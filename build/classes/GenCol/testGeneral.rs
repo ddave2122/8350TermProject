@@ -1,0 +1,2 @@
+GenCol.testGeneral
+GenCol.extMethod
