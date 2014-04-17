@@ -5,28 +5,28 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package simView;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
-import util.*;
+import java.util.Map;
 
 /**
  * An object that holds member variables common to the ViewableAtomic and
  * ViewableDigraph classes, so they aren't specified twice.
  *
- * @author  Jeff Mather
+ * @author Jeff Mather
  */
-public class ViewableComponentBase
-{
+public class ViewableComponentBase {
     /**
      * A list of all of this component's test-inputs, for all ports.
      */
     protected List testInputs = new ArrayList();
-    
+
     /**
      * For each of this component's ports, the group of test inputs
      * that may be injected into that port, mapped by port name.

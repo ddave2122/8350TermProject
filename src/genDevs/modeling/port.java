@@ -1,14 +1,12 @@
 package genDevs.modeling;
 
-import GenCol.*;
-
-import java.util.*;
+import GenCol.entity;
 
 
-public class port extends entity implements PortInterface{
-public port(String nm){
-super(nm);
-}
+public class port extends entity implements PortInterface {
+    public port(String nm) {
+        super(nm);
+    }
 }
 
 

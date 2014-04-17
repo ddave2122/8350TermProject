@@ -8,40 +8,34 @@
  */
 
 
-package  statistics;
+package statistics;
 
-import GenCol.*;
-import java.lang.*;
-import java.util.*;
-
-
-public class randPareto extends rand{
-protected double location, shape;
+public class randPareto extends rand {
+    protected double location, shape;
 
 
-public randPareto(long seed,double location ,double shape){
-  super(seed);
-  this.location = location;
-  this.shape = shape;
-}
+    public randPareto(long seed, double location, double shape) {
+        super(seed);
+        this.location = location;
+        this.shape = shape;
+    }
 
-public randPareto(long seed){
-this(seed,1,1);
-}
+    public randPareto(long seed) {
+        this(seed, 1, 1);
+    }
 
-public randPareto(){
-this(1,1,1);
-}
+    public randPareto() {
+        this(1, 1, 1);
+    }
 
-public double sample(){
-return pareto(location,shape);
-}
+    public double sample() {
+        return pareto(location, shape);
+    }
 
-    static public void main(String[] args)
-    {
-       rand r = new randPareto();
-       for (int i = 0;i<10;i++)
-         System.out.println(r.sample());
+    static public void main(String[] args) {
+        rand r = new randPareto();
+        for (int i = 0; i < 10; i++)
+            System.out.println(r.sample());
 
     }
 }

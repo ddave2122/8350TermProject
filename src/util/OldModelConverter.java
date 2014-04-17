@@ -9,8 +9,8 @@
 
 package util;
 
-import java.io.*;
 import javax.swing.*;
+import java.io.*;
 
 /**
  * An application that tries to convert DEVSJava model files into ones
@@ -19,10 +19,9 @@ import javax.swing.*;
  * capabilities of this program.  However, most of the grunt work
  * of the conversion process should be eliminated.
  *
- * @author      Jeff Mather
+ * @author Jeff Mather
  */
-public class OldModelConverter
-{
+public class OldModelConverter {
     /**
      * The command to specify as the second line of a conversion-pair to
      * indicate that the entire line of text should be deleted.
@@ -36,106 +35,105 @@ public class OldModelConverter
      */
     protected static String newLine = System.getProperty("line.separator");
     protected String[] conversions = {
-        "package project","package RobotFormation",
-        "import Zdevs.*;",
+            "package project", "package RobotFormation",
+            "import Zdevs.*;",
             "import genDevs.modeling.*;" + newLine + "import genDevs.simulation.*;",
-        "import Zdevs.Zcontainer.*;",
+            "import Zdevs.Zcontainer.*;",
             "import GenCol.*;",
-        "import GUIDEVS.*;",
+            "import GUIDEVS.*;",
             "import simView.*;",
-        "atomGraph",
+            "atomGraph",
             "ViewableAtomic",
-        "digraphGraph",
+            "digraphGraph",
             "ViewableDigraph",
-        "inports.add",
+            "inports.add",
             "addInport",
-        "outports.add",
+            "outports.add",
             "addOutport",
-        "phases.add",
+            "phases.add",
             deleteCommand,
-        "phase_is",
+            "phase_is",
             "phaseIs",
-        "message_on_port",
+            "message_on_port",
             "messageOnPort",
-        "hold_in",
+            "hold_in",
             "holdIn",
-        "get_length",
+            "get_length",
             "getLength",
-        "addString",
+            "addString",
             "System.out.println",
-        "get_name",
+            "get_name",
             "getName",
-        "classname =",
+            "classname =",
             deleteCommand,
-        "get_val_on_port",
+            "get_val_on_port",
             "getValOnPort",
-        "make_content",
+            "make_content",
             "makeContent",
-        "addTestPortValue",
+            "addTestPortValue",
             "addTestInput",
-        "get_head()",
+            "get_head()",
             "read(0)",
-        ".get_ent()",
+            ".get_ent()",
             "",
-        "con.val",
+            "con.val",
             "con.getValue()",
-        "double Out()",
+            "double Out()",
             "double sisoOut()",
-        "new doubleEnt(Out())",
+            "new doubleEnt(Out())",
             "new doubleEnt(sisoOut())",
-        "function",
+            "function",
             "Function",
-        ".getLength()",
+            ".getLength()",
             ".size()",
-        ".empty()",
+            ".empty()",
             ".isEmpty()",
-        "Add_coupling",
+            "Add_coupling",
             "addCoupling",
-        "add_coupling",
+            "add_coupling",
             "addCoupling",
-        "show_state",
+            "show_state",
             "showState",
-        "show_coupling",
+            "show_coupling",
             deleteCommand,
-        "queue",
+            "queue",
             "Queue",
-        "pair",
+            "pair",
             "Pair",
-        "get_key(",
+            "get_key(",
             "getKey(",
-        "get_value(",
+            "get_value(",
             "getValue(",
-        ".eq(",
+            ".eq(",
             ".equals(",
-        ".front()",
+            ".front()",
             ".first()",
-        "passivate_in",
+            "passivate_in",
             "passivateIn",
-        "relation",
+            "relation",
             "Relation",
-        "set ",
+            "set ",
             "Set ",
-        "set()",
+            "set()",
             "HashSet()",
-        "remove_all",
+            "remove_all",
             "removeAll",
-        ".read(0)",
+            ".read(0)",
             ".iterator().next()",
-        ".list_ref(",
+            ".list_ref(",
             ".get(",
-        "get_components()",
+            "get_components()",
             "getComponents()",
-        ".equal(",
+            ".equal(",
             ".equals(",
-        "initialize()",
+            "initialize()",
             deleteCommand,
     };
 
     /**
      * A constructor.
      */
-    public OldModelConverter()
-    {
+    public OldModelConverter() {
         // create a file-chooser, to be used below
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setMultiSelectionEnabled(true);
@@ -156,9 +154,7 @@ public class OldModelConverter
                     convertFile(files[i]);
                     System.out.println(" done");
                 }
-            }
-
-            else break;
+            } else break;
         }
 
         System.exit(0);
@@ -169,18 +165,19 @@ public class OldModelConverter
      * substitutions on them, then writes the converted contents out to a new
      * file.
      *
-     * @param   file        The file to convert.
+     * @param file The file to convert.
      */
-    protected void convertFile(File file)
-    {
+    protected void convertFile(File file) {
         // read in the contents of the file
         byte[] buffer = null;
         try {
             InputStream stream = new FileInputStream(file);
-            buffer = new byte[(int)file.length()];
+            buffer = new byte[(int) file.length()];
             stream.read(buffer);
             stream.close();
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // turn the contents of the file into a string
         String text = new String(buffer);
@@ -194,7 +191,7 @@ public class OldModelConverter
                 // find the next instance of the string to convert within the
                 // text
                 StringUtil.IndexOfIgnoreWhitespaceResult result =
-                    StringUtil.indexOfIgnoreWhitespace(text, convert, index);
+                        StringUtil.indexOfIgnoreWhitespace(text, convert, index);
                 index = result.index;
                 if (index == -1) break;
 
@@ -205,15 +202,15 @@ public class OldModelConverter
                     int previousNewLineIndex = text.lastIndexOf(newLine, index);
                     int nextNewLineIndex = text.indexOf(newLine, index);
                     text = text.substring(0, previousNewLineIndex)
-                        + text.substring(nextNewLineIndex, text.length());
+                            + text.substring(nextNewLineIndex, text.length());
                 }
 
                 // otherwise
                 else {
                     // convert the string
                     text = text.substring(0, index) + conversion
-                        + text.substring(index + convert.length() +
-                        result.numWhitespaceCharsSkipped, text.length());
+                            + text.substring(index + convert.length() +
+                            result.numWhitespaceCharsSkipped, text.length());
 
                     // advance beyond the conversion
                     index += conversion.length();
@@ -243,14 +240,15 @@ public class OldModelConverter
             OutputStream stream = new FileOutputStream(file);
             stream.write(text.getBytes());
             stream.close();
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Starts this application.
      */
-    static public void main(String[] args)
-    {
+    static public void main(String[] args) {
         new OldModelConverter();
     }
 }

@@ -1,9 +1,8 @@
 
 package genDevs.modeling;
 
-import GenCol.*;
-
-import java.util.*;
+import java.util.HashSet;
 
 
-public class ports extends HashSet implements PortsInterface{}
+public class ports extends HashSet implements PortsInterface {
+}

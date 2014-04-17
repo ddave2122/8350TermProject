@@ -5,32 +5,31 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package genDevs.simulation.realTime;
 
-import GenCol.*;
-
-import java.util.*;
-import genDevs.simulation.*;
+import genDevs.simulation.AtomicSimulatorInterface;
 
 
-public interface RTSimulatorInterface extends AtomicSimulatorInterface,Runnable{
+public interface RTSimulatorInterface extends AtomicSimulatorInterface, Runnable {
 
-public long timeInSecs();
-public long timeInMillis();
+    public long timeInSecs();
 
-public void setTN();
-public double getTN();
+    public long timeInMillis();
+
+    public void setTN();
+
+    public double getTN();
 
 //public void setCurrentTime();
 //public double getCurrentTime();
 //public void setLastTime();
 //public double getLastTime();
 
-public void stopSimulate();
+    public void stopSimulate();
 
-public void sendMessages();
+    public void sendMessages();
 }
 
 

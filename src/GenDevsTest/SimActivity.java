@@ -5,26 +5,23 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package GenDevsTest;
 
-import GenCol.*;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
+import GenCol.entity;
+import genDevs.modeling.activity;
+import genDevs.modeling.devs;
 
-public class SimActivity extends activity
-{
+public class SimActivity extends activity {
     protected double tN;
     protected devs myModel;
-    public SimActivity(String name, double pt)
-    {
+
+    public SimActivity(String name, double pt) {
         super(name, pt);
     }
 
-    public void run()
-    {
+    public void run() {
         try {
             sleep((long) getProcessingTime() * 1000);
         } catch (InterruptedException e) {
@@ -33,8 +30,7 @@ public class SimActivity extends activity
         returnTheResult(new entity("ActivityResult"));
     }
 
-    public void kill()
-    {
+    public void kill() {
         interrupt();
     }
 }

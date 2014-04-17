@@ -7,18 +7,15 @@
  *  Date       : 02-22-03
  */
 package genDevs.modeling;
-import GenCol.*;
-import java.util.*;
-
-import genDevs.modeling.*;
 
 /**
  * @author Saurabh Mittal
  */
 
-public interface scalableAtomicInterface extends friendlyAtomicInterface{
+public interface scalableAtomicInterface extends friendlyAtomicInterface {
 
-public void addNewModel() ;
-public void removeOldModel();
+    public void addNewModel();
+
+    public void removeOldModel();
 
 }

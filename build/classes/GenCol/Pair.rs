@@ -1,2 +1,0 @@
-GenCol.Pair
-GenCol.PairComparator

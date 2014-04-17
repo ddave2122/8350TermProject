@@ -7,22 +7,18 @@
  *  Date       : 02-22-03
  */
 package genDevs.modeling;
-import GenCol.*;
-
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
 
 /**
  * class to provide the VariableStructure methodology
+ *
  * @author Saurabh Mittal
  */
 
-public interface scalableDigraphInterface extends friendlyDigraphInterface{
+public interface scalableDigraphInterface extends friendlyDigraphInterface {
 
-  public void addNewModel() ;
+    public void addNewModel();
 
-  public void removeOldModel(String withName) ;
+    public void removeOldModel(String withName);
 
 
 }

@@ -5,23 +5,22 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package simView;
 
-import java.awt.*;
+import genDevs.modeling.content;
+
 import javax.swing.*;
+import java.awt.*;
 import java.text.DecimalFormat;
-import genDevs.modeling.*;
-import util.*;
 
 /**
  * A label that displays what's contained in a content object.
  *
- * @author      Jeff Mather
+ * @author Jeff Mather
  */
-public class ContentView extends JLabel
-{
+public class ContentView extends JLabel {
     /**
      * The content this view is displaying.
      */
@@ -35,15 +34,14 @@ public class ContentView extends JLabel
     /**
      * The font of this view's label.
      */
-    static protected Font font =   new Font("SansSerif", Font.PLAIN, 10);
+    static protected Font font = new Font("SansSerif", Font.PLAIN, 10);
 
     /**
      * Constructs a view on the given content.
      *
-     * @param   content        The content to be viewed.
+     * @param content The content to be viewed.
      */
-    public ContentView(content content_)
-    {
+    public ContentView(content content_) {
         content = content_;
 
         // define this view's look
@@ -52,8 +50,8 @@ public class ContentView extends JLabel
         setBackground(Color.white);
         setFont(font);
         setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.black, 1),
-            BorderFactory.createEmptyBorder(0, 2, 0, 2)));
+                BorderFactory.createLineBorder(Color.black, 1),
+                BorderFactory.createEmptyBorder(0, 2, 0, 2)));
 
         // try to convert the content's value to a double; if it can
         // be converted, format the double nicely;
@@ -63,7 +61,8 @@ public class ContentView extends JLabel
         try {
             double numericValue = Double.parseDouble(value);
             value = (new DecimalFormat("0.000")).format(numericValue);
-        } catch (NumberFormatException e) {}
+        } catch (NumberFormatException e) {
+        }
 
         // have this view display the content's value
         setText(header + value);
@@ -72,5 +71,7 @@ public class ContentView extends JLabel
     /**
      * Return's the content this view is displaying.
      */
-    public content getContent() {return content;}
+    public content getContent() {
+        return content;
+    }
 }

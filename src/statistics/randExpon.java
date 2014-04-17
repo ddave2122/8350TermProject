@@ -8,38 +8,32 @@
  */
 
 
-package  statistics;
+package statistics;
 
-import GenCol.*;
-import java.lang.*;
-import java.util.*;
-
-
-public class randExpon extends rand{
-protected double mean;
+public class randExpon extends rand {
+    protected double mean;
 
 
-public randExpon(long seed,double mean){
-  super(seed);
-  this.mean = mean;
-}
+    public randExpon(long seed, double mean) {
+        super(seed);
+        this.mean = mean;
+    }
 
-public randExpon(long seed){
-this(seed,1);
-}
+    public randExpon(long seed) {
+        this(seed, 1);
+    }
 
-public randExpon(){
-this(1,1);
-}
+    public randExpon() {
+        this(1, 1);
+    }
 
-public double sample(){
-return expon(mean);
-}
+    public double sample() {
+        return expon(mean);
+    }
 
-    static public void main(String[] args)
-    {
-       rand r = new randExpon();
-       for (int i = 0;i<10;i++)
-       System.out.println(r.sample());
+    static public void main(String[] args) {
+        rand r = new randExpon();
+        for (int i = 0; i < 10; i++)
+            System.out.println(r.sample());
     }
 }

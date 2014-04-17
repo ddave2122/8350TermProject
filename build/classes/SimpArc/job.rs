@@ -1,2 +1,0 @@
-SimpArc.job
-SimpArc.jobSize

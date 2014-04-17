@@ -1,13 +1,14 @@
 package genDevs.modeling;
 
-import GenCol.*;
+import GenCol.EntityInterface;
 
-import java.util.*;
+import java.util.Iterator;
 
 
-public interface PortInterface extends EntityInterface{}
+public interface PortInterface extends EntityInterface {
+}
 
-interface portIterator extends Iterator{
-public PortInterface nextPort();
+interface portIterator extends Iterator {
+    public PortInterface nextPort();
 }
 

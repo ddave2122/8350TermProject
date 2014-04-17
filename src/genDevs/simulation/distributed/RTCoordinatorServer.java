@@ -1,13 +1,13 @@
 package genDevs.simulation.distributed;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import genDevs.simulation.realTime.*;
-import util.*;
+import GenCol.ensembleBag;
+import genDevs.modeling.coupledDevs;
+import genDevs.simulation.coupledSimulator;
+import genDevs.simulation.realTime.RTcoordinator;
+import util.s;
+
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * The top-level coordinator-server in a distributed real-time simulation
@@ -15,8 +15,7 @@ import util.*;
  * remote subordinate coordinators) to coordinate a DRTS.  There is
  * exactly one of these in each DRTS.
  */
-public class RTCoordinatorServer extends RTcoordinator
-{
+public class RTCoordinatorServer extends RTcoordinator {
     /**
      * How many simulation iterations this coordinator is to perform.
      */
@@ -33,35 +32,32 @@ public class RTCoordinatorServer extends RTcoordinator
     /**
      * Constructs an object of this class.
      *
-     * @param   devs            The coupled component whose simulation this
-     *                          coordinator is to coordinate.
-     * @param   numIterations_  How many simulation iterations this
-     *                          coordinator is to perform.
-     * @param   port            The port number on which this server should
-     *                          listen for new clients.
-     * @param   shouldBroadcastInitialize
-     *                          Whether this server should broadcast a
-     *                          message that says to initialize to all
-     *                          subordinate simulators, once all clients
-     *                          have connected.
+     * @param devs                      The coupled component whose simulation this
+     *                                  coordinator is to coordinate.
+     * @param numIterations_            How many simulation iterations this
+     *                                  coordinator is to perform.
+     * @param port                      The port number on which this server should
+     *                                  listen for new clients.
+     * @param shouldBroadcastInitialize Whether this server should broadcast a
+     *                                  message that says to initialize to all
+     *                                  subordinate simulators, once all clients
+     *                                  have connected.
      */
     public RTCoordinatorServer(coupledDevs devs, int numIterations_,
-        int port, boolean shouldBroadcastInitialize)
-    {
+                               int port, boolean shouldBroadcastInitialize) {
         super(devs, true);
         numIterations = numIterations_;
 
         // start the thread that will wait for the clients to connect
         // with this server
         new WaitForClientsToConnectThread(
-            port, shouldBroadcastInitialize).start();
+                port, shouldBroadcastInitialize).start();
     }
 
     /**
      * A convienence constructor.
      */
-    public RTCoordinatorServer(coupledDevs devs, int numIterations)
-    {
+    public RTCoordinatorServer(coupledDevs devs, int numIterations) {
         this(devs, numIterations, Constants.serverPortNumber, true);
     }
 
@@ -71,20 +67,19 @@ public class RTCoordinatorServer extends RTcoordinator
      * associate that proxy with the name of the devs component upon which
      * the actual simulator will operate.
      *
-     * @param   proxy       A local proxy for a client-side simulator.
-     * @param   devsName    The name of the devs component on which the
-     *                      simulator will operate.
+     * @param proxy    A local proxy for a client-side simulator.
+     * @param devsName The name of the devs component on which the
+     *                 simulator will operate.
      */
     public void registerSimulatorProxy(coupledSimulator proxy,
-        String devsName)
-    {
+                                       String devsName) {
         // add the given proxy to the set of simulator proxies with which
         // this coordinator will interact
         simulators.add(proxy);
 
         // associate the proxy with the name of the devs component
         modelToSim.put(devsName, proxy);
-        internalModelTosim.put(devsName,proxy);
+        internalModelTosim.put(devsName, proxy);
 
         // one more simulator has registered with this coordinator
         registerCount--;
@@ -96,8 +91,7 @@ public class RTCoordinatorServer extends RTcoordinator
      * method, because in a distributed simulation those simulators
      * are instead created one-by-one on the client side.
      */
-    public void setSimulators()
-    {
+    public void setSimulators() {
         tellAllSimsSetModToSim();
     }
 
@@ -105,10 +99,9 @@ public class RTCoordinatorServer extends RTcoordinator
      * Sends the given message to all the client simulators via their
      * proxies.
      *
-     * @param   message     The message to send.
+     * @param message The message to send.
      */
-    protected void broadcast(String message)
-    {
+    protected void broadcast(String message) {
         s.s("broadcast: tell all send " + message);
         Class[] classes = {ensembleBag.getTheClass("java.lang.String")};
         Object[] args = {message};
@@ -119,8 +112,7 @@ public class RTCoordinatorServer extends RTcoordinator
      * A thread that waits for the client simulators to connect with this
      * server.
      */
-    protected class WaitForClientsToConnectThread extends Thread
-    {
+    protected class WaitForClientsToConnectThread extends Thread {
         protected int port;
 
         /**
@@ -133,28 +125,27 @@ public class RTCoordinatorServer extends RTcoordinator
         /**
          * Constructs an object of this class.
          *
-         * @param   port_       The port number on which to listen for clients.
-         * @param   shouldBroadcastInitialize_
-         *                      Whether this thread should broadcast a
-         *                      message that says to initialize to all
-         *                      subordinate simulators, once all clients
-         *                      have connected.
+         * @param port_                      The port number on which to listen for clients.
+         * @param shouldBroadcastInitialize_ Whether this thread should broadcast a
+         *                                   message that says to initialize to all
+         *                                   subordinate simulators, once all clients
+         *                                   have connected.
          */
         public WaitForClientsToConnectThread(int port_,
-            boolean shouldBroadcastInitialize_)
-        {
+                                             boolean shouldBroadcastInitialize_) {
             port = port_;
             shouldBroadcastInitialize = shouldBroadcastInitialize_;
         }
 
-        public void run()
-        {
+        public void run() {
             // create a server socket on the given port to accept
             // client connections
             ServerSocket serverSocket = null;
             try {
                 serverSocket = new ServerSocket(port);
-            } catch (Exception e) {s.e(e);}
+            } catch (Exception e) {
+                s.e(e);
+            }
 
             // detm how many subordinate components there are that must
             // register their names with this server
@@ -170,7 +161,9 @@ public class RTCoordinatorServer extends RTcoordinator
                 try {
                     s.s("Waiting for connection...");
                     socket = serverSocket.accept();
-                } catch (Exception e) {s.e(e);}
+                } catch (Exception e) {
+                    s.e(e);
+                }
 
                 // create a proxy for the newly connected component
                 s.s("Yes!  Received a connection!");

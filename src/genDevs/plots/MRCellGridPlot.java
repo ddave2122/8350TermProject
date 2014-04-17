@@ -1,21 +1,21 @@
 package genDevs.plots;
 
+import GenCol.doubleEnt;
+import GenCol.entity;
+import genDevs.modeling.message;
+
 import java.awt.*;
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
+import java.util.Iterator;
+
 //import genDevs.modeling.basicModels.*;
-import simView.*;
-import util.*;
 
 /**
  * A devs component that displays a cell-grid-view and accepts
  * messages telling it what to plot on that view.
  *
- * @author      Bernard Zeigler, Jeff Mather
+ * @author Bernard Zeigler, Jeff Mather
  */
-public class MRCellGridPlot extends JobQueue
-{
+public class MRCellGridPlot extends JobQueue {
     /**
      * The cell-grid-view on to which to plot.
      */
@@ -80,17 +80,16 @@ public class MRCellGridPlot extends JobQueue
     /**
      * Constructor.
      *
-     * @param   name            The name to give this devs component.
-     * @param   jobDueDelay     The length of time after a job arrives until
-     *                          it is due.
-     * @param   xLabel_         The name to give the x-axis of the cell-grid-view.
-     * @param   xRange_         How large a range the x-axis should cover.
-     * @param   yLabel_         The name to give the y-axis of the cell-grid-view.
-     * @param   yRange_         How large a range the y-axis should cover.
+     * @param name        The name to give this devs component.
+     * @param jobDueDelay The length of time after a job arrives until
+     *                    it is due.
+     * @param xLabel_     The name to give the x-axis of the cell-grid-view.
+     * @param xRange_     How large a range the x-axis should cover.
+     * @param yLabel_     The name to give the y-axis of the cell-grid-view.
+     * @param yRange_     How large a range the y-axis should cover.
      */
     public MRCellGridPlot(String name, double jobDueDelay,
-        String xLabel, double xRange_, String yLabel, double yRange_)
-    {
+                          String xLabel, double xRange_, String yLabel, double yRange_) {
         super(name, jobDueDelay);
 
         // this class of component appears often within models, and its
@@ -126,9 +125,9 @@ public class MRCellGridPlot extends JobQueue
 
         // add some test inputs
         addTestInput("drawString",
-            new DrawCellEntity("this is a test", 15, 10, Color.red), 0);
+                new DrawCellEntity("this is a test", 15, 10, Color.red), 0);
         addTestInput("drawCell",
-            new DrawCellEntity(15, 11, Color.black, Color.green), 0);
+                new DrawCellEntity(15, 11, Color.black, Color.green), 0);
         addTestInput("drawCell", new DrawCellEntity(10, 10, Color.red), 0);
         addTestInput("drawI", new doubleEnt(.5), 0);
         addTestInput("drawJ", new doubleEnt(-.7), 0);
@@ -141,14 +140,13 @@ public class MRCellGridPlot extends JobQueue
     /**
      * Constructor.
      *
-     * @param   name            See other constructor.
-     * @param   jobDueDelay     See other constructor.
-     * @param   cellGridView_   The cell-grid-view on which to plot.
-     * @param   zRange_         How large a range the z-axis should cover.
+     * @param name          See other constructor.
+     * @param jobDueDelay   See other constructor.
+     * @param cellGridView_ The cell-grid-view on which to plot.
+     * @param zRange_       How large a range the z-axis should cover.
      */
-      public MRCellGridPlot(String name, double jobDueDelay,
-          MRCellGridView cellGridView_, double zRange_)
-    {
+    public MRCellGridPlot(String name, double jobDueDelay,
+                          MRCellGridView cellGridView_, double zRange_) {
         super(name, jobDueDelay);
         cellGridView = cellGridView_;
         zRange = zRange_;
@@ -165,9 +163,8 @@ public class MRCellGridPlot extends JobQueue
      */
 //    public CellGridPlot(String name, double jobDueDelay,
 //        CellGridView cellGridView)
-      public MRCellGridPlot(String name, double jobDueDelay,
-          MRCellGridView cellGridView)
-    {
+    public MRCellGridPlot(String name, double jobDueDelay,
+                          MRCellGridView cellGridView) {
         this(name, jobDueDelay, cellGridView, 1.0);
     }
 
@@ -175,8 +172,7 @@ public class MRCellGridPlot extends JobQueue
      * A convenience constructor.
      */
     public MRCellGridPlot(String name, double delay,
-        double xRange, double yRange)
-    {
+                          double xRange, double yRange) {
         this(name, delay, "X", xRange, "Y", yRange);
     }
 
@@ -184,8 +180,7 @@ public class MRCellGridPlot extends JobQueue
      * A convenience constructor.
      */
     public MRCellGridPlot(String name, double delay,
-        double xRange, double yRange, double zRange_)
-    {
+                          double xRange, double yRange, double zRange_) {
         this(name, delay, "X", xRange, "Y", yRange);
         zRange = zRange_;
     }
@@ -194,34 +189,30 @@ public class MRCellGridPlot extends JobQueue
      * A convenience constructor.
      */
     public MRCellGridPlot(String name, double delay,
-        String yLabel, double yRange)
-    {
+                          String yLabel, double yRange) {
         this(name, delay, "time", 100, yLabel, yRange);
     }
 
     /**
      * A convenience constructor.
      */
-    public MRCellGridPlot(String name, double delay, double yRange)
-    {
+    public MRCellGridPlot(String name, double delay, double yRange) {
         this(name, delay, "Y", yRange);
     }
 
     /**
      * A convenience constructor.
      */
-    public MRCellGridPlot()
-    {
+    public MRCellGridPlot() {
         this("CellGridPlot", 10, 2, 2);
     }
 
     /**
      * Sets the location of this component's cell-grid-view onscreen.
      *
-     * @param   x, y    The location onscreen.
+     * @param x, y    The location onscreen.
      */
-    public void setCellGridViewLocation(int x, int y)
-    {
+    public void setCellGridViewLocation(int x, int y) {
         cellGridViewLocation.setLocation(x, y);
         cellGridView.setLocation(x, y);
     }
@@ -229,10 +220,9 @@ public class MRCellGridPlot extends JobQueue
     /**
      * Sets the size of the cell space to be displayed by the cell-grid-view.
      *
-     * @param       width, height       The size of the cell space (in cells).
+     * @param width, height       The size of the cell space (in cells).
      */
-    public void setSpaceSize(int width, int height)
-    {
+    public void setSpaceSize(int width, int height) {
         cellGridView.setSpaceSize(new Dimension(width, height));
         computeTimeScale();
         cellGridView.setXScale(xRange);
@@ -242,34 +232,33 @@ public class MRCellGridPlot extends JobQueue
     /**
      * See member variable for description of variable computed.
      */
-    protected void computeTimeScale()
-    {
+    protected void computeTimeScale() {
         timeScale = 2.2 * cellGridView.getSpaceSize().width;
     }
 
     /**
      * Sets how large each cell should be.
      *
-     * @param       cellSize_           The size of each cell (in pixels).
+     * @param cellSize_ The size of each cell (in pixels).
      */
-    public void setCellSize(int size)
-    {
+    public void setCellSize(int size) {
         cellGridView.setCellSize(size);
     }
 
     /**
      * See member variable accessed.
      */
-    public double getTimeScale() {return timeScale;}
+    public double getTimeScale() {
+        return timeScale;
+    }
 
     /**
      * Sets the ratio of pixels-to-seconds when the x-axis is used as the time
      * axis for a time plot.
      *
-     * @param   timeScale_      The ratio of pixels to seconds for the x-axis.
+     * @param timeScale_ The ratio of pixels to seconds for the x-axis.
      */
-    public void setTimeScale(double timeScale_)
-    {
+    public void setTimeScale(double timeScale_) {
         timeScale = timeScale_;
         xRange = timeScale;
         cellGridView.setXLabel("time " + 0.5 * xRange);
@@ -279,10 +268,9 @@ public class MRCellGridPlot extends JobQueue
      * Sets the color to use in cell drawing operations where the color is
      * always the same.
      *
-     * @param   color       The color to use.
+     * @param color The color to use.
      */
-    public void setDefaultColor(Color color)
-    {
+    public void setDefaultColor(Color color) {
         defaultColor = color;
     }
 
@@ -290,11 +278,10 @@ public class MRCellGridPlot extends JobQueue
      * Returns a color based on where the given value lies within the
      * cell-grid-view's z-range.
      *
-     * @param   value       The value to map to a color.
-     * @return              The color mapped to.
+     * @param value The value to map to a color.
+     * @return The color mapped to.
      */
-    public Color mapValueToColor(double value)
-    {
+    public Color mapValueToColor(double value) {
         value *= 2;
         if (value > zRange) return Color.red;
         else if (value > .8 * zRange) return Color.pink;
@@ -313,8 +300,7 @@ public class MRCellGridPlot extends JobQueue
      * Configures this component's cell-grid-view according to current
      * member variable values.
      */
-    protected void configureCellGridView()
-    {
+    protected void configureCellGridView() {
         // configure the cell-grid-view
         cellGridView.setXScale(xRange);
         cellGridView.setYScale(yRange);
@@ -328,8 +314,7 @@ public class MRCellGridPlot extends JobQueue
     /**
      * Performs additional work beyond that done in the parent class method.
      */
-    protected void deltextHook1(message message)
-    {
+    protected void deltextHook1(message message) {
         // for each content in the given message
         doubleEnt dueTime = new doubleEnt(clock + jobDueDelay);
         for (int i = 0; i < message.getLength(); i++) {
@@ -337,13 +322,13 @@ public class MRCellGridPlot extends JobQueue
             if (messageOnPort(message, "drawString", i)) {
                 // add this content to the jobs that have arrived
                 DrawCellEntity entity = (DrawCellEntity)
-                    message.getValOnPort("drawString", i);
+                        message.getValOnPort("drawString", i);
                 arrived.put(dueTime, entity);
 
                 // tell the cell-grid-view to draw the entity's name
                 cellGridView.drawString(
-                    (int)Math.rint(entity.i), (int)Math.rint(entity.j),
-                    entity.getName(), entity.color);
+                        (int) Math.rint(entity.i), (int) Math.rint(entity.j),
+                        entity.getName(), entity.color);
 
                 // remember the operation that must be performed to dim what
                 // was drawn just above
@@ -354,13 +339,13 @@ public class MRCellGridPlot extends JobQueue
             else if (messageOnPort(message, "drawCell", i)) {
                 // add this content to the jobs that have arrived
                 DrawCellEntity entity = (DrawCellEntity)
-                    message.getValOnPort("drawCell", i);
+                        message.getValOnPort("drawCell", i);
                 arrived.put(dueTime, entity);
 
                 // tell the cell-grid-view to draw the cell specified by the job
                 cellGridView.drawCell(
-                    (int)Math.rint(entity.i), (int)Math.rint(entity.j),
-                    entity.color);
+                        (int) Math.rint(entity.i), (int) Math.rint(entity.j),
+                        entity.color);
 
                 // remember the operation that must be performed to dim what
                 // was drawn just above
@@ -371,8 +356,8 @@ public class MRCellGridPlot extends JobQueue
             else if (messageOnPort(message, "drawCellToScale", i)) {
                 // add this content to the jobs that have arrived
                 entity inEntity = message.getValOnPort("drawCellToScale", i);
-                DrawCellEntity entity = (DrawCellEntity)inEntity;
-              //  DrawCellEntity entity = DrawCellEntity.toObject(inEntity);
+                DrawCellEntity entity = (DrawCellEntity) inEntity;
+                //  DrawCellEntity entity = DrawCellEntity.toObject(inEntity);
                 arrived.put(dueTime, entity);
 
                 // tell the cell-grid-view to draw-to-scale the cell
@@ -388,8 +373,8 @@ public class MRCellGridPlot extends JobQueue
             else if (messageOnPort(message, "drawMRCellToScale", i)) {
                 // add this content to the jobs that have arrived
                 entity inEntity = message.getValOnPort("drawMRCellToScale", i);
-                DrawCellEntity entity = (DrawCellEntity)inEntity;
-              //  DrawCellEntity entity = DrawCellEntity.toObject(inEntity);
+                DrawCellEntity entity = (DrawCellEntity) inEntity;
+                //  DrawCellEntity entity = DrawCellEntity.toObject(inEntity);
                 arrived.put(dueTime, entity);
 
                 // tell the cell-grid-view to draw-to-scale the cell
@@ -405,7 +390,7 @@ public class MRCellGridPlot extends JobQueue
             else if (messageOnPort(message, "draw2D", i)) {
                 // add this content to the jobs that have arrived
                 DrawCellEntity entity = (DrawCellEntity)
-                    message.getValOnPort("draw2D", i);
+                        message.getValOnPort("draw2D", i);
                 arrived.put(dueTime, entity);
 
                 // tell the cell-grid-view to draw-to-scale the cell
@@ -422,12 +407,12 @@ public class MRCellGridPlot extends JobQueue
             // else, if this content is on the draw-i port
             else if (messageOnPort(message, "drawI", i)) {
                 // store the i specified by the cell as the last one received
-                doubleEnt entity = (doubleEnt)message.getValOnPort("drawI", i);
+                doubleEnt entity = (doubleEnt) message.getValOnPort("drawI", i);
                 lastI = entity.getv();
 
                 // add this content to the jobs that have arrived
                 arrived.put(dueTime, new DrawCellEntity("drawCellToScale",
-                    lastI, lastJ));
+                        lastI, lastJ));
 
                 // tell the cell-grid-view to draw-to-scale the cell of the last
                 // i and j received
@@ -437,12 +422,12 @@ public class MRCellGridPlot extends JobQueue
             // else, if this content is on the draw-j port
             else if (messageOnPort(message, "drawJ", i)) {
                 // store the j specified by the cell as the last one received
-                doubleEnt entity = (doubleEnt)message.getValOnPort("drawJ", i);
+                doubleEnt entity = (doubleEnt) message.getValOnPort("drawJ", i);
                 lastJ = entity.getv();
 
                 // add this content to the jobs that have arrived
                 arrived.put(dueTime,
-                    new DrawCellEntity("drawCellToScale", lastI, lastJ));
+                        new DrawCellEntity("drawCellToScale", lastI, lastJ));
 
                 // tell the cell-grid-view to draw-to-scale the cell of the last
                 // i and j received
@@ -452,13 +437,13 @@ public class MRCellGridPlot extends JobQueue
             // else, if this content is on the time-plot port
             else if (messageOnPort(message, "timePlot", i)) {
                 // add this content to the jobs that have arrived
-                doubleEnt entity = (doubleEnt)message.getValOnPort(
-                    "timePlot", i);
+                doubleEnt entity = (doubleEnt) message.getValOnPort(
+                        "timePlot", i);
                 double time = (-.5 + (clock / timeScale) % 1) * timeScale;
                 double value = entity.getv();
                 arrived.put(dueTime,
-                    new DrawCellEntity("drawCellToTimeScale", time, value,
-                        null, timeScale));
+                        new DrawCellEntity("drawCellToTimeScale", time, value,
+                                null, timeScale));
 
                 // if the plot is cycling back to the left side of the
                 // cell-grid-view
@@ -476,19 +461,19 @@ public class MRCellGridPlot extends JobQueue
                 // whose i value is given by the current clock value,
                 // and whose j value is specified by the job
                 cellGridView.drawCellToTimeScale(time, timeScale,
-                    value, defaultColor);
+                        value, defaultColor);
             }
 
             // else, if this content is on the pulse-plot port
             else if (messageOnPort(message, "pulsePlot", i)) {
                 // add this content to the jobs that have arrived
-                doubleEnt entity = (doubleEnt)message.getValOnPort(
-                    "pulsePlot", i);
+                doubleEnt entity = (doubleEnt) message.getValOnPort(
+                        "pulsePlot", i);
                 double time = (-.5 + (clock / timeScale) % 1) * timeScale;
                 double value = entity.getv();
                 arrived.put(dueTime,
-                    new DrawCellEntity("drawPulseToTimeScale", time, value,
-                        null, timeScale));
+                        new DrawCellEntity("drawPulseToTimeScale", time, value,
+                                null, timeScale));
 
                 // if the plot is cycling back to the left side of the
                 // cell-grid-view
@@ -506,7 +491,7 @@ public class MRCellGridPlot extends JobQueue
                 // whose i value is given by the current clock value,
                 // and whose j value is specified by the job
                 cellGridView.drawPulseToTimeScale(time, timeScale,
-                    value, defaultColor);
+                        value, defaultColor);
             }
         }
     }
@@ -514,13 +499,12 @@ public class MRCellGridPlot extends JobQueue
     /**
      * Performs additional work beyond that done in the parent class method.
      */
-    protected void deltintHook1()
-    {
+    protected void deltintHook1() {
         // for each job that is due
         Iterator i = due.iterator();
         while (i.hasNext()) {
             // if this job is a draw-cell-to-scale job
-            DrawCellEntity entity = (DrawCellEntity)i.next();
+            DrawCellEntity entity = (DrawCellEntity) i.next();
             String name = entity.getName();
             if (name.startsWith("drawCellToScale")) {
                 // dim the cell that was drawn when the job arrived
@@ -535,7 +519,7 @@ public class MRCellGridPlot extends JobQueue
                 if (!dontDimTimePlotCells || entity.i < 0) {
                     // dim the cell that was drawn when the job arrived
                     cellGridView.drawCellToTimeScale(entity.i, entity.timeScale,
-                        entity.j, entity.dimTo);
+                            entity.j, entity.dimTo);
                 }
 
                 // else, if we currently aren't supposed to dim time plot
@@ -555,7 +539,7 @@ public class MRCellGridPlot extends JobQueue
                 if (!dontDimPulseLines || entity.i < 0) {
                     // dim the pulse line that was drawn when the job arrived
                     cellGridView.drawPulseToTimeScale(entity.i, entity.timeScale,
-                        entity.j, entity.dimTo);
+                            entity.j, entity.dimTo);
                 }
 
                 // else, if we currently aren't supposed to dim pulse lines, yet
@@ -571,16 +555,16 @@ public class MRCellGridPlot extends JobQueue
             else if (name.startsWith("drawCell")) {
                 // dim the cell that was drawn when the job arrived
                 cellGridView.drawCell(
-                    (int)Math.rint(entity.i), (int)Math.rint(entity.j),
-                    entity.dimTo);
+                        (int) Math.rint(entity.i), (int) Math.rint(entity.j),
+                        entity.dimTo);
             }
 
             // else, if the job is a draw-string job
             else if (name.startsWith("drawString")) {
                 // dim the string that was drawn when the job arrived
                 cellGridView.drawString(
-                    (int)Math.rint(entity.i), (int)Math.rint(entity.j),
-                    name, entity.dimTo);
+                        (int) Math.rint(entity.i), (int) Math.rint(entity.j),
+                        name, entity.dimTo);
             }
         }
     }
@@ -588,8 +572,7 @@ public class MRCellGridPlot extends JobQueue
     /**
      * See parent method.
      */
-    public message out()
-    {
+    public message out() {
         // the parent class's outputting of finished jobs is not desired here
         return new message();
     }
@@ -597,20 +580,21 @@ public class MRCellGridPlot extends JobQueue
     /**
      * See parent method.
      */
-    public String stringState()
-    {
+    public String stringState() {
         String graphInfo =
-            "XRange,YRange : " + xRange + "," + yRange + "\n" +
-            "lastI,lastJ : " + lastI + "," + lastJ;
+                "XRange,YRange : " + xRange + "," + yRange + "\n" +
+                        "lastI,lastJ : " + lastI + "," + lastJ;
         return super.stringState() + "\n" + graphInfo;
     }
 
     /**
      * See member variable accessed.
      */
-    public MRCellGridView getCellGridView() {return cellGridView;}
-    public void setCellGridView(MRCellGridView view)
-    {
+    public MRCellGridView getCellGridView() {
+        return cellGridView;
+    }
+
+    public void setCellGridView(MRCellGridView view) {
         cellGridView = view;
         configureCellGridView();
     }

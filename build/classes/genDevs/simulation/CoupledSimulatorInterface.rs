@@ -1,2 +1,0 @@
-genDevs.simulation.CoupledSimulatorInterface
-genDevs.simulation.ActivityProtocolInterface

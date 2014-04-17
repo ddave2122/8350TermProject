@@ -5,28 +5,28 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package GenDevsTest;
 
-import GenCol.*;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
+import GenCol.entity;
+import GenCol.testGeneral;
+import genDevs.modeling.content;
+import genDevs.modeling.digraph;
+import genDevs.modeling.message;
+import genDevs.simulation.coordinator;
 
-public class TestHierarchy extends testGeneral
-{
+public class TestHierarchy extends testGeneral {
     protected coordinator cs;
     protected static digraph testDig;
-    public TestHierarchy(coordinator cs)
-    {
+
+    public TestHierarchy(coordinator cs) {
         super("GenDevsTest.testHierarchy");
         this.cs = cs;
     }
 
-    public static void main(String[ ] args)
-    {
+    public static void main(String[] args) {
         testDig = new HierarModel();
         coordinator cs = new coordinator(testDig);
         cs.initialize();

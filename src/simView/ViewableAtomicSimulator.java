@@ -9,22 +9,25 @@
 
 package simView;
 
-import java.util.*;
-import javax.swing.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import GenCol.*;
-import util.*;
+import GenCol.EntityInterface;
+import GenCol.Pair;
+import genDevs.modeling.ContentInterface;
+import genDevs.modeling.ContentIteratorInterface;
+import genDevs.modeling.content;
+import genDevs.modeling.devs;
+import genDevs.simulation.AtomicSimulatorUtil;
+import genDevs.simulation.atomicSimulator;
+import genDevs.simulation.coupledSimulator;
+import util.Util;
 
 
 /**
  * An atomic simulator that can interact with an associated viewable-atomic
  * and sim-view.
  *
- * @author  Jeff Mather
+ * @author Jeff Mather
  */
-public class ViewableAtomicSimulator extends coupledSimulator
-{
+public class ViewableAtomicSimulator extends coupledSimulator {
     /**
      * An object can report to this simulator the real-time-scale being used
      * during the simulation.
@@ -45,11 +48,10 @@ public class ViewableAtomicSimulator extends coupledSimulator
     /**
      * Constructor.
      *
-     * @param   viewableAtomic_     The atomic on which this simulator should
-     *                              operate.
+     * @param viewableAtomic_ The atomic on which this simulator should
+     *                        operate.
      */
-    public ViewableAtomicSimulator(ViewableAtomic viewableAtomic_)
-    {
+    public ViewableAtomicSimulator(ViewableAtomic viewableAtomic_) {
         super(viewableAtomic_);
 
         viewableAtomic = viewableAtomic_;
@@ -58,8 +60,7 @@ public class ViewableAtomicSimulator extends coupledSimulator
     /**
      * See parent method.
      */
-    protected void computeInputOutputHook1()
-    {
+    protected void computeInputOutputHook1() {
         if (listener == null) return;
 
         // for each content in the current output message
@@ -69,16 +70,15 @@ public class ViewableAtomicSimulator extends coupledSimulator
 
             // inform the listener that this content has been outputted
             // from this sim's atomic
-            listener.contentOutputted((content)content,
-                viewableAtomic, content.getPort().getName());
+            listener.contentOutputted((content) content,
+                    viewableAtomic, content.getPort().getName());
         }
     }
 
     /**
      * See parent method.
      */
-    protected void wrapDeltfuncHook2()
-    {
+    protected void wrapDeltfuncHook2() {
         // inform the atomic's view that the atomic's phase just changed
         AtomicView view = viewableAtomic.getAtomicView();
         if (view != null) {
@@ -89,21 +89,19 @@ public class ViewableAtomicSimulator extends coupledSimulator
     /**
      * See parent method.
      */
-    protected void simInjectHook1(double waitTime)
-    {
+    protected void simInjectHook1(double waitTime) {
         if (timeScaleKeeper == null) return;
 
         // sleep before injecting the input for a time detm'd by the given
         // wait time, as well as the time-scale
-        long timeToSleep = (long)(waitTime * timeScaleKeeper.getTimeScale());
+        long timeToSleep = (long) (waitTime * timeScaleKeeper.getTimeScale());
         Util.sleep(timeToSleep);
     }
 
     /**
      * See parent method.
      */
-    protected void simInjectHook2(double newTime)
-    {
+    protected void simInjectHook2(double newTime) {
         if (listener == null) return;
 
         listener.clockChanged(newTime);
@@ -112,12 +110,11 @@ public class ViewableAtomicSimulator extends coupledSimulator
     /**
      * See parent method.
      */
-    protected void simInjectHook3(String mess)
-    {
-    javax.swing.JPanel pan = new javax.swing.JPanel();
-    javax.swing.JOptionPane p = new javax.swing.JOptionPane();
-    p.showConfirmDialog(pan,
-        "Confluent events. The output is: "+mess,"",-1,2);
+    protected void simInjectHook3(String mess) {
+        javax.swing.JPanel pan = new javax.swing.JPanel();
+        javax.swing.JOptionPane p = new javax.swing.JOptionPane();
+        p.showConfirmDialog(pan,
+                "Confluent events. The output is: " + mess, "", -1, 2);
 //      ((ViewableAtomic)this.getModel()).myModelView.stepToBeTaken();
 //      this.sendMessages();
     }
@@ -126,70 +123,67 @@ public class ViewableAtomicSimulator extends coupledSimulator
      * See parent method.
      */
     protected void convertMsgHook1(content oldContent, Pair coupling,
-        content newContent, String sourceComponentName,
-        String destComponentName)
-    {
+                                   content newContent, String sourceComponentName,
+                                   String destComponentName) {
         if (listener == null) return;
 
         // detm the component at the end of the coupling the content
         // has just travelled
         EntityInterface component;
-        if(myParent!=null)  component = AtomicSimulatorUtil.getComponentWithName(
-            destComponentName, modelToSim, (atomicSimulator)myParent);
+        if (myParent != null) component = AtomicSimulatorUtil.getComponentWithName(
+                destComponentName, modelToSim, (atomicSimulator) myParent);
         else component = AtomicSimulatorUtil.getComponentWithName(
-            destComponentName, modelToSim, (atomicSimulator)myRootParent);
+                destComponentName, modelToSim, (atomicSimulator) myRootParent);
 
         // if the destination component is a viewable component
         if (component instanceof ViewableComponent) {
             // inform the model-view the content has crossed another coupling
             listener.couplingAddedToContentPath(oldContent,
-                (devs)component, (String)coupling.getValue(),
-                newContent, sourceComponentName);
+                    (devs) component, (String) coupling.getValue(),
+                    newContent, sourceComponentName);
         }
     }
 
     /**
      * An object interested in events generated by this simulator.
      */
-    static public interface Listener
-    {
+    static public interface Listener {
         /**
          * Informs this listener that the given content has been outputted
          * from the given source component on the given port.
          *
-         * @param   content         The content outputted.
-         * @param   source          The source component that outputted the
-         *                          content.
-         * @param   sourcePortName  The port on which the content was outputted.
+         * @param content        The content outputted.
+         * @param source         The source component that outputted the
+         *                       content.
+         * @param sourcePortName The port on which the content was outputted.
          */
         void contentOutputted(content content, devs source,
-            String sourcePortName);
+                              String sourcePortName);
 
         /**
          * Informs this listener that the given older-content traversed
          * a coupling to the given port on the given component to become
          * the given new-content.
          *
-         * @param   oldContent      The content object that existed before
-         *                          the traversal of the coupling.
-         * @param   destComponent   The destination component at the end
-         *                          of the coupling.
-         * @param   destPortName    The destination port at the end of the
-         *                          coupling.
-         * @param   newContent      The content object as it stands now
-         *                          after the traversal.
-         * @param   sourceComponentName
-         *                          The name of the component at the beginning
-         *                          of the coupling.
+         * @param oldContent          The content object that existed before
+         *                            the traversal of the coupling.
+         * @param destComponent       The destination component at the end
+         *                            of the coupling.
+         * @param destPortName        The destination port at the end of the
+         *                            coupling.
+         * @param newContent          The content object as it stands now
+         *                            after the traversal.
+         * @param sourceComponentName The name of the component at the beginning
+         *                            of the coupling.
          */
         void couplingAddedToContentPath(content oldContent,
-            devs destComponent, String destPortName,
-            content newContent, String sourceComponentName);
+                                        devs destComponent, String destPortName,
+                                        content newContent, String sourceComponentName);
 
         /**
          * Informs this listener that the simulation clock time has changed.
          *
-         * @param   newTime     The new value of the simulation clock.
+         * @param newTime The new value of the simulation clock.
          */
         void clockChanged(double newTime);
     }
@@ -197,21 +191,24 @@ public class ViewableAtomicSimulator extends coupledSimulator
     /**
      * See member variable accessed.
      */
-    public void setListener(Listener listener_) {listener = listener_;}
+    public void setListener(Listener listener_) {
+        listener = listener_;
+    }
 
     /**
      * An object which can report to this simulator the real-time-scale
      * being used during the simulation.
      */
-    static public interface TimeScaleKeeper
-    {
+    static public interface TimeScaleKeeper {
         double getTimeScale();
     }
 
     /**
      * See member variable accessed.
      */
-    public void setTimeScaleKeeper(TimeScaleKeeper keeper) {timeScaleKeeper = keeper;}
+    public void setTimeScaleKeeper(TimeScaleKeeper keeper) {
+        timeScaleKeeper = keeper;
+    }
 }
 
 

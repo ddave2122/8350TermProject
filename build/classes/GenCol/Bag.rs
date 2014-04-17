@@ -1,2 +1,0 @@
-GenCol.Bag
-GenCol.BagIterator

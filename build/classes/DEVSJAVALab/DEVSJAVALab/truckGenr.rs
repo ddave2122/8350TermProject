@@ -1,1 +1,0 @@
-DEVSJAVALab.truckGenr

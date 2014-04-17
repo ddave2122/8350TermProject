@@ -5,20 +5,17 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package GenDevsTest;
 
-import java.awt.*;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import simView.*;
+import genDevs.simulation.coordinator;
+import simView.ViewableDigraph;
 
-public class TwoGenr extends ViewableDigraph
-{
-    public TwoGenr()
-    {
+import java.awt.*;
+
+public class TwoGenr extends ViewableDigraph {
+    public TwoGenr() {
         super("TwoGenr");
 
         // add a digraph, to make this hierarchical
@@ -39,17 +36,14 @@ public class TwoGenr extends ViewableDigraph
         addCoupling(second, "out", first, "stop");
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         coordinator c = new coordinator(new TwoGenr());
         c.initialize();
         c.simulate(1000000);
     }
 
-    protected class SubTwoGenr extends ViewableDigraph
-    {
-        public SubTwoGenr()
-        {
+    protected class SubTwoGenr extends ViewableDigraph {
+        public SubTwoGenr() {
             super("SubTwoGenr");
 
             preferredSize = new Dimension(472, 90);

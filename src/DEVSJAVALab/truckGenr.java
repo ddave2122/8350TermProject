@@ -10,69 +10,62 @@
 
 package DEVSJAVALab;
 
-import simView.*;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
+import simView.ViewableAtomic;
+import statistics.rand;
+
+public class truckGenr extends ViewableAtomic {
 
 
-import java.lang.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import GenCol.*;
-import util.*;
-import statistics.*;
+    protected double int_gen_time;
+    protected int count;
+    protected rand r;
 
-public class truckGenr extends ViewableAtomic{
+    public truckGenr() {
+        this("truckGenr", 30);
+    }
 
+    public truckGenr(String name, double period) {
+        super(name);
+        addInport("in");
+        addOutport("out");
 
-  protected double int_gen_time;
-  protected int count;
-  protected rand r;
+        int_gen_time = period;
+    }
 
-  public truckGenr() {this("truckGenr", 30);}
-
-public truckGenr(String name,double period){
-   super(name);
-   addInport("in");
-   addOutport("out");
-
-   int_gen_time = period ;
-}
-
-public void initialize(){
-   holdIn("active", 2);
-   r = new rand(2);
-   count = 0;
-}
+    public void initialize() {
+        holdIn("active", 2);
+        r = new rand(2);
+        count = 0;
+    }
 
 
-public void  deltext(double e,message x)
-{
-Continue(e);
+    public void deltext(double e, message x) {
+        Continue(e);
 
-}
+    }
 
 
-public void  deltint( )
-{
+    public void deltint() {
 
-if(phaseIs("active")){
-   count = count +1;
-   holdIn("active",20+r.uniform(int_gen_time));
-}
-else passivate();
-}
+        if (phaseIs("active")) {
+            count = count + 1;
+            holdIn("active", 20 + r.uniform(int_gen_time));
+        } else passivate();
+    }
 
-public message  out( )
-{
+    public message out() {
 
 //System.out.println(name+" out count "+count);
 
-   message  m = new message();
+        message m = new message();
 //   content con = makeContent("out", new entity("truck" + count));
-   content con = makeContent("out", new vehicleEntity("truck" + count, 10+r.uniform(30), 100+r.uniform(100), 1));
-   m.add(con);
+        content con = makeContent("out", new vehicleEntity("truck" + count, 10 + r.uniform(30), 100 + r.uniform(100), 1));
+        m.add(con);
 
-  return m;
-}
+        return m;
+    }
 
 
 }

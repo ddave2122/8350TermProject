@@ -5,28 +5,27 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package GenDevsTest;
 
-import GenCol.*;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
+import GenCol.entity;
+import GenCol.testGeneral;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
+import genDevs.simulation.atomicSimulator;
 
-public class TestAtomic extends testGeneral
-{
+public class TestAtomic extends testGeneral {
     protected atomicSimulator as;
     protected static Genr g;
-    public TestAtomic(atomicSimulator as)
-    {
+
+    public TestAtomic(atomicSimulator as) {
         super("GenDevsTest.testAtomic");
         this.as = as;
     }
 
-    public static void main(String[ ] args)
-    {
+    public static void main(String[] args) {
         //g = new genr();
         g = new NewGenr();
         atomicSimulator as = new atomicSimulator(g);
@@ -34,8 +33,7 @@ public class TestAtomic extends testGeneral
         t.applyTests("simulation of genr is correct");
     }
 
-    public boolean testInitial()
-    {
+    public boolean testInitial() {
         description = "initialization";
         precondition = Boolean.TRUE;
         as.initialize();
@@ -43,8 +41,7 @@ public class TestAtomic extends testGeneral
         return ts.equals(g.toString());
     }
 
-    public boolean testInjectStart()
-    {
+    public boolean testInjectStart() {
         description = "injection of Start induces phase active";
         String ts = "phase :" + "passive" + " sigma : " + "Infinity";
         precondition = new Boolean(ts.equals(g.toString()));
@@ -52,16 +49,14 @@ public class TestAtomic extends testGeneral
         return g.toString().startsWith("phase :" + "active");
     }
 
-    public boolean testSimulation()
-    {
+    public boolean testSimulation() {
         description = "simulation retains phase active";
         precondition = new Boolean(g.toString().startsWith("phase :" + "active"));
         as.simulate(3);
         return g.toString().startsWith("phase :" + "active");
     }
 
-    public boolean testInjectStop()
-    {
+    public boolean testInjectStop() {
         description = "injection of Stop induces phase passive";
         String ts = "phase :" + "passive" + " sigma : " + "Infinity";
         precondition = new Boolean(g.toString().startsWith("phase :" + "active"));
@@ -69,8 +64,7 @@ public class TestAtomic extends testGeneral
         return g.toString().startsWith("phase :" + "passive");
     }
 
-    public boolean testInjectStopStart()
-    {
+    public boolean testInjectStopStart() {
         description = "simultaneous Stop and Start induces phase active";
         String ts = "phase :" + "passive" + " sigma : " + "Infinity";
         precondition = Boolean.TRUE;

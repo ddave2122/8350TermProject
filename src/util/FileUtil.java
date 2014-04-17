@@ -9,12 +9,13 @@
 
 package util;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
-public class FileUtil
-{
-    static public String getContentsAsString(File file)
-    {
+public class FileUtil {
+    static public String getContentsAsString(File file) {
         try {
             StringBuffer buffer = new StringBuffer();
             BufferedReader in = new BufferedReader(new FileReader(file));
@@ -26,6 +27,9 @@ public class FileUtil
             }
 
             return buffer.toString();
-        } catch (IOException e) {e.printStackTrace(); return null;}
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

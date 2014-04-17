@@ -8,35 +8,20 @@
  */
 package simView;
 
-import java.awt.*;
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import genDevs.simulation.realTime.*;
-import util.*;
-
-
 public class LevelView {
 
-  ViewableDigraph digraph;
-  SimView sv;
+    ViewableDigraph digraph;
+    SimView sv;
 
-  public LevelView(ViewableDigraph digraph_) {
-    this.digraph = digraph_;
-    digraph.setBlackBox(false);
-    String packName = digraph_.getClass().getPackage().getName();
-    String className = digraph_.getClass().getName();
-    System.out.println("New window  0pened. Iminside the levelView class");
-    sv = new SimView(digraph, packName,className, false,0);//false indiacates the explosion of the digraph
-  }
+    public LevelView(ViewableDigraph digraph_) {
+        this.digraph = digraph_;
+        digraph.setBlackBox(false);
+        String packName = digraph_.getClass().getPackage().getName();
+        String className = digraph_.getClass().getName();
+        System.out.println("New window  0pened. Iminside the levelView class");
+        sv = new SimView(digraph, packName, className, false, 0);//false indiacates the explosion of the digraph
+    }
 }
-
-
-
-
-
-
 
 
 //}//end LevelView

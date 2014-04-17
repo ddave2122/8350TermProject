@@ -9,25 +9,24 @@
 
 package simView;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
+import util.HtmlUtil;
+import util.StringUtil;
+import util.s;
+
 import javax.swing.*;
-import javax.swing.event.*;
-import GenCol.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import util.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A view meant to depict aspects of an atomic devs component, such as
  * its name, its state, and its ports.
  *
- * @author      Jeff Mather
+ * @author Jeff Mather
  */
-public class AtomicView extends JPanel implements ComponentView
-{
+public class AtomicView extends JPanel implements ComponentView {
     /**
      * A mapping of port names to port boxes that are associated with this view.
      */
@@ -58,12 +57,11 @@ public class AtomicView extends JPanel implements ComponentView
     /**
      * Constructs a view on the given atomic component.
      *
-     * @param   atomic_         The component to be viewed.
-     * @param   modelView_      The sim-view model-view that will contain this
-     *                          view.
+     * @param atomic_    The component to be viewed.
+     * @param modelView_ The sim-view model-view that will contain this
+     *                   view.
      */
-    public AtomicView(ViewableAtomic atomic_, SimView.ModelView modelView_)
-    {
+    public AtomicView(ViewableAtomic atomic_, SimView.ModelView modelView_) {
         atomic = atomic_;
         modelView = modelView_;
 
@@ -80,7 +78,7 @@ public class AtomicView extends JPanel implements ComponentView
 //        atomic.printInports();
 
         ComponentViewUtil.createPortBoxes(panel, atomic.getInportNames(),
-            true, true, nameToPortBox, atomic, modelView, null);
+                true, true, nameToPortBox, atomic, modelView, null);
 
         // add the component box
         compBox = new CompBox();
@@ -97,41 +95,41 @@ public class AtomicView extends JPanel implements ComponentView
 
 
         ComponentViewUtil.createPortBoxes(panel, atomic.getOutportNames(),
-            false, false, nameToPortBox, atomic, modelView, null);
+                false, false, nameToPortBox, atomic, modelView, null);
     }
 
-    public void updateAtomicView(){
-      setOpaque(false);
+    public void updateAtomicView() {
+        setOpaque(false);
 
-      setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-      // add the inports panel
-      JPanel panel = inportsPanel = new JPanel();
-      panel.setOpaque(false);
-      panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-      add(panel);
+        // add the inports panel
+        JPanel panel = inportsPanel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        add(panel);
 //        System.out.println("Printing the inports :"+atomic.getName());
 //        atomic.printInports();
 
-      ComponentViewUtil.createPortBoxes(panel, atomic.getInportNames(),
-                                        true, true, nameToPortBox, atomic, modelView, null);
+        ComponentViewUtil.createPortBoxes(panel, atomic.getInportNames(),
+                true, true, nameToPortBox, atomic, modelView, null);
 
-      // add the component box
+        // add the component box
 //      compBox = new CompBox();
-      add(compBox);
+        add(compBox);
 
-      // add the outports panel
-      panel = outportsPanel = new JPanel();
-      panel.setOpaque(false);
-      panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-      add(panel);
+        // add the outports panel
+        panel = outportsPanel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        add(panel);
 
 //        System.out.println("Printing the OUTports :"+atomic.getName());
 //        atomic.printOutports();
 
 
-      ComponentViewUtil.createPortBoxes(panel, atomic.getOutportNames(),
-                                        false, false, nameToPortBox, atomic, modelView, null);
+        ComponentViewUtil.createPortBoxes(panel, atomic.getOutportNames(),
+                false, false, nameToPortBox, atomic, modelView, null);
 
     }
 
@@ -139,8 +137,7 @@ public class AtomicView extends JPanel implements ComponentView
      * The main body portion of this view, which displays the name and state
      * of the associated atomic component.
      */
-    protected class CompBox extends JPanel
-    {
+    protected class CompBox extends JPanel {
         /**
          * The font used when drawing the atomic's name, along with the
          * font's associated metrics object.
@@ -163,71 +160,70 @@ public class AtomicView extends JPanel implements ComponentView
         /**
          * Constructor.
          */
-        public CompBox()
-        {
-          // this ensures my tooltip will show up right away even if the mouse
-          // starts over me when I'm first shown
-          setToolTipText("");
+        public CompBox() {
+            // this ensures my tooltip will show up right away even if the mouse
+            // starts over me when I'm first shown
+            setToolTipText("");
 
-          // when the mouse cursor enters this comp-box
-          addMouseListener(new MouseAdapter() {
-              public void mouseEntered(MouseEvent e) {
-                  updateTooltip();
-              }
-              public void mouseClicked(MouseEvent e){
-                if(e.isControlDown()){
-                  s.s("_________________________________________________________________________");
-
-                  System.out.println("Control is pressed along with mouse on Atomic element ");
-                    ViewableDigraph parent = (ViewableDigraph)atomic.getParent();
-                    try{
-                      //System.out.println("The parent inside ViewD is : "+parent.getName());
-                      parent.addNewModel();
-                  }
-                  catch(NullPointerException ex){
-                    JOptionPane.showMessageDialog(modelView.getSim().mainFrame,
-                        "That does not appear to be a valid add operation.");
-                   // ex.printStackTrace();
-                    return;
-                    }
-                  }
-                if(e.isAltDown()){
-                  s.s("_________________________________________________________________________");
-                  System.out.println("Alt is pressed along with mouse on Atomic element ");
-                    ViewableDigraph parent = (ViewableDigraph)atomic.getParent();
-                    try{
-                      //System.out.println("The parent inside ViewD is : "+parent.getName());
-                      s.s("U are trying to remove: "+atomic.getName());
-                      parent.removeOldModel(atomic.getName());
-                  }
-                  catch(NullPointerException ex){
-                    JOptionPane.showMessageDialog(modelView.getSim().mainFrame,
-                        "That does not appear to be a valid Remove operation.");
-                   // ex.printStackTrace();
-                    return;
-                    }
+            // when the mouse cursor enters this comp-box
+            addMouseListener(new MouseAdapter() {
+                public void mouseEntered(MouseEvent e) {
+                    updateTooltip();
                 }
 
-              }
-          });
+                public void mouseClicked(MouseEvent e) {
+                    if (e.isControlDown()) {
+                        s.s("_________________________________________________________________________");
 
-          // add a drag-listener
-          DragViewListener listener = new DragViewListener(
-              AtomicView.this, modelView);
-          addMouseListener(listener);
+                        System.out.println("Control is pressed along with mouse on Atomic element ");
+                        ViewableDigraph parent = (ViewableDigraph) atomic.getParent();
+                        try {
+                            //System.out.println("The parent inside ViewD is : "+parent.getName());
+                            parent.addNewModel();
+                        } catch (NullPointerException ex) {
+                            JOptionPane.showMessageDialog(modelView.getSim().mainFrame,
+                                    "That does not appear to be a valid add operation.");
+                            // ex.printStackTrace();
+                            return;
+                        }
+                    }
+                    if (e.isAltDown()) {
+                        s.s("_________________________________________________________________________");
+                        System.out.println("Alt is pressed along with mouse on Atomic element ");
+                        ViewableDigraph parent = (ViewableDigraph) atomic.getParent();
+                        try {
+                            //System.out.println("The parent inside ViewD is : "+parent.getName());
+                            s.s("U are trying to remove: " + atomic.getName());
+                            parent.removeOldModel(atomic.getName());
+                        } catch (NullPointerException ex) {
+                            JOptionPane.showMessageDialog(modelView.getSim().mainFrame,
+                                    "That does not appear to be a valid Remove operation.");
+                            // ex.printStackTrace();
+                            return;
+                        }
+                    }
+
+                }
+            });
+
+            // add a drag-listener
+            DragViewListener listener = new DragViewListener(
+                    AtomicView.this, modelView);
+            addMouseListener(listener);
             addMouseMotionListener(listener);
         }
 
         /**
          * Limits this box's size to its preferred size.
          */
-        public Dimension getMaximumSize() {return getPreferredSize();}
+        public Dimension getMaximumSize() {
+            return getPreferredSize();
+        }
 
         /**
          * Returns how big this box should be sized.
          */
-        public Dimension getPreferredSize()
-        {
+        public Dimension getPreferredSize() {
             Dimension size = new Dimension();
 
             // the preferred with is the maximum of the string width of the
@@ -238,8 +234,8 @@ public class AtomicView extends JPanel implements ComponentView
             // phase name text height, and the height needed to display
             // the in- or out-ports names when arranged vertically
             size.height = Math.max((phaseFontMetrics.getAscent() + 2) * 3,
-                Math.max(atomic.getNumInports(), atomic.getNumOutports()) *
-                PortBox.nameFontAscent * 3 / 2);
+                    Math.max(atomic.getNumInports(), atomic.getNumOutports()) *
+                            PortBox.nameFontAscent * 3 / 2);
 
             return size;
         }
@@ -248,8 +244,7 @@ public class AtomicView extends JPanel implements ComponentView
          * Draws the name, phase, sigma, etc. of the associated atomic
          * component in this box.
          */
-        public void paint(Graphics g)
-        {
+        public void paint(Graphics g) {
             // fill my background
             g.setColor(atomic.getBackgroundColor());
             g.fillRect(0, 0, getWidth(), getHeight());
@@ -258,8 +253,8 @@ public class AtomicView extends JPanel implements ComponentView
             g.setColor(Color.black);
             g.setFont(nameFont);
             g.drawString(atomic.getName(),
-                getWidth() / 2 - nameWidth / 2,
-                nameFontMetrics.getAscent() + 2);
+                    getWidth() / 2 - nameWidth / 2,
+                    nameFontMetrics.getAscent() + 2);
 
             // draw my atomic's phase
             g.setColor(Color.blue);
@@ -267,45 +262,50 @@ public class AtomicView extends JPanel implements ComponentView
             String phase = atomic.getFormattedPhase();
             if (phase == null) phase = "no phase";
             g.drawString(phase,
-                getWidth() / 2 - phaseFontMetrics.stringWidth(phase) / 2,
-                getHeight() / 2 + phaseFontMetrics.getAscent() / 2 - 1);
+                    getWidth() / 2 - phaseFontMetrics.stringWidth(phase) / 2,
+                    getHeight() / 2 + phaseFontMetrics.getAscent() / 2 - 1);
 
             // draw my atomic's sigma
             g.setColor(Color.black);
             g.setFont(nameFont);
             String sigma = "\u03C3 = " + atomic.getFormattedSigma();
             g.drawString(sigma,
-                getWidth() / 2 - nameFontMetrics.stringWidth(sigma) / 2,
-                getHeight() - 4);
-         }
+                    getWidth() / 2 - nameFontMetrics.stringWidth(sigma) / 2,
+                    getHeight() - 4);
+        }
     }
 
     /**
      * Informs this view that the phase of the associated atomic component
      * has changed.
      */
-    public void phaseChanged() {repaint();}
+    public void phaseChanged() {
+        repaint();
+    }
 
     /**
      * Informs this view that the sigma of the associated atomic component
      * has changed.
      */
-    public void sigmaChanged() {repaint();}
+    public void sigmaChanged() {
+        repaint();
+    }
 
     /**
      * Limits the size of this atomic view to its preferred size.
      */
-    public Dimension getMaximumSize() {return getPreferredSize();}
+    public Dimension getMaximumSize() {
+        return getPreferredSize();
+    }
 
     /**
      * Returns the preferred size of this atomic view's comp-box, plus
      * added width to hold its inports and outports panels.
      */
-    public Dimension getPreferredSize()
-    {
+    public Dimension getPreferredSize() {
         Dimension size = compBox.getPreferredSize();
         size.width += inportsPanel.getPreferredSize().width +
-            outportsPanel.getPreferredSize().width;
+                outportsPanel.getPreferredSize().width;
         return size;
     }
 
@@ -313,8 +313,7 @@ public class AtomicView extends JPanel implements ComponentView
      * Updates this atomic view's tooltip text with the current state from
      * the atomic.
      */
-    protected void updateTooltip()
-    {
+    protected void updateTooltip() {
         StringBuffer text = new StringBuffer();
 
         // add the opening html
@@ -333,34 +332,41 @@ public class AtomicView extends JPanel implements ComponentView
      * Returns the offset within this atomic view of the lollipop circle
      * of the port-box associated with the port of the given name.
      *
-     * @param   portName        The port whose port-box pollipop location
-     *                          should be returned.
-     * @return                  The offset of the port-box's lollipop within
-     *                          this atomic view.
+     * @param portName The port whose port-box pollipop location
+     *                 should be returned.
+     * @return The offset of the port-box's lollipop within
+     *         this atomic view.
      */
-    public Point getPortLocation(String portName)
-    {
+    public Point getPortLocation(String portName) {
         return ComponentViewUtil.getPortLocation(this, portName, nameToPortBox);
     }
 
     /**
      * Injects all test inputs on their associated inports.
      */
-    public void injectAll() {ComponentViewUtil.injectAll(this);}
+    public void injectAll() {
+        ComponentViewUtil.injectAll(this);
+    }
 
     /**
      * Returns where this view would like its upper-left corner to be
      * positioned, relative to its parent component.
      */
-    public Point getPreferredLocation() {return atomic.getPreferredLocation();}
+    public Point getPreferredLocation() {
+        return atomic.getPreferredLocation();
+    }
 
     /**
      * Returns the viewable devs component on which this is a view.
      */
-    public ViewableComponent getViewableComponent() {return atomic;}
+    public ViewableComponent getViewableComponent() {
+        return atomic;
+    }
 
     /**
      * Returns the viewable atomic on which this is a view.
      */
-    public ViewableAtomic getAtomic() {return atomic;}
+    public ViewableAtomic getAtomic() {
+        return atomic;
+    }
 }

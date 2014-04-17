@@ -1,24 +1,21 @@
 package genDevs.simulation.distributed;
 
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
-import util.*;
+import GenCol.entity;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
 
 /**
  * Utility methods employed by the classes in this package.
  */
-public class Util
-{
+public class Util {
     /**
      * Builds a message from the port and value entry pairs in the given
      * string.
      *
-     * @param   string      The string to parse for port-value entry pairs.
-     * @return              A message embodying the port-value pairs.
+     * @param string The string to parse for port-value entry pairs.
+     * @return A message embodying the port-value pairs.
      */
-    static public message interpret(String string)
-    {
+    static public message interpret(String string) {
         // if the given string is null, or signals there is nothing to
         // interpret, return an empty message
         if (string == null || string.startsWith("none")) return new message();
@@ -34,18 +31,18 @@ public class Util
             final int portLabelLength = portLabel.length();
             final int valueLabelLength = valueLabel.length();
             int portIndex = (searchIndex == 0) ?
-                string.indexOf(portLabel, searchIndex) : searchIndex;
+                    string.indexOf(portLabel, searchIndex) : searchIndex;
             int valueIndex = string.indexOf(valueLabel, searchIndex);
 
             // extract the next port entry from the string
             String portString = string.substring(portIndex + portLabelLength,
-                valueIndex).trim();
+                    valueIndex).trim();
 
             // extract the next value entry from the string
             searchIndex = valueIndex + valueLabelLength;
             int nextPortIndex = string.indexOf(portLabel, searchIndex);
             String valueString = string.substring(searchIndex,
-                (nextPortIndex != -1) ? nextPortIndex : string.length()).trim();
+                    (nextPortIndex != -1) ? nextPortIndex : string.length()).trim();
             searchIndex = nextPortIndex;
 
             // add a new content containing the port and value entries

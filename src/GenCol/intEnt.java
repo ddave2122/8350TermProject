@@ -9,47 +9,50 @@
 
 package GenCol;
 
-import java.lang.*;
-
 public class intEnt extends entity {
 
-	int v;
+    int v;
 
-public intEnt(int t)
-{
-  v = t;
+    public intEnt(int t) {
+        v = t;
 
-}
+    }
 
-public boolean greaterThan(entity ent){
-    return (this.v > ((intEnt)  ent).getv());
-}
+    public boolean greaterThan(entity ent) {
+        return (this.v > ((intEnt) ent).getv());
+    }
 
-public void setv(int t){v = t;}
+    public void setv(int t) {
+        v = t;
+    }
 
-public int getv(){return v;}
+    public int getv() {
+        return v;
+    }
 
-public void print(){System.out.print( v);}
+    public void print() {
+        System.out.print(v);
+    }
 
-public boolean equal(entity ent){
+    public boolean equal(entity ent) {
 //System.out.println(v + " " + ((intEnt)ent).getv());
-    return this.v ==((intEnt)  ent).getv();
-}
+        return this.v == ((intEnt) ent).getv();
+    }
 
-public boolean equals(Object ent){ //needed for Relation
-    return  equal((entity)ent);
-}
+    public boolean equals(Object ent) { //needed for Relation
+        return equal((entity) ent);
+    }
 
-public entity  copy(){
-     intEnt  ip = new intEnt(getv());
-     return (entity)ip;
-}
+    public entity copy() {
+        intEnt ip = new intEnt(getv());
+        return (entity) ip;
+    }
 
-public String getName(){
-     return Integer.toString(v);
-}
+    public String getName() {
+        return Integer.toString(v);
+    }
 
-public int hashCode(){  //bpz needed to make work with Collections
-return v;
-}
+    public int hashCode() {  //bpz needed to make work with Collections
+        return v;
+    }
 }

@@ -1,7 +1,6 @@
 package genDevs.modeling;
 
-import GenCol.*;
-import java.util.*;
+import java.util.Collection;
 
-interface PortsInterface extends Collection{
+interface PortsInterface extends Collection {
 }

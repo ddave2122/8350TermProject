@@ -1,2 +1,0 @@
-GenCol.testCollection
-GenCol.testList

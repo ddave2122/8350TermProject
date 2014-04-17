@@ -5,26 +5,27 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package GenDevsTest;
 
-import java.awt.Color;
-import GenCol.*;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import simView.*;
+import GenCol.entity;
+import genDevs.modeling.ContentIteratorInterface;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
+import genDevs.modeling.port;
+import simView.ViewableAtomic;
 
-public class RegisterGenr extends ViewableAtomic
-{
+import java.util.Random;
+
+public class RegisterGenr extends ViewableAtomic {
     protected int totalNum;
     protected double interval, remainInterval, meanInter;
     protected Random r;
     private int count;
-    public RegisterGenr(String nm, long seed, int totalNum, double interval)
-    {
+
+    public RegisterGenr(String nm, long seed, int totalNum, double interval) {
         super("genr" + nm); //need unique name for coupling to work
         r = new Random(seed);
         this.totalNum = totalNum;
@@ -43,38 +44,33 @@ public class RegisterGenr extends ViewableAtomic
         addTestInput("none", new entity(), 10);
     }
 
-    public RegisterGenr()
-    {
+    public RegisterGenr() {
         this("genr", 1, 200, 30);
     }
 
-    public double expon()
-    {
+    public double expon() {
         double u = r.nextDouble();
         return -meanInter * Math.log(u);
     }
 
-    public double exponWithin()
-    {
+    public double exponWithin() {
         double projected = 0;
         while (true) {
             projected = expon();
-            if (projected <= remainInterval)break;
+            if (projected <= remainInterval) break;
         }
         remainInterval -= projected;
         return projected;
     }
 
-    public void initialize()
-    {
+    public void initialize() {
         super.initialize();
         count = 0;
         //holdIn("active",exponWithin());
         passivate();
     }
 
-    public void deltext(double e, message x)
-    {
+    public void deltext(double e, message x) {
         Continue(e);
         for (int i = 0; i < x.getLength(); i++)
             if (messageOnPort(x, "stop", i)) {
@@ -93,8 +89,7 @@ public class RegisterGenr extends ViewableAtomic
         }
     }
 
-    public void deltint()
-    {
+    public void deltint() {
         count++;
         if (phaseIs("active")) {
             if (count < totalNum)
@@ -103,8 +98,7 @@ public class RegisterGenr extends ViewableAtomic
         } else passivate();
     }
 
-    public message out()
-    {
+    public message out() {
         message m = new message();
         m.add(makeContent("out", new entity("job" + count)));
         if (phaseIs("final"))
@@ -112,17 +106,15 @@ public class RegisterGenr extends ViewableAtomic
         return m;
     }
 
-    public void showState()
-    {
+    public void showState() {
         super.showState();
         System.out.println(stringState());
     }
 
-    public String stringState()
-    {
+    public String stringState() {
         return "\n" + "count :" + count
-            + "\n" + "totalNum :" + totalNum
-            + "\n" + "interval :" + interval
-            + "\n" + " meanInter :" + meanInter;
+                + "\n" + "totalNum :" + totalNum
+                + "\n" + "interval :" + interval
+                + "\n" + " meanInter :" + meanInter;
     }
 }

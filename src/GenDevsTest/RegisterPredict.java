@@ -5,53 +5,46 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package GenDevsTest;
 
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import java.awt.Color;
-import GenCol.*;
-import java.util.*;
-import javax.swing.*;
-import simView.*;
+import GenCol.entity;
+import genDevs.modeling.message;
+import simView.ViewableAtomic;
 
-public class RegisterPredict extends ViewableAtomic
-{
+import javax.swing.*;
+
+public class RegisterPredict extends ViewableAtomic {
     protected double interval;
     protected int latestPrediction;
-    public RegisterPredict()
-    {
+
+    public RegisterPredict() {
         this("registerPredict", 100);
         addTestInput("in", new entity("pulse"), 0);
         addTestInput("in", new entity("pulse"), 1);
         addTestInput("none", new entity("pulse"), 10);
     }
 
-    public RegisterPredict(String name, double interval)
-    {
+    public RegisterPredict(String name, double interval) {
         super(name);
         this.interval = interval;
         addInport("in");
         addOutport("out");
     }
 
-    public void reset()
-    {
+    public void reset() {
         latestPrediction = 0;
         passivateIn("receptive");
     }
 
-    public void initialize()
-    {
+    public void initialize() {
         reset();
         super.initialize();
     }
 
-    public void  deltext(double e, message x)
-    {
+    public void deltext(double e, message x) {
         Continue(e);
         if (phaseIs("receptive")) {
             for (int i = 0; i < x.getLength(); i++)
@@ -59,8 +52,8 @@ public class RegisterPredict extends ViewableAtomic
                     entity ent = x.getValOnPort("in", i);
                     latestPrediction = Integer.parseInt(ent.getName()); //
                     int response = JOptionPane.showConfirmDialog
-                        (null, "prediction is " + latestPrediction + " continue?", "We have a prediction:",
-                            JOptionPane.YES_NO_OPTION);
+                            (null, "prediction is " + latestPrediction + " continue?", "We have a prediction:",
+                                    JOptionPane.YES_NO_OPTION);
                     if (response != 0) {
                         System.out.println("simulation terminated at your request");
                         //dispose();
@@ -68,30 +61,26 @@ public class RegisterPredict extends ViewableAtomic
                     }
                     passivateIn("receptive");
                 }
-        } else  for (int i = 0; i < x.getLength(); i++)
-                if (messageOnPort(x, "reset", i))
-                    initialize();
+        } else for (int i = 0; i < x.getLength(); i++)
+            if (messageOnPort(x, "reset", i))
+                initialize();
     }
 
-    public void  deltint()
-    {
+    public void deltint() {
         passivate();
     }
 
-    public message    out()
-    {
-        message   m = new message();
+    public message out() {
+        message m = new message();
         return m;
     }
 
-    public void showState()
-    {
+    public void showState() {
         super.showState();
         System.out.println(stringState());
     }
 
-    public String stringState()
-    {
+    public String stringState() {
         return "\n" + "latestPrediction :" + latestPrediction;
     }
 }

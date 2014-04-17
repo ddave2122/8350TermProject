@@ -5,64 +5,55 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package SimpArc;
 
-import simView.*;
+public class binaryCounter extends siso {
+    double count;
 
-import java.lang.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import GenCol.*;
+    public binaryCounter() {
+        super("binaryCounter");
+        AddTestPortValue(1);
+    }
 
-public class binaryCounter extends siso{
-  double count;
+    public binaryCounter(String name) {
+        super(name);
+    }
 
-  public binaryCounter(){
-    super("binaryCounter");
-    AddTestPortValue(1);
-}
-
-public binaryCounter(String name){
-   super(name);
-}
-
-public void initialize(){
-     count  = 0;
-     super.initialize();
- }
+    public void initialize() {
+        count = 0;
+        super.initialize();
+    }
 
 
-public void  Deltext(double e,double input){
- Continue(e);
-    count = count + (int)input;
-    if (count >= 2){
-    count = 0;
-    holdIn("active",10);
-}
+    public void Deltext(double e, double input) {
+        Continue(e);
+        count = count + (int) input;
+        if (count >= 2) {
+            count = 0;
+            holdIn("active", 10);
+        }
 
-}
-
-
-
-public void  deltint( ){
-passivate();
-}
+    }
 
 
-public double sisoOut(){
-    if (phaseIs("active"))
-       return 1;
-     else return 0;
-}
+    public void deltint() {
+        passivate();
+    }
 
- public void showState(){
-  super.showState();
-System.out.println("count: " + count);
- }
 
+    public double sisoOut() {
+        if (phaseIs("active"))
+            return 1;
+        else return 0;
+    }
+
+    public void showState() {
+        super.showState();
+        System.out.println("count: " + count);
+    }
 
 
 }

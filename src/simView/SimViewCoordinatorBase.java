@@ -5,28 +5,26 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package simView;
 
-import genDevs.modeling.*;
-import genDevs.simulation.*;
+import genDevs.modeling.IOBasicDevs;
+import genDevs.simulation.coupledSimulator;
 
 /**
- * Houses implementation common to SimViewCoordinator and 
+ * Houses implementation common to SimViewCoordinator and
  * SimViewCoupledCoordinator.
  */
-public class SimViewCoordinatorBase
-{
+public class SimViewCoordinatorBase {
     /**
      * Tries to attach the given listener to the given simulator.
      *
-     * @param   listener    The listener to attach.
-     * @param   simulator   The simulator to which to attach the listener.
+     * @param listener  The listener to attach.
+     * @param simulator The simulator to which to attach the listener.
      */
     protected void setListenerIntoSimulator(Object listener,
-        coupledSimulator simulator)
-    {
+                                            coupledSimulator simulator) {
         if (listener == null) return;
 
         // if the created simulator is a viewable-atomic-simulator
@@ -35,15 +33,15 @@ public class SimViewCoordinatorBase
             // created simulator
             if (listener instanceof ViewableAtomicSimulator.Listener) {
                 // pass the listener to the simulator
-                ((ViewableAtomicSimulator)simulator).setListener(
-                    (ViewableAtomicSimulator.Listener)listener);
+                ((ViewableAtomicSimulator) simulator).setListener(
+                        (ViewableAtomicSimulator.Listener) listener);
             }
 
             // if the listener is also a time-scale-keeper
             if (listener instanceof ViewableAtomicSimulator.TimeScaleKeeper) {
                 // pass the listener to the simulator
-                ((ViewableAtomicSimulator)simulator).setTimeScaleKeeper(
-                    (ViewableAtomicSimulator.TimeScaleKeeper)listener);
+                ((ViewableAtomicSimulator) simulator).setTimeScaleKeeper(
+                        (ViewableAtomicSimulator.TimeScaleKeeper) listener);
             }
         }
     }
@@ -51,14 +49,13 @@ public class SimViewCoordinatorBase
     /**
      * Creates a simulator for the given devs component.
      *
-     * @param   devs    The component for which to create a simulator.
-     */    
-    protected coupledSimulator createSimulator(IOBasicDevs devs)
-    {
+     * @param devs The component for which to create a simulator.
+     */
+    protected coupledSimulator createSimulator(IOBasicDevs devs) {
         // if the given component is a viewable-atomic
         if (devs instanceof ViewableAtomic) {
             // create a viewable-atomic-simulator for it
-            return new ViewableAtomicSimulator((ViewableAtomic)devs);
+            return new ViewableAtomicSimulator((ViewableAtomic) devs);
         }
 
         return null;

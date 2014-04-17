@@ -9,15 +9,14 @@
 
 package GenDevsTest;
 
-import genDevs.modeling.*;
-import genDevs.plots.*;
-import genDevs.simulation.realTime.*;
-import simView.*;
+import genDevs.modeling.atomic;
+import genDevs.modeling.digraph;
+import genDevs.plots.JobQueue;
+import genDevs.simulation.realTime.TunableCoordinator;
+import simView.ViewableDigraph;
 
-public class OrderedDigraphTest extends ViewableDigraph
-{
-    public OrderedDigraphTest()
-    {
+public class OrderedDigraphTest extends ViewableDigraph {
+    public OrderedDigraphTest() {
         super("stats");
 
         // add a1
@@ -41,8 +40,7 @@ public class OrderedDigraphTest extends ViewableDigraph
         d1.add(d2);
     }
 
-    public static void main(String args[])
-    {
+    public static void main(String args[]) {
         digraph digraph = new OrderedDigraphTest();
         TunableCoordinator coord = new TunableCoordinator(digraph);
         coord.initialize();

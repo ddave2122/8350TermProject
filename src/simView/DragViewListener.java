@@ -5,22 +5,22 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package simView;
 
-import java.awt.*;
-import java.awt.event.*;
+import util.PointUtil;
+
 import javax.swing.*;
-import javax.swing.event.*;
-import util.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * A mouse-event listener that allows its associated view to be dragged
  * about its parent view.
  */
-public class DragViewListener extends MouseInputAdapter
-{
+public class DragViewListener extends MouseInputAdapter {
     /**
      * The displacement during the drag between the mouse cursor
      * and the upper-left corner of this view.
@@ -51,11 +51,10 @@ public class DragViewListener extends MouseInputAdapter
     /**
      * Constructs a drag-view-listener on the given view.
      *
-     * @param   view        The devs-component-view on which to listen for
-     *                      drag events.
+     * @param view The devs-component-view on which to listen for
+     *             drag events.
      */
-    public DragViewListener(JComponent view_, SimView.ModelView modelView_)
-    {
+    public DragViewListener(JComponent view_, SimView.ModelView modelView_) {
         view = view_;
         modelView = modelView_;
     }
@@ -63,8 +62,7 @@ public class DragViewListener extends MouseInputAdapter
     /**
      * See parent method.
      */
-    public void mousePressed(MouseEvent e)
-    {
+    public void mousePressed(MouseEvent e) {
         e = convertEvent(e);
 
         // this may be the start of a drag, so remember where the
@@ -89,18 +87,17 @@ public class DragViewListener extends MouseInputAdapter
      * is necessary when this listener is added to a component that is
      * not the associated draggable view itself.
      *
-     * @param       The mouse event whose coordinates might need to
-     *              be converted.
-     * @return      The (perhaps) converted event.
+     * @param The mouse event whose coordinates might need to
+     *            be converted.
+     * @return The (perhaps) converted event.
      */
-    protected MouseEvent convertEvent(MouseEvent e)
-    {
+    protected MouseEvent convertEvent(MouseEvent e) {
         // if the event source isn't the view that can be dragged
         if (e.getSource() != view) {
             // convert the mouse event coordinates to the coordinate
             // space of the draggable view
-            e = SwingUtilities.convertMouseEvent((Component)e.getSource(),
-                e, view);
+            e = SwingUtilities.convertMouseEvent((Component) e.getSource(),
+                    e, view);
         }
 
         return e;
@@ -109,8 +106,7 @@ public class DragViewListener extends MouseInputAdapter
     /**
      * See parent method.
      */
-    public void mouseMoved(MouseEvent e)
-    {
+    public void mouseMoved(MouseEvent e) {
         // this method only applies to digraph-views
         if (!(view instanceof DigraphView)) return;
 
@@ -137,8 +133,7 @@ public class DragViewListener extends MouseInputAdapter
     /**
      * See parent method.
      */
-    public void mouseExited(MouseEvent e)
-    {
+    public void mouseExited(MouseEvent e) {
         if (!resizing) {
             // use the normal mouse cursor
             modelView.setCursor(Cursor.getDefaultCursor());
@@ -148,8 +143,7 @@ public class DragViewListener extends MouseInputAdapter
     /**
      * See parent method.
      */
-    public void mouseReleased(MouseEvent e)
-    {
+    public void mouseReleased(MouseEvent e) {
         resizing = false;
 
         // use the normal mouse cursor
@@ -160,53 +154,44 @@ public class DragViewListener extends MouseInputAdapter
      * Determines which resize cursor to use (if any), based on the mouse
      * occupying the given location within this listener's associated view.
      *
-     * @param   location    The position of the mouse cursor within this
-     *                      listener's associated view.
+     * @param location The position of the mouse cursor within this
+     *                 listener's associated view.
      */
-    protected void detmResizeCursor(Point location)
-    {
+    protected void detmResizeCursor(Point location) {
         // if the mouse location is within any of the borders of this
         // listener's associated view, determine the appropriate resize
         // cursor type
         final int borderWidth = 6;
         int type = Cursor.DEFAULT_CURSOR;
         final int x = location.x, y = location.y,
-            width = view.getWidth(), height = view.getHeight();
+                width = view.getWidth(), height = view.getHeight();
         if (x >= width - borderWidth && y >= height - borderWidth) {
             type = Cursor.SE_RESIZE_CURSOR;
-        }
-        else if (x >= width - borderWidth && y < borderWidth) {
+        } else if (x >= width - borderWidth && y < borderWidth) {
             type = Cursor.NE_RESIZE_CURSOR;
-        }
-        else if (x < borderWidth && y >= height - borderWidth) {
+        } else if (x < borderWidth && y >= height - borderWidth) {
             type = Cursor.SW_RESIZE_CURSOR;
-        }
-        else if (x < borderWidth && y < borderWidth) {
+        } else if (x < borderWidth && y < borderWidth) {
             type = Cursor.NW_RESIZE_CURSOR;
-        }
-        else if (x < borderWidth) {
+        } else if (x < borderWidth) {
             type = Cursor.W_RESIZE_CURSOR;
-        }
-        else if (y < borderWidth) {
+        } else if (y < borderWidth) {
             type = Cursor.N_RESIZE_CURSOR;
-        }
-        else if (x >= width - borderWidth) {
+        } else if (x >= width - borderWidth) {
             type = Cursor.E_RESIZE_CURSOR;
-        }
-        else if (y >= height - borderWidth) {
+        } else if (y >= height - borderWidth) {
             type = Cursor.S_RESIZE_CURSOR;
         }
 
         // obtain the cursor of the type detm'd above
         resizeCursor = (type != Cursor.DEFAULT_CURSOR) ?
-            Cursor.getPredefinedCursor(type) : null;
+                Cursor.getPredefinedCursor(type) : null;
     }
 
     /**
      * See parent method.
      */
-    public void mouseDragged(MouseEvent e)
-    {
+    public void mouseDragged(MouseEvent e) {
         e = convertEvent(e);
 
         // if the drag is for a resize
@@ -218,9 +203,9 @@ public class DragViewListener extends MouseInputAdapter
 
             // update the associated viewable-digraph's preferred size
             ViewableDigraph digraph = (ViewableDigraph)
-                ((ComponentView)view).getViewableComponent();
+                    ((ComponentView) view).getViewableComponent();
             digraph.setPreferredSize(
-                new Dimension(location.x, location.y));
+                    new Dimension(location.x, location.y));
         }
 
         // otherwise, the drag is for a move
@@ -234,8 +219,8 @@ public class DragViewListener extends MouseInputAdapter
             if (view instanceof ComponentView) {
                 // update the associated viewable component's preferred
                 // location
-                ((ComponentView)view).getViewableComponent().
-                    setPreferredLocation(location);
+                ((ComponentView) view).getViewableComponent().
+                        setPreferredLocation(location);
 
                 // for each parent component of the view up its ancestry chain
                 // (until we find this view's parent digraph-view, or the
@@ -246,7 +231,7 @@ public class DragViewListener extends MouseInputAdapter
                     if (parent instanceof DigraphView) {
                         // tell the parent's associated viewable-digraph that its
                         // layout has changed
-                        ((DigraphView)parent).getDigraph().setLayoutChanged(true);
+                        ((DigraphView) parent).getDigraph().setLayoutChanged(true);
                         break;
                     }
 
@@ -266,43 +251,35 @@ public class DragViewListener extends MouseInputAdapter
      * Resizes this listener's associated view based on the given
      * drag-location, as well as the direction of the resize being performed.
      *
-     * @param   dragLocation    The position of the mouse cursor performing
-     *                          the drag, using the coordinate space of the
-     *                          associated view.
+     * @param dragLocation The position of the mouse cursor performing
+     *                     the drag, using the coordinate space of the
+     *                     associated view.
      */
-    protected void resizeView(Point dragLocation)
-    {
+    protected void resizeView(Point dragLocation) {
         // if no resize is being performed, quit
         if (resizeCursor == null) return;
 
         // perform the appropriate resize of the view, according to
         // the direction of the resize
         final int x = dragLocation.x, y = dragLocation.y,
-            viewx = view.getX(), viewy = view.getY(),
-            width = view.getWidth(), height = view.getHeight();
+                viewx = view.getX(), viewy = view.getY(),
+                width = view.getWidth(), height = view.getHeight();
         int type = resizeCursor.getType();
         if (type == Cursor.SE_RESIZE_CURSOR) {
             view.setSize(x, y);
-        }
-        else if (type == Cursor.NW_RESIZE_CURSOR) {
+        } else if (type == Cursor.NW_RESIZE_CURSOR) {
             view.setBounds(viewx + x, viewy + y, width - x, height - y);
-        }
-        else if (type == Cursor.SW_RESIZE_CURSOR) {
+        } else if (type == Cursor.SW_RESIZE_CURSOR) {
             view.setBounds(viewx + x, viewy, width - x, y);
-        }
-        else if (type == Cursor.NE_RESIZE_CURSOR) {
+        } else if (type == Cursor.NE_RESIZE_CURSOR) {
             view.setBounds(viewx, viewy + y, x, height - y);
-        }
-        else if (type == Cursor.N_RESIZE_CURSOR) {
+        } else if (type == Cursor.N_RESIZE_CURSOR) {
             view.setBounds(viewx, viewy + y, width, height - y);
-        }
-        else if (type == Cursor.S_RESIZE_CURSOR) {
+        } else if (type == Cursor.S_RESIZE_CURSOR) {
             view.setBounds(viewx, viewy, width, y);
-        }
-        else if (type == Cursor.W_RESIZE_CURSOR) {
+        } else if (type == Cursor.W_RESIZE_CURSOR) {
             view.setBounds(viewx + x, viewy, width - x, height);
-        }
-        else if (type == Cursor.E_RESIZE_CURSOR) {
+        } else if (type == Cursor.E_RESIZE_CURSOR) {
             view.setBounds(viewx, viewy, x, height);
         }
     }

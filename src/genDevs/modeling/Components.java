@@ -1,8 +1,6 @@
 package genDevs.modeling;
 
-import GenCol.*;
-
-import java.util.*;
+import GenCol.ensembleSet;
 
 
 /*
@@ -15,8 +13,8 @@ public IOBasicDevs nextComponent() {return (IOBasicDevs)it.next();}   //  ???  P
 */
 
 //public class Components extends threadEnsembleSet implements ComponentsInterface{
-public class Components extends ensembleSet implements ComponentsInterface{
-public componentIterator cIterator(){
-return new componentIterator(this);
-}
+public class Components extends ensembleSet implements ComponentsInterface {
+    public componentIterator cIterator() {
+        return new componentIterator(this);
+    }
 }

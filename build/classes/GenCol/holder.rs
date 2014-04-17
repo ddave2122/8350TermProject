@@ -1,2 +1,0 @@
-GenCol.holder
-GenCol.wrapObject
