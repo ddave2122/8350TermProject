@@ -3,3 +3,15 @@ build/*
 .nbproject/*
 *.iml
 *.xml
+/JavaApplication13/nbproject/private/
+/NetbeansProject/nbproject/private/
+/NetbeansProject/dist/
+/NetbeansProject/build/
+bin/
+build/
+JavaApplication13/
+NetbeansProject/build/
+NetbeansProject/nbproject/
+NetbeansProject/build.xml
+NetbeansProject/SimView_settings
+NetbeansProject/manifest.mf
