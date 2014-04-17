@@ -15,8 +15,6 @@ import simView.ViewableDigraph;
  */
 public class DNReaction extends ViewableDigraph {
 
-
-    
     public DNReaction(){
         this("Reaction");
     }
@@ -49,12 +47,12 @@ public class DNReaction extends ViewableDigraph {
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(625, 341);
-        if((ViewableComponent)withName("Fixing")!=null)
-             ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(34, 123));
-        if((ViewableComponent)withName("Transformation")!=null)
-             ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(177, 226));
+        preferredSize = new Dimension(625, 331);
         if((ViewableComponent)withName("Release")!=null)
              ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(346, 212));
+        if((ViewableComponent)withName("Transformation")!=null)
+             ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(177, 226));
+        if((ViewableComponent)withName("Fixing")!=null)
+             ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(34, 123));
     }
 }

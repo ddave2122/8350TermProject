@@ -50,9 +50,9 @@ public class DNSubstrate extends ViewableDigraph {
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(625, 341);
+        preferredSize = new Dimension(395, 259);
         if((ViewableComponent)withName("DNCoSubstrate")!=null)
-             ((ViewableComponent)withName("DNCoSubstrate")).setPreferredLocation(new Point(318, 116));
+             ((ViewableComponent)withName("DNCoSubstrate")).setPreferredLocation(new Point(259, 118));
         if((ViewableComponent)withName("Glucose")!=null)
              ((ViewableComponent)withName("Glucose")).setPreferredLocation(new Point(77, 53));
         if((ViewableComponent)withName("Product")!=null)

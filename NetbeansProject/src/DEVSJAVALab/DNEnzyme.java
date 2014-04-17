@@ -52,14 +52,14 @@ public class DNEnzyme extends ViewableDigraph {
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(625, 341);
-        if((ViewableComponent)withName("Activa")!=null)
-             ((ViewableComponent)withName("Activa")).setPreferredLocation(new Point(349, 99));
+        preferredSize = new Dimension(625, 276);
         if((ViewableComponent)withName("Choice")!=null)
              ((ViewableComponent)withName("Choice")).setPreferredLocation(new Point(-9, 123));
-        if((ViewableComponent)withName("Aldolase")!=null)
-             ((ViewableComponent)withName("Aldolase")).setPreferredLocation(new Point(164, 234));
         if((ViewableComponent)withName("Enzyme")!=null)
              ((ViewableComponent)withName("Enzyme")).setPreferredLocation(new Point(166, 69));
+        if((ViewableComponent)withName("Aldolase")!=null)
+             ((ViewableComponent)withName("Aldolase")).setPreferredLocation(new Point(170, 188));
+        if((ViewableComponent)withName("Activa")!=null)
+             ((ViewableComponent)withName("Activa")).setPreferredLocation(new Point(349, 99));
     }
 }
