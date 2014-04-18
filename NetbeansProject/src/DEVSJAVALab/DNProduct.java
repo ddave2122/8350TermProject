@@ -27,6 +27,7 @@ public class DNProduct extends ViewableAtomic {
         super(name);
         addInport("in1");
         addOutport("out1");
+        addOutport("out2");
 
         //int_gen_time = period ;
     }

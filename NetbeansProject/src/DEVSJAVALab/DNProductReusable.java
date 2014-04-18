@@ -27,7 +27,7 @@ public class DNProductReusable extends ViewableAtomic {
     public DNProductReusable(String name, double period) {
         super(name);
         addInport("in1");
-        addOutport("out");
+        addOutport("out1");
 
         int_gen_time = period;
     }

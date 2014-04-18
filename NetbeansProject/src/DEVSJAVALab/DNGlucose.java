@@ -27,7 +27,7 @@ public class DNGlucose extends ViewableAtomic {
     public DNGlucose(String name) {
         super(name);
         addInport("in1");
-        addOutport("out");
+        addOutport("out1");
 
         //int_gen_time = period ;
     }

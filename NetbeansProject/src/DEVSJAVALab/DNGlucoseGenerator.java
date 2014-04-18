@@ -21,8 +21,7 @@ public class DNGlucoseGenerator extends ViewableAtomic {
 
     public DNGlucoseGenerator(String name, double period) {
         super(name);
-        addInport("in");
-        addOutport("out");
+        addOutport("out1");
 
         int_gen_time = period;
     }

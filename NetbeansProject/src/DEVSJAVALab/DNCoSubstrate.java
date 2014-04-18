@@ -28,7 +28,7 @@ public class DNCoSubstrate extends ViewableAtomic {
         super(name);
         addInport("in2");
         addInport("in1");
-        addOutport("out");
+        addOutport("out1");
 
         //int_gen_time = period ;
     }
