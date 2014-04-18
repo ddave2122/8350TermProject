@@ -1,5 +1,6 @@
-package DEVSJAVALab;
+package DEVSGlycolysis.coupled;
 
+import DEVSGlycolysis.atomic.*;
 import simView.ViewableAtomic;
 import simView.ViewableComponent;
 import simView.ViewableDigraph;
@@ -13,14 +14,14 @@ import java.awt.*;
  * Time: 11:03 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DNEnzyme extends ViewableDigraph {
+public class Enzyme extends ViewableDigraph {
 
 
-    public DNEnzyme() {
+    public Enzyme() {
         this("Enzyme");
     }
 
-    public DNEnzyme(String nm) {
+    public Enzyme(String nm) {
         super(nm);
         DNEnzymeConstructor();
     }
@@ -29,10 +30,10 @@ public class DNEnzyme extends ViewableDigraph {
         this.addOutport("out1");
         this.addInport("in1");
 
-        ViewableAtomic dNChoice = new DNChoice("Choice");
-        ViewableAtomic dNAMEnzyme = new DNAMEnzyme("DNAMEnzyme");
-        ViewableAtomic dNAldolase = new DNAldolase("Aldolase");
-        ViewableAtomic dNActiva = new DNActiva("Activa");
+        ViewableAtomic dNChoice = new DEVSGlycolysis.atomic.Choice("Choice");
+        ViewableAtomic dNAMEnzyme = new AtomicEnzyme("AtomicEnzyme");
+        ViewableAtomic dNAldolase = new Aldolase("Aldolase");
+        ViewableAtomic dNActiva = new Activa("Activa");
 
         add(dNChoice);
         add(dNAMEnzyme);
@@ -54,13 +55,13 @@ public class DNEnzyme extends ViewableDigraph {
     public void layoutForSimView()
     {
         preferredSize = new Dimension(625, 276);
-        if((ViewableComponent)withName("Choice")!=null)
-             ((ViewableComponent)withName("Choice")).setPreferredLocation(new Point(7, 119));
-        if((ViewableComponent)withName("DNAMEnzyme")!=null)
-             ((ViewableComponent)withName("DNAMEnzyme")).setPreferredLocation(new Point(165, 37));
-        if((ViewableComponent)withName("Activa")!=null)
-             ((ViewableComponent)withName("Activa")).setPreferredLocation(new Point(349, 99));
         if((ViewableComponent)withName("Aldolase")!=null)
              ((ViewableComponent)withName("Aldolase")).setPreferredLocation(new Point(170, 188));
+        if((ViewableComponent)withName("AtomicEnzyme")!=null)
+             ((ViewableComponent)withName("AtomicEnzyme")).setPreferredLocation(new Point(165, 37));
+        if((ViewableComponent)withName("Choice")!=null)
+             ((ViewableComponent)withName("Choice")).setPreferredLocation(new Point(7, 119));
+        if((ViewableComponent)withName("Activa")!=null)
+             ((ViewableComponent)withName("Activa")).setPreferredLocation(new Point(346, 110));
     }
 }

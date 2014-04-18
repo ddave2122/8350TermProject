@@ -1,5 +1,8 @@
-package DEVSJAVALab;
+package DEVSGlycolysis.coupled;
 
+import DEVSGlycolysis.atomic.CoSubstrate;
+import DEVSGlycolysis.atomic.Glucose;
+import DEVSGlycolysis.atomic.ProductReusable;
 import simView.ViewableAtomic;
 import simView.ViewableComponent;
 import simView.ViewableDigraph;
@@ -13,14 +16,14 @@ import java.awt.*;
  * Time: 10:56 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DNSubstrate extends ViewableDigraph {
+public class Substrate extends ViewableDigraph {
 
 
-    public DNSubstrate() {
+    public Substrate() {
         this("Substrate");
     }
 
-    public DNSubstrate(String nm) {
+    public Substrate(String nm) {
         super(nm);
         DNSubstrateConstructor();
     }
@@ -30,9 +33,9 @@ public class DNSubstrate extends ViewableDigraph {
         this.addInport("in1");
         this.addInport("in2");
 
-        ViewableAtomic dNProduct = new DNProductReusable("Product", 7);
-        ViewableAtomic dNGlucose = new DNGlucose("Glucose");
-        ViewableAtomic dNCoSubstrate = new DNCoSubstrate("DNCoSubstrate");
+        ViewableAtomic dNProduct = new ProductReusable("Product", 7);
+        ViewableAtomic dNGlucose = new Glucose("Glucose");
+        ViewableAtomic dNCoSubstrate = new CoSubstrate("CoSubstrate");
 
         add(dNProduct);
         add(dNGlucose);
@@ -51,12 +54,12 @@ public class DNSubstrate extends ViewableDigraph {
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(528, 304);
+        preferredSize = new Dimension(515, 271);
+        if((ViewableComponent)withName("CoSubstrate")!=null)
+             ((ViewableComponent)withName("CoSubstrate")).setPreferredLocation(new Point(212, 110));
         if((ViewableComponent)withName("Glucose")!=null)
-             ((ViewableComponent)withName("Glucose")).setPreferredLocation(new Point(54, 78));
-        if((ViewableComponent)withName("DNCoSubstrate")!=null)
-             ((ViewableComponent)withName("DNCoSubstrate")).setPreferredLocation(new Point(181, 134));
+             ((ViewableComponent)withName("Glucose")).setPreferredLocation(new Point(10, 180));
         if((ViewableComponent)withName("Product")!=null)
-             ((ViewableComponent)withName("Product")).setPreferredLocation(new Point(83, 183));
+             ((ViewableComponent)withName("Product")).setPreferredLocation(new Point(10, 45));
     }
 }

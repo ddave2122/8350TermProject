@@ -2,23 +2,23 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package DEVSJAVALab;
+package DEVSGlycolysis;
 
 import GenCol.entity;
 
 /**
  * @author David
  */
-public class DNGlucoseEntity extends entity {
+public class GlucoseEntity extends entity {
     protected double processingTime;
     protected double price;
     protected int priority;
 
-    public DNGlucoseEntity() {
+    public GlucoseEntity() {
         this("Glucose", 10, 10, 1);
     }
 
-    public DNGlucoseEntity(String name, double _procTime, double _price, int _priority) {
+    public GlucoseEntity(String name, double _procTime, double _price, int _priority) {
         super(name);
         processingTime = _procTime;
         price = _price;

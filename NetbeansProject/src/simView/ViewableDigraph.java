@@ -456,7 +456,7 @@ public class ViewableDigraph
      */
     public void layoutForSimView() {
         preferredSize = new Dimension(625, 341);
-        if ((ViewableComponent) withName("DNAMEnzyme") != null)
-            ((ViewableComponent) withName("DNAMEnzyme")).setPreferredLocation(new Point(203, 145));
+        if ((ViewableComponent) withName("AtomicEnzyme") != null)
+            ((ViewableComponent) withName("AtomicEnzyme")).setPreferredLocation(new Point(203, 145));
     }
 }

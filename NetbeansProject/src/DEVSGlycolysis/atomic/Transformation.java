@@ -1,5 +1,6 @@
-package DEVSJAVALab;
+package DEVSGlycolysis.atomic;
 
+import DEVSJAVALab.InputEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -9,22 +10,21 @@ import statistics.rand;
  * Created with IntelliJ IDEA.
  * User: nick
  * Date: 4/17/14
- * Time: 10:55 AM
+ * Time: 11:02 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DNGlucose extends ViewableAtomic {
-
+public class Transformation extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
 
     private String messageToSend;
 
-    public DNGlucose() {
-        this("DNGlucose");
+    public Transformation() {
+        this("Glucose");
     }
 
-    public DNGlucose(String name) {
+    public Transformation(String name) {
         super(name);
         addInport("in1");
         addOutport("out1");
@@ -81,5 +81,4 @@ public class DNGlucose extends ViewableAtomic {
     private String getMessageOnPortZero(message x) {
         return x.getValOnPort("in", 0).toString();
     }
-
 }

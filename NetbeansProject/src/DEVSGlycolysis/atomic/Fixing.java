@@ -1,5 +1,6 @@
-package DEVSJAVALab;
+package DEVSGlycolysis.atomic;
 
+import DEVSJAVALab.InputEntity;
 import GenCol.entity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
@@ -13,7 +14,7 @@ import statistics.rand;
  * Time: 10:58 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DNFixing extends ViewableAtomic {
+public class Fixing extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
@@ -24,15 +25,15 @@ public class DNFixing extends ViewableAtomic {
 
     private String messageToSend;
 
-    public DNFixing() {
-        this("DNGlucose", 20);
+    public Fixing() {
+        this("Glucose", 20);
     }
 
-    public DNFixing(String name) {
+    public Fixing(String name) {
         this(name, 20);
     }
 
-    public DNFixing(String name, double observation_time) {
+    public Fixing(String name, double observation_time) {
         super(name);
         addInport("in1");
         addInport("in2");

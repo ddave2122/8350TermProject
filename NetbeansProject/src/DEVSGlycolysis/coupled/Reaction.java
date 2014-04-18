@@ -1,5 +1,8 @@
-package DEVSJAVALab;
+package DEVSGlycolysis.coupled;
 
+import DEVSGlycolysis.atomic.Fixing;
+import DEVSGlycolysis.atomic.Release;
+import DEVSGlycolysis.atomic.Transformation;
 import simView.ViewableAtomic;
 import simView.ViewableComponent;
 import simView.ViewableDigraph;
@@ -13,13 +16,13 @@ import java.awt.*;
  * Time: 10:58 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DNReaction extends ViewableDigraph {
+public class Reaction extends ViewableDigraph {
 
-    public DNReaction() {
+    public Reaction() {
         this("Reaction");
     }
 
-    public DNReaction(String nm) {
+    public Reaction(String nm) {
         super(nm);
         DNReactionConstructor();
     }
@@ -29,9 +32,9 @@ public class DNReaction extends ViewableDigraph {
         this.addInport("in1");
         this.addInport("in2");
 
-        ViewableAtomic dNFixing = new DNFixing("Fixing", 20);
-        ViewableAtomic dNTransformation = new DNTransformation("Transformation");
-        ViewableAtomic dNRelease = new DNRelease("Release");
+        ViewableAtomic dNFixing = new Fixing("Fixing", 20);
+        ViewableAtomic dNTransformation = new Transformation("Transformation");
+        ViewableAtomic dNRelease = new Release("Release");
 
         add(dNFixing);
         add(dNTransformation);
@@ -50,13 +53,13 @@ public class DNReaction extends ViewableDigraph {
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(625, 331);
-        if((ViewableComponent)withName("Release")!=null)
-             ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(357, 138));
+        preferredSize = new Dimension(633, 196);
         if((ViewableComponent)withName("Transformation")!=null)
-             ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(215, 201));
+             ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(185, 83));
         if((ViewableComponent)withName("Fixing")!=null)
-             ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(15, 164));
+             ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(6, 81));
+        if((ViewableComponent)withName("Release")!=null)
+             ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(383, 84));
     }
 }
 

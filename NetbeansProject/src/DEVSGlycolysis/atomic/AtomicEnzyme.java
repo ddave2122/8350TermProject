@@ -1,5 +1,6 @@
-package DEVSJAVALab;
+package DEVSGlycolysis.atomic;
 
+import DEVSJAVALab.InputEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -9,27 +10,25 @@ import statistics.rand;
  * Created with IntelliJ IDEA.
  * User: nick
  * Date: 4/17/14
- * Time: 11:05 AM
+ * Time: 11:04 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DNActiva extends ViewableAtomic {
+public class AtomicEnzyme extends ViewableAtomic {
+
     private double int_gen_time;
     private rand r;
     private int count;
 
     private String messageToSend;
 
-    public DNActiva() {
-        this("Activa");
+    public AtomicEnzyme() {
+        this("AtomicEnzyme");
     }
 
-    public DNActiva(String name) {
+    public AtomicEnzyme(String name) {
         super(name);
         addInport("in1");
-        addInport("in2");
         addOutport("out1");
-
-        //int_gen_time = period ;
     }
 
     public void initialize() {
