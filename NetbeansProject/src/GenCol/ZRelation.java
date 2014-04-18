@@ -6,66 +6,66 @@
 package GenCol;
 
 
-import java.util.*;
+import java.util.Set;
 
 
-public class ZRelation  extends Relation implements ZRelationInterface{
-String name;
+public class ZRelation extends Relation implements ZRelationInterface {
+    String name;
 
-public ZRelation(){
-super();
-}
+    public ZRelation() {
+        super();
+    }
 
-public ZRelation(String name){
-super();
-this.name = name;
-}
+    public ZRelation(String name) {
+        super();
+        this.name = name;
+    }
 
-public String getName(){
-return name;
-}
+    public String getName() {
+        return name;
+    }
 
-public ExternalRepresentation getExtRep(){
-return new ExternalRepresentation.ByteArray();
-}
+    public ExternalRepresentation getExtRep() {
+        return new ExternalRepresentation.ByteArray();
+    }
 
-public boolean empty(){
-return isEmpty();
-}
+    public boolean empty() {
+        return isEmpty();
+    }
 
-public int getLength(){
-return size();
-}
+    public int getLength() {
+        return size();
+    }
 
-public Set assocAll(Object key){
-return getSet(key);
-}
-
-
-public Object assoc(Object key){
-return get(key);
-}
+    public Set assocAll(Object key) {
+        return getSet(key);
+    }
 
 
-public boolean isIn(Object key, Object value){
-return contains(key, value);
-}
-
-public Set domainObjects(){
-return keySet();
-}
-
-public Set rangeObjects(){
-return valueSet();
-}
+    public Object assoc(Object key) {
+        return get(key);
+    }
 
 
-public synchronized void add(Object key, Object value){
-put(key,value);
-}
+    public boolean isIn(Object key, Object value) {
+        return contains(key, value);
+    }
 
-public synchronized void Remove(Object key, Object value){
-remove(key,value);
-}
+    public Set domainObjects() {
+        return keySet();
+    }
+
+    public Set rangeObjects() {
+        return valueSet();
+    }
+
+
+    public synchronized void add(Object key, Object value) {
+        put(key, value);
+    }
+
+    public synchronized void Remove(Object key, Object value) {
+        remove(key, value);
+    }
 
 }

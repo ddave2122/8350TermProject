@@ -5,55 +5,46 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package SimpArc;
 
-import simView.*;
-
-import java.lang.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import GenCol.*;
-
-public class passive extends siso{
+public class passive extends siso {
 
 
+    public passive() {
+        super("passive");
+    }
 
-  public passive(){
-    super("passive");
-}
+    public passive(String name) {
+        super(name);
+    }
 
-public passive(String name){
-   super(name);
-}
-
-public void initialize(){
-     phase = "passive";
-     sigma = INFINITY;
-     super.initialize();
- }
-
-
-public void  Deltext(double e,double input){
-    passivate();
-}
+    public void initialize() {
+        phase = "passive";
+        sigma = INFINITY;
+        super.initialize();
+    }
 
 
+    public void Deltext(double e, double input) {
+        passivate();
+    }
 
-public void  deltint( ){
-    passivate();
-}
+
+    public void deltint() {
+        passivate();
+    }
 
 
-public double sisoOut(){
-    return 0;
-}
+    public double sisoOut() {
+        return 0;
+    }
 
- public void showState(){
-  super.showState();
- }
+    public void showState() {
+        super.showState();
+    }
 
 
 }

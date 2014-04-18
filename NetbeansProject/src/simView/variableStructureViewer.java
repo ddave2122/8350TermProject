@@ -8,17 +8,21 @@
  */
 
 package simView;
-import GenCol.*;
-import genDevs.modeling.*;
+
+import genDevs.modeling.IODevs;
+
 /**
  * the interface needed for displaying variable structure DEVS
  *
- * @author  Xiaolin Hu
+ * @author Xiaolin Hu
  */
 
-public interface variableStructureViewer{
-   void couplingAdded(IODevs src, String p1, IODevs dest, String p2);
-   void couplingRemoved(IODevs src, String p1, IODevs dest, String p2);
-   void modelAdded(ViewableComponent iod, ViewableDigraph parent);
-   void modelRemoved(ViewableComponent iod, ViewableDigraph parent);
+public interface variableStructureViewer {
+    void couplingAdded(IODevs src, String p1, IODevs dest, String p2);
+
+    void couplingRemoved(IODevs src, String p1, IODevs dest, String p2);
+
+    void modelAdded(ViewableComponent iod, ViewableDigraph parent);
+
+    void modelRemoved(ViewableComponent iod, ViewableDigraph parent);
 }

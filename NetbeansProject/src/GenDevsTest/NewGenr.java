@@ -5,30 +5,24 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package GenDevsTest;
 
-import GenCol.*;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
+import GenCol.ensembleBag;
+import genDevs.modeling.message;
 
-public class NewGenr extends Genr
-{
-    public NewGenr(String nm)
-    {
+public class NewGenr extends Genr {
+    public NewGenr(String nm) {
         super(nm);
     }
 
-    public NewGenr()
-    {
+    public NewGenr() {
         super("newGenr");
     }
 
-    public void deltext(double e, message x)
-    {
+    public void deltext(double e, message x) {
         Continue(e);
         ensembleBag b = x.getPortNames();
         if (b.size() >= 2) //both stop and start arrive

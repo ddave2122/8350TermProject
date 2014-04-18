@@ -1,8 +1,6 @@
 package genDevs.simulation;
 
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
+import genDevs.modeling.MessageInterface;
 
 //what is the core requirement on legacy models if they
 //are just required to have a message interface
@@ -10,14 +8,19 @@ import genDevs.modeling.*;
 
 //standalone simulator
 
-public interface coreSimulatorInterface{
+public interface coreSimulatorInterface {
 
-public void initialize();
-public Double nextTNDouble();
-public void computeInputOutput(Double d);
-public void DeltFunc(Double d);
-public MessageInterface getOutput();
-public void simulate(int numIter);
+    public void initialize();
+
+    public Double nextTNDouble();
+
+    public void computeInputOutput(Double d);
+
+    public void DeltFunc(Double d);
+
+    public MessageInterface getOutput();
+
+    public void simulate(int numIter);
 }
 
 

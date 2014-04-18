@@ -9,20 +9,19 @@
 
 package genDevs.plots;
 
-import java.lang.*;
-import java.util.*;
 import GenCol.*;
-import genDevs.modeling.*;
-import simView.*;
+import genDevs.modeling.message;
+import simView.ViewableAtomic;
+
+import java.util.Iterator;
 
 /**
  * An atomic devs component which outputs jobs a certain amount of time
  * after they are received.
  *
- * @author      Bernard Zeigler, Jeff Mather
+ * @author Bernard Zeigler, Jeff Mather
  */
-public class JobQueue extends ViewableAtomic
-{
+public class JobQueue extends ViewableAtomic {
     /**
      * The jobs that have arrived at this job-queue.
      */
@@ -51,12 +50,11 @@ public class JobQueue extends ViewableAtomic
     /**
      * Constructor.
      *
-     * @param   name        The name to call this job-queue.
-     * @param   jobDueDelay The length of time after a job arrives until
-     *                      it is due.
+     * @param name        The name to call this job-queue.
+     * @param jobDueDelay The length of time after a job arrives until
+     *                    it is due.
      */
-    public JobQueue(String name, double jobDueDelay_)
-    {
+    public JobQueue(String name, double jobDueDelay_) {
         super(name);
 
         // create this job-queue's ports
@@ -71,8 +69,7 @@ public class JobQueue extends ViewableAtomic
      * Constructs an job-queue with default values and test-inputs,
      * for convenience.
      */
-    public JobQueue()
-    {
+    public JobQueue() {
         this("JobQueue", 10);
 
         // add some test inputs
@@ -86,8 +83,7 @@ public class JobQueue extends ViewableAtomic
     /**
      * See parent method.
      */
-    public void initialize()
-    {
+    public void initialize() {
         passivate();
         clock = 0;
         super.initialize();
@@ -99,8 +95,7 @@ public class JobQueue extends ViewableAtomic
     /**
      * Determines the minimum time of all the jobs that have arrived.
      */
-    protected void detmMinimumJobTime()
-    {
+    protected void detmMinimumJobTime() {
         double min = INFINITY;
 
         // if there are any jobs that have arrived
@@ -109,8 +104,8 @@ public class JobQueue extends ViewableAtomic
             Iterator i = arrived.iterator();
             while (i.hasNext()) {
                 // if this job's time is the minimum so far
-                Pair pair = (Pair)i.next();
-                double time = ((doubleEnt)pair.getKey()).getv();
+                Pair pair = (Pair) i.next();
+                double time = ((doubleEnt) pair.getKey()).getv();
                 if (time < min) {
                     // remember this job's time
                     min = time;
@@ -125,14 +120,13 @@ public class JobQueue extends ViewableAtomic
      * Creates a bag of jobs that are due consisting of those that have arrived
      * and have the minimum time.
      */
-    protected void detmDueJobs()
-    {
+    protected void detmDueJobs() {
         // for each arrived job
         due = new Bag();
         Iterator i = arrived.iterator();
         while (i.hasNext()) {
             // if the job is one of those that has the minimum time
-            Pair pair = (Pair)i.next();
+            Pair pair = (Pair) i.next();
             if (pair.getKey().equals(minimumJobTime)) {
                 // add to this job to the bag of those that are due
                 due.add(pair.getValue());
@@ -144,13 +138,12 @@ public class JobQueue extends ViewableAtomic
      * Removes all the jobs of the minimum time from the container of
      * arrived jobs.
      */
-    protected void removeAllMinimumJobs()
-    {
+    protected void removeAllMinimumJobs() {
         // for each arrived job
         Iterator i = arrived.iterator();
         while (i.hasNext()) {
             // if the job is one of those that has the minimum time
-            Pair pair = (Pair)i.next();
+            Pair pair = (Pair) i.next();
             if (pair.getKey().equals(minimumJobTime)) {
                 // remove the job from the arrived jobs container
                 arrived.remove(pair.getKey(), pair.getValue());
@@ -161,8 +154,7 @@ public class JobQueue extends ViewableAtomic
     /**
      * See parent method.
      */
-    public void deltext(double e, message message)
-    {
+    public void deltext(double e, message message) {
         // update this job-queue's track of the current clock value
         clock = clock + e;
 
@@ -184,14 +176,14 @@ public class JobQueue extends ViewableAtomic
         holdUntilNextJob();
     }
 
-    protected void deltextHook1(message message) {}
+    protected void deltextHook1(message message) {
+    }
 
     /**
      * Makes this job-queue hold in phase "active" until the time of the
      * next job of minimum time.
      */
-    protected void holdUntilNextJob()
-    {
+    protected void holdUntilNextJob() {
         // if there are any arrived jobs
         detmMinimumJobTime();
         if (!arrived.isEmpty()) {
@@ -211,8 +203,7 @@ public class JobQueue extends ViewableAtomic
     /**
      * See parent method.
      */
-    public void deltcon(double e, message message)
-    {
+    public void deltcon(double e, message message) {
         // the order needed here is the reverse of the default deltcon order
         deltext(e, message);
         deltint();
@@ -221,8 +212,7 @@ public class JobQueue extends ViewableAtomic
     /**
      * See parent method.
      */
-    public void deltint()
-    {
+    public void deltint() {
         // update this job-queue's clock value
         clock = clock + sigma;
 
@@ -233,13 +223,13 @@ public class JobQueue extends ViewableAtomic
         holdUntilNextJob();
     }
 
-    protected void deltintHook1() {}
+    protected void deltintHook1() {
+    }
 
     /**
      * See parent method.
      */
-    public message out()
-    {
+    public message out() {
         message message = new message();
 
         if (phaseIs("active")) {
@@ -247,7 +237,7 @@ public class JobQueue extends ViewableAtomic
             Iterator i = due.iterator();
             while (i.hasNext()) {
                 // add this job to the output message
-                message.add(makeContent("out", (entity)i.next()));
+                message.add(makeContent("out", (entity) i.next()));
             }
         }
 
@@ -257,16 +247,13 @@ public class JobQueue extends ViewableAtomic
     /**
      * See parent method.
      */
-    public String stringState()
-    {
+    public String stringState() {
         if (arrived != null && due != null) {
             return "arrived : " + arrived.size() +
-                "\n" + "clock : " + clock + "\n" +
-                "min : " + minimumJobTime.getv() + "\n" +
-                "due : " + due.size();
-        }
-
-        else {
+                    "\n" + "clock : " + clock + "\n" +
+                    "min : " + minimumJobTime.getv() + "\n" +
+                    "due : " + due.size();
+        } else {
             return "";
         }
     }

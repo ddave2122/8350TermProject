@@ -33,7 +33,7 @@ public class DNGlucoseGenerator extends ViewableAtomic {
         r = new rand(12345);
         count = 0;
     }
-    
+
     @Override
     public void deltext(double e, message x) {
         Continue(e);

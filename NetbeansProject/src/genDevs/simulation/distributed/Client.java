@@ -1,19 +1,20 @@
 package genDevs.simulation.distributed;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
-import util.*;
+import genDevs.modeling.message;
+import util.s;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 
 /**
  * A component meant to be composed into a simulator or coordinator to
  * allow it to communicate with a server-coordinator overseeing its
  * operation within a distributed simulation.
  */
-abstract public class Client
-{
+abstract public class Client {
     /**
      * The name of the devs component to identify this client by.
      */
@@ -32,13 +33,12 @@ abstract public class Client
     /**
      * Constructs an object of this class.
      *
-     * @param   devsName_       The name of the devs component to identify
-     *                          this client by.
-     * @param   serverAddress   The server's IP address.
-     * @param   serverPort      The server's port number.
+     * @param devsName_     The name of the devs component to identify
+     *                      this client by.
+     * @param serverAddress The server's IP address.
+     * @param serverPort    The server's port number.
      */
-    public Client(String devsName_, String serverAddress, int serverPort)
-    {
+    public Client(String devsName_, String serverAddress, int serverPort) {
         devsName = devsName_;
 
         // connect to the server
@@ -51,10 +51,8 @@ abstract public class Client
     /**
      * Receives and processes all the messages sent by the server.
      */
-    protected class ListenForServerMessagesThread extends Thread
-    {
-        public void run()
-        {
+    protected class ListenForServerMessagesThread extends Thread {
+        public void run() {
             // wait for this coordinator's proxy to be created on the
             // server side
             s.sleep(1000);
@@ -79,8 +77,8 @@ abstract public class Client
      * Informs this client that its initialization message has been
      * received.
      *
-     * @param   message     The message received, in case the method
-     *                      implementation would like to further parse it.
+     * @param message The message received, in case the method
+     *                implementation would like to further parse it.
      */
     abstract protected void initializeMessageReceived(String message);
 
@@ -88,8 +86,7 @@ abstract public class Client
      * Waits for a message from the server that says to initialize this
      * client.
      */
-    protected void waitForInitialize()
-    {
+    protected void waitForInitialize() {
         // if the next message from the server is not the one that says
         // to initialize
         String message = readMessage();
@@ -105,16 +102,15 @@ abstract public class Client
      * Informs this client that it has received its start-simulate message
      * from the server.
      *
-     * @param   numIterations       How many simulation iterations the server
-     *                              say this client is to perform.
+     * @param numIterations How many simulation iterations the server
+     *                      say this client is to perform.
      */
     abstract protected void startSimulateMessageReceived(int numIterations);
 
     /**
      * Waits for a message from the server that says to start simulating.
      */
-    protected void waitForStartSimulate()
-    {
+    protected void waitForStartSimulate() {
         // if the next message from the server is not the one that says
         // to start simulating
         String message = readMessage();
@@ -124,8 +120,8 @@ abstract public class Client
         }
 
         // detm the number of iterations specified in the message
-        int numIterations = (int)Double.parseDouble(
-            message.substring(message.indexOf(":") + 1, message.length()));
+        int numIterations = (int) Double.parseDouble(
+                message.substring(message.indexOf(":") + 1, message.length()));
 
         s.s("---start simulate");
 
@@ -135,7 +131,7 @@ abstract public class Client
     /**
      * Informs this client it has received an input message from the server.
      *
-     * @param   message     The message received.
+     * @param message The message received.
      */
     abstract protected void inputReceived(message message);
 
@@ -143,8 +139,7 @@ abstract public class Client
      * Waits for an input message from the server, then gets that input
      * processed.
      */
-    protected void waitForInput()
-    {
+    protected void waitForInput() {
         // wait for the next input from the server
         String string = readMessage();
         s.s(devsName + " received input: " + string);
@@ -159,10 +154,9 @@ abstract public class Client
     /**
      * Sends the given message to the server.
      *
-     * @param   message     The message to send.
+     * @param message The message to send.
      */
-    protected void sendMessageToServer(String message)
-    {
+    protected void sendMessageToServer(String message) {
         printStream.println(message);
         s.s(devsName + " sends " + message);
     }
@@ -170,22 +164,23 @@ abstract public class Client
     /**
      * Returns the next line read from this client's input-stream.
      */
-    protected String readMessage()
-    {
+    protected String readMessage() {
         try {
             return inputStream.readLine();
-        } catch (IOException e) {s.e(e); return "";}
+        } catch (IOException e) {
+            s.e(e);
+            return "";
+        }
     }
 
     /**
      * Connects using a socket to the given server address and port.  Creates
      * an input-stream and print-stream on that socket.
      *
-     * @param   serverAddress       The IP address to which to connect.
-     * @param   serverPort          The port number on which to connect.
+     * @param serverAddress The IP address to which to connect.
+     * @param serverPort    The port number on which to connect.
      */
-    protected void connect(String serverAddress, int serverPort)
-    {
+    protected void connect(String serverAddress, int serverPort) {
         Socket socket = null;
         try {
             // try to connect
@@ -204,8 +199,10 @@ abstract public class Client
             // create input and output streams on the socket
             inputStream = new DataInputStream(socket.getInputStream());
             printStream = new PrintStream(
-                new DataOutputStream(socket.getOutputStream()));
+                    new DataOutputStream(socket.getOutputStream()));
             s.s("Open was successful!");
-        } catch (IOException e) {s.e(e);}
+        } catch (IOException e) {
+            s.e(e);
+        }
     }
 }

@@ -1,12 +1,11 @@
 package GenCol;
 
 
+public interface ExternalRepresentation {
 
-public interface ExternalRepresentation{
 
-
-class ByteArray implements ExternalRepresentation{}
-
+    class ByteArray implements ExternalRepresentation {
+    }
 
 
 }

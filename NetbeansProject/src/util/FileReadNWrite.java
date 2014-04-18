@@ -11,10 +11,8 @@ package util;
 
 import java.io.*;
 
-public class FileReadNWrite
-{
-    static public String getContentsAsString(File file)
-    {
+public class FileReadNWrite {
+    static public String getContentsAsString(File file) {
         try {
             StringBuffer buffer = new StringBuffer();
             BufferedReader in = new BufferedReader(new FileReader(file));
@@ -26,17 +24,20 @@ public class FileReadNWrite
             }
 
             return buffer.toString();
-        } catch (IOException e) {e.printStackTrace(); return null;}
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-   static public void writeString(String s,String fnm){
-     PrintWriter dout = null;
-                try {
-                 dout = new PrintWriter(new FileOutputStream(fnm,true));
-                } catch(FileNotFoundException ee) {
-                 System.out.println("could not open file"+fnm);
-                }
-            dout.println(s);
-            dout.close();
-       }
+    static public void writeString(String s, String fnm) {
+        PrintWriter dout = null;
+        try {
+            dout = new PrintWriter(new FileOutputStream(fnm, true));
+        } catch (FileNotFoundException ee) {
+            System.out.println("could not open file" + fnm);
+        }
+        dout.println(s);
+        dout.close();
+    }
 }

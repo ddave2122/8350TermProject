@@ -1,12 +1,10 @@
 package genDevs.modeling;
 
-import GenCol.*;
-
-import java.util.*;
+import GenCol.ensembleInterface;
 
 
-public interface ComponentsInterface extends ensembleInterface{
-public componentIterator cIterator();
+public interface ComponentsInterface extends ensembleInterface {
+    public componentIterator cIterator();
 }
 
 

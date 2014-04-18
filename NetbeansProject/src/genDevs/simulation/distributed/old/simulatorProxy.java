@@ -1,99 +1,105 @@
 package genDevs.simulation.distributed.old;
 
-import GenCol.*;
+import GenCol.Pair;
+import GenCol.Relation;
+import GenCol.entity;
+import genDevs.modeling.IOBasicDevs;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
+import genDevs.simulation.CoupledSimulatorInterface;
+import genDevs.simulation.coupledSimulator;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.Iterator;
 
 public class simulatorProxy extends coupledSimulator
-       implements CoupledSimulatorInterface,Runnable{
+        implements CoupledSimulatorInterface, Runnable {
 
-        coordServer          srvr;
-        DataOutputStream  dos;
-        DataInputStream   dis;
-        PrintStream       ps;
-        Thread myThread;
+    coordServer srvr;
+    DataOutputStream dos;
+    DataInputStream dis;
+    PrintStream ps;
+    Thread myThread;
 
 
+    public simulatorProxy(Socket s, coordServer srvr) {
 
-public simulatorProxy( Socket s, coordServer srvr) {
+        this.srvr = srvr;
+        myThread = new Thread(this);
 
-            this.srvr = srvr;
-            myThread = new Thread(this);
-
-            try {
-                dis = new DataInputStream( s.getInputStream() );
-                dos = new DataOutputStream( s.getOutputStream() );
-                ps  = new PrintStream( dos );
-            }
-            catch( IOException e ) {
-                System.out.println( e );
-                System.exit( -1 );
-            }
-
-            myThread.start();
+        try {
+            dis = new DataInputStream(s.getInputStream());
+            dos = new DataOutputStream(s.getOutputStream());
+            ps = new PrintStream(dos);
+        } catch (IOException e) {
+            System.out.println(e);
+            System.exit(-1);
         }
+
+        myThread.start();
+    }
+
     boolean quit = false;
 
-    public void stop(){
-     quit = true;
-     }
+    public void stop() {
+        quit = true;
+    }
 
     public void run() {
         waitForName();
-            while( !quit) {
-        waitForNextTN();
-        waitForMsgToSend();
-             }
-    System.out.println("SimulatorProxy terminated");
+        while (!quit) {
+            waitForNextTN();
+            waitForMsgToSend();
         }
-
-
-  public  synchronized  void waitForName(){  //from component
-  System.out.println("waiting for name");
-  String compName = readMsg();
-
-
- IOBasicDevs comp = (IOBasicDevs)srvr.getCoupled().withName(compName);
- myModel = comp;
- srvr.addSimulator(comp,this);
- System.out.println("name is : "+compName);
- srvr.register();
-  }
-
-  //client will be identified by component name it is working on
-  public  synchronized void waitForNextTN(){  //from component
-  String s = readMsg();
-  srvr.telltN(Double.parseDouble(s));
-  }
-
-  public  message interpret(String s){
-   String portString, valueString;
-   int startIndex = 0;
-   int portIndex, valueIndex;
-   if (s == null || s.startsWith("none"))return new message();
-   message m = new message();
-    while(true){
-        portIndex = s.indexOf("port: ",startIndex);
-        valueIndex = s.indexOf(" value: ", startIndex);
-        portString=s.substring(portIndex+6,valueIndex).trim();
-        startIndex =  valueIndex+8;
-        portIndex = s.indexOf("port: ",startIndex);
-        if(portIndex!=-1){
-          valueString = s.substring(valueIndex+8,portIndex).trim();
-          m.add(new content(portString,new entity(valueString)));
-        }
-        else{
-          valueString = s.substring(valueIndex+8,s.length()).trim();
-          m.add(new content(portString,new entity(valueString)));
-          break;
-        }
+        System.out.println("SimulatorProxy terminated");
     }
-   return m;
-   }
+
+
+    public synchronized void waitForName() {  //from component
+        System.out.println("waiting for name");
+        String compName = readMsg();
+
+
+        IOBasicDevs comp = (IOBasicDevs) srvr.getCoupled().withName(compName);
+        myModel = comp;
+        srvr.addSimulator(comp, this);
+        System.out.println("name is : " + compName);
+        srvr.register();
+    }
+
+    //client will be identified by component name it is working on
+    public synchronized void waitForNextTN() {  //from component
+        String s = readMsg();
+        srvr.telltN(Double.parseDouble(s));
+    }
+
+    public message interpret(String s) {
+        String portString, valueString;
+        int startIndex = 0;
+        int portIndex, valueIndex;
+        if (s == null || s.startsWith("none")) return new message();
+        message m = new message();
+        while (true) {
+            portIndex = s.indexOf("port: ", startIndex);
+            valueIndex = s.indexOf(" value: ", startIndex);
+            portString = s.substring(portIndex + 6, valueIndex).trim();
+            startIndex = valueIndex + 8;
+            portIndex = s.indexOf("port: ", startIndex);
+            if (portIndex != -1) {
+                valueString = s.substring(valueIndex + 8, portIndex).trim();
+                m.add(new content(portString, new entity(valueString)));
+            } else {
+                valueString = s.substring(valueIndex + 8, s.length()).trim();
+                m.add(new content(portString, new entity(valueString)));
+                break;
+            }
+        }
+        return m;
+    }
 
 /*   public  synchronized  message interpret(String s){ //single port expected for now
 
@@ -107,57 +113,55 @@ public simulatorProxy( Socket s, coordServer srvr) {
    }
 */
 
-   public  synchronized void  waitForMsgToSend(){ //from component
-   String s = readMsg();
-   message output = interpret(s);
-   sendMessages(output);
-   }
+    public synchronized void waitForMsgToSend() { //from component
+        String s = readMsg();
+        message output = interpret(s);
+        sendMessages(output);
+    }
 
-   public  synchronized void sendMessages(message output) {
-     srvr.done();
-  if (output!=null && !output.isEmpty()) {
-   Relation r = convertMsg(output);//assume computeInputOutput done first
-   Iterator rit = r.iterator();
-   while (rit.hasNext()){
-   Pair p = (Pair)rit.next();
-   Object ds = p.getKey();
-   content co = (content)p.getValue();
-   simulatorProxy cn  = (simulatorProxy)modelToSim.get(ds);
-   if(cn!=null) cn.putMessages(co);
-   else srvr.putMyMessages(co);     // this goes to the root server
-   }
-  }
-  }
-
-
-  public /*synchronized */void sendInput() {
-  String s = input.toString();
-  if (s != "")
-     sendMsg(s);
-  else sendMsg("none");
-  input = new message();
-   srvr.done();
-  }
-
-
-  public /* synchronized */ String readMsg(){
-         try {
-            String MsgLine = dis.readLine();   //read your own client's msg
-            System.out.println( MsgLine );
-            return MsgLine;
-                }
-             catch( IOException e ) {
-             System.out.println( e.toString() );
-             System.exit( -1 );
-                }
-   return " ";
-  }
-
-
-
-public /* synchronized */ void sendMsg( String sMsg ) {
-            ps.println( sMsg );
+    public synchronized void sendMessages(message output) {
+        srvr.done();
+        if (output != null && !output.isEmpty()) {
+            Relation r = convertMsg(output);//assume computeInputOutput done first
+            Iterator rit = r.iterator();
+            while (rit.hasNext()) {
+                Pair p = (Pair) rit.next();
+                Object ds = p.getKey();
+                content co = (content) p.getValue();
+                simulatorProxy cn = (simulatorProxy) modelToSim.get(ds);
+                if (cn != null) cn.putMessages(co);
+                else srvr.putMyMessages(co);     // this goes to the root server
+            }
         }
+    }
+
+
+    public /*synchronized */void sendInput() {
+        String s = input.toString();
+        if (s != "")
+            sendMsg(s);
+        else sendMsg("none");
+        input = new message();
+        srvr.done();
+    }
+
+
+    public /* synchronized */ String readMsg() {
+        try {
+            String MsgLine = dis.readLine();   //read your own client's msg
+            System.out.println(MsgLine);
+            return MsgLine;
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            System.exit(-1);
+        }
+        return " ";
+    }
+
+
+    public /* synchronized */ void sendMsg(String sMsg) {
+        ps.println(sMsg);
+    }
 
 
 }

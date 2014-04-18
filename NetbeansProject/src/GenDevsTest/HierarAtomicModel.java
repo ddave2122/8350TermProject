@@ -5,24 +5,22 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package GenDevsTest;
 
-import util.*;
-import GenCol.*;
-import java.util.*;
-import java.awt.Color;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import simView.*;
+import GenCol.entity;
+import genDevs.modeling.ContentIteratorInterface;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
+import genDevs.modeling.port;
+import simView.ViewableAtomic;
 
-public class HierarAtomicModel extends ViewableAtomic
-{
+public class HierarAtomicModel extends ViewableAtomic {
     protected entity source;
-    public HierarAtomicModel(String nm)
-    {
+
+    public HierarAtomicModel(String nm) {
         super(nm);
         source = new entity("none");
         addInport("start");
@@ -32,13 +30,11 @@ public class HierarAtomicModel extends ViewableAtomic
         addTestInput("start", new entity(nm), 2);
     }
 
-    public HierarAtomicModel()
-    {
+    public HierarAtomicModel() {
         this("HierarAtomicModel");
     }
 
-    public void initialize()
-    {
+    public void initialize() {
         //if (name.startsWith("third")||name.startsWith("second"))
         if (name.startsWith("first"))
             holdIn("active", 1);
@@ -46,8 +42,7 @@ public class HierarAtomicModel extends ViewableAtomic
         //passivate();
     }
 
-    public void deltext(double e, message x)
-    {
+    public void deltext(double e, message x) {
         Continue(e);
         ContentIteratorInterface cit = x.mIterator();
         while (cit.hasNext()) {
@@ -61,27 +56,23 @@ public class HierarAtomicModel extends ViewableAtomic
         }
     }
 
-    public void deltint()
-    {
+    public void deltint() {
         if (phaseIs("active"))
             passivate();
     }
 
-    public message out()
-    {
+    public message out() {
         message m = new message();
         m.add(makeContent("out", new entity(getName())));
         return m;
     }
 
-    public void showState()
-    {
+    public void showState() {
         super.showState();
     }
 
-    public String stringState()
-    {
+    public String stringState() {
         return
-            "\n" + "source :" + source.getName();
+                "\n" + "source :" + source.getName();
     }
 }

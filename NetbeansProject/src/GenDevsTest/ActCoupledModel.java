@@ -5,23 +5,17 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
-
+ */
 
 
 package GenDevsTest;
 
-import java.awt.*;
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import simView.*;
+import simView.ViewableDigraph;
 
-public class ActCoupledModel extends ViewableDigraph
-{
-    public ActCoupledModel()
-    {
+import java.awt.*;
+
+public class ActCoupledModel extends ViewableDigraph {
+    public ActCoupledModel() {
         super("actCoupledModel");
         ActModel first = new ActModel("first", 8);
         ActModel second = new ActModel("second", 8);

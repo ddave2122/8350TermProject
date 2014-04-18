@@ -5,32 +5,30 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package util;
 
-import java.util.*;
+import java.util.Comparator;
 
 /**
  * A comparator that compares strings that might contain one or more
  * numeric substrings, considering their numeric values in addition to
  * their usual alphabetical order.
  */
-public class NumericStringComparator implements Comparator
-{
+public class NumericStringComparator implements Comparator {
     /**
      * Compares two strings to see which is greater, taking into
      * account any numbers starting at identical indices within the strings.
      * For instance, according to this comparator "x9" comes
      * before "x10", not after as would be dictated by a pure
      * alphabetical sort.
-     *
+     * <p/>
      * See parent method for parameter and return value descriptions.
      */
-    public int compare(Object o1, Object o2)
-    {
+    public int compare(Object o1, Object o2) {
         // cast the given objects to strings
-        String a = (String)o1, b = (String)o2;
+        String a = (String) o1, b = (String) o2;
 
         // for each corresponding character position within the two strings
         int aLength = a.length(), bLength = b.length();
@@ -43,7 +41,7 @@ public class NumericStringComparator implements Comparator
             aChar = a.charAt(i);
             bChar = b.charAt(i);
             boolean aInNum = Character.isDigit(aChar),
-                bInNum = Character.isDigit(bChar);
+                    bInNum = Character.isDigit(bChar);
 
             // if both current characters are numerals (meaning, we are
             // now in the process of comparing two numbers)
@@ -89,7 +87,7 @@ public class NumericStringComparator implements Comparator
         // both strings are through, judge by the last character to detm
         // which string is greater
         if (aLength == bLength) return (aChar == bChar) ? 0 :
-            ((aChar < bChar) ? -1 : 1);
+                ((aChar < bChar) ? -1 : 1);
         return (aLength < bLength) ? -1 : 1;
     }
 }

@@ -1,21 +1,20 @@
 package genDevs.modeling;
 
-import GenCol.*;
-
-import java.util.*;
+import java.util.Collection;
 
 
+public interface MessageInterface extends Collection {
+    public boolean onPort(PortInterface port, ContentInterface c);
 
-public interface MessageInterface  extends Collection{
-public boolean onPort(PortInterface port, ContentInterface c);
-public Object getValOnPort(PortInterface port,ContentInterface c);
-public void print();
+    public Object getValOnPort(PortInterface port, ContentInterface c);
+
+    public void print();
 /* examples of using ensembleBag approach */
 //public ensembleBag getPortNames();
 //public ensembleBag valuesOnPort(String portName);
 
-// Jeff
-ContentIteratorInterface mIterator();
+    // Jeff
+    ContentIteratorInterface mIterator();
 // Jeff
 }
 

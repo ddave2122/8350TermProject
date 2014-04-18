@@ -10,71 +10,64 @@
 
 package DEVSJAVALab;
 
-import simView.*;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
+import simView.ViewableAtomic;
+import statistics.rand;
+
+public class carGenr extends ViewableAtomic {
 
 
-import java.lang.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import GenCol.*;
-import util.*;
-import statistics.*;
+    protected double int_gen_time;
+    protected int count;
+    protected rand r;
 
-public class carGenr extends ViewableAtomic{
+    public carGenr() {
+        this("carGenr", 7);
+    }
 
+    public carGenr(String name, double period) {
+        super(name);
+        addInport("in");
+        addOutport("out");
 
-  protected double int_gen_time;
-  protected int count;
-  protected rand r;
+        int_gen_time = period;
+    }
 
-  public carGenr() {this("carGenr", 7);}
-
-public carGenr(String name,double period){
-   super(name);
-   addInport("in");
-   addOutport("out");
-
-   int_gen_time = period ;
-}
-
-public void initialize(){
-   holdIn("active", int_gen_time);
-   r = new rand(12345);
-   count = 0;
-}
+    public void initialize() {
+        holdIn("active", int_gen_time);
+        r = new rand(12345);
+        count = 0;
+    }
 
 
-public void  deltext(double e,message x)
-{
-Continue(e);
-   for (int i=0; i< x.getLength();i++){
-     if (messageOnPort(x, "in", i)) { //the stop message from tranducer
-       passivate();
-     }
-   }
-}
+    public void deltext(double e, message x) {
+        Continue(e);
+        for (int i = 0; i < x.getLength(); i++) {
+            if (messageOnPort(x, "in", i)) { //the stop message from tranducer
+                passivate();
+            }
+        }
+    }
 
 
-public void  deltint( )
-{
+    public void deltint() {
 
-if(phaseIs("active")){
-   count = count +1;
+        if (phaseIs("active")) {
+            count = count + 1;
 //   holdIn("active",int_gen_time);
-   holdIn("active",10+r.uniform(int_gen_time));
-}
-else passivate();
-}
+            holdIn("active", 10 + r.uniform(int_gen_time));
+        } else passivate();
+    }
 
-public message  out( )
-{
+    public message out() {
 //System.out.println(name+" out count "+count);
-   message  m = new message();
+        message m = new message();
 //   content con = makeContent("out", new entity("car" + count));
-   content con = makeContent("out", new vehicleEntity("car" + count, 5+r.uniform(20), 50+r.uniform(100), 1));
-   m.add(con);
+        content con = makeContent("out", new vehicleEntity("car" + count, 5 + r.uniform(20), 50 + r.uniform(100), 1));
+        m.add(con);
 
-  return m;
-}
+        return m;
+    }
 }
 

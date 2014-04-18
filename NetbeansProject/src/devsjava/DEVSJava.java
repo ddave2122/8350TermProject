@@ -5,7 +5,6 @@
 package devsjava;
 
 /**
- *
  * @author David
  */
 public class DEVSJava {

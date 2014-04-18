@@ -9,17 +9,16 @@
 
 package util;
 
-import java.io.*;
 import javax.swing.*;
+import java.io.*;
 
 /**
  * An application that performs simple textual
  * substitutions.
  *
- * @author      Jeff Mather
+ * @author Jeff Mather
  */
-public class fileConverter
-{
+public class fileConverter {
     /**
      * The command to specify as the second line of a conversion-pair to
      * indicate that the entire line of text should be deleted.
@@ -33,7 +32,7 @@ public class fileConverter
      */
     protected static String newLine = System.getProperty("line.separator");
     protected String[] conversions = {
-        "package GenDevsTest.Animation;","package Animation;",
+            "package GenDevsTest.Animation;", "package Animation;",
 
 
     };
@@ -41,8 +40,7 @@ public class fileConverter
     /**
      * A constructor.
      */
-    public fileConverter()
-    {
+    public fileConverter() {
         // create a file-chooser, to be used below
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setMultiSelectionEnabled(true);
@@ -63,9 +61,7 @@ public class fileConverter
                     convertFile(files[i]);
                     System.out.println(" done");
                 }
-            }
-
-            else break;
+            } else break;
         }
 
         System.exit(0);
@@ -76,18 +72,19 @@ public class fileConverter
      * substitutions on them, then writes the converted contents out to a new
      * file.
      *
-     * @param   file        The file to convert.
+     * @param file The file to convert.
      */
-    protected void convertFile(File file)
-    {
+    protected void convertFile(File file) {
         // read in the contents of the file
         byte[] buffer = null;
         try {
             InputStream stream = new FileInputStream(file);
-            buffer = new byte[(int)file.length()];
+            buffer = new byte[(int) file.length()];
             stream.read(buffer);
             stream.close();
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // turn the contents of the file into a string
         String text = new String(buffer);
@@ -101,7 +98,7 @@ public class fileConverter
                 // find the next instance of the string to convert within the
                 // text
                 StringUtil.IndexOfIgnoreWhitespaceResult result =
-                    StringUtil.indexOfIgnoreWhitespace(text, convert, index);
+                        StringUtil.indexOfIgnoreWhitespace(text, convert, index);
                 index = result.index;
                 if (index == -1) break;
 
@@ -112,15 +109,15 @@ public class fileConverter
                     int previousNewLineIndex = text.lastIndexOf(newLine, index);
                     int nextNewLineIndex = text.indexOf(newLine, index);
                     text = text.substring(0, previousNewLineIndex)
-                        + text.substring(nextNewLineIndex, text.length());
+                            + text.substring(nextNewLineIndex, text.length());
                 }
 
                 // otherwise
                 else {
                     // convert the string
                     text = text.substring(0, index) + conversion
-                        + text.substring(index + convert.length() +
-                        result.numWhitespaceCharsSkipped, text.length());
+                            + text.substring(index + convert.length() +
+                            result.numWhitespaceCharsSkipped, text.length());
 
                     // advance beyond the conversion
                     index += conversion.length();
@@ -150,14 +147,15 @@ public class fileConverter
             OutputStream stream = new FileOutputStream(file);
             stream.write(text.getBytes());
             stream.close();
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Starts this application.
      */
-    static public void main(String[] args)
-    {
+    static public void main(String[] args) {
         new fileConverter();
     }
 }

@@ -9,23 +9,25 @@
 
 package simView;
 
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-import GenCol.*;
+import GenCol.entity;
 import genDevs.modeling.*;
-import genDevs.simulation.*;
-import util.*;
+import genDevs.simulation.atomicSimulator;
+import genDevs.simulation.coordinator;
+import util.s;
+
+import java.awt.*;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A digraph devs component that is capable of creating and updating a
  * graphical view of itself.
  *
- * @author  Jeff Mather
+ * @author Jeff Mather
  */
 public class ViewableDigraph
-    //extends digraph implements ViewableComponent
-    extends scalableDigraph implements ViewableComponent
+        //extends digraph implements ViewableComponent
+        extends scalableDigraph implements ViewableComponent
 
 {
     /**
@@ -74,21 +76,19 @@ public class ViewableDigraph
     /**
      * Constructor.
      *
-     * @param   name        The name to give this devs digraph component.
+     * @param name The name to give this devs digraph component.
      */
-    public ViewableDigraph(String name)
-    {
+    public ViewableDigraph(String name) {
         super(name);
     }
 
     /**
      * Creates this digraph's view on itself.
      *
-     * @param   modelView       The sim-view model-view that will contain the
-     *                          created view.
+     * @param modelView The sim-view model-view that will contain the
+     *                  created view.
      */
-    public void createView(SimView.ModelView modelView)
-    {
+    public void createView(SimView.ModelView modelView) {
         // create the view
         view = new DigraphView(this, modelView);
         myModelView = modelView;
@@ -100,13 +100,14 @@ public class ViewableDigraph
     /**
      * See member variable accessed.
      */
-    public Dimension getPreferredSize() {return preferredSize;}
+    public Dimension getPreferredSize() {
+        return preferredSize;
+    }
 
     /**
      * See member variable accessed.
      */
-    public void setPreferredSize(Dimension size)
-    {
+    public void setPreferredSize(Dimension size) {
         preferredSize = size;
         layoutChanged = true;
     }
@@ -114,84 +115,85 @@ public class ViewableDigraph
     /**
      * See member variable accessed.
      */
-    public Point getPreferredLocation() {return base.preferredLocation;}
+    public Point getPreferredLocation() {
+        return base.preferredLocation;
+    }
 
     /**
      * See member variable accessed.
      */
-    public void setPreferredLocation(Point location)
-    {
+    public void setPreferredLocation(Point location) {
         base.preferredLocation = location;
     }
 
     /**
      * See member variable accessed.
      */
-    public ComponentView getView() {return view;}
+    public ComponentView getView() {
+        return view;
+    }
 
     /**
      * See member variable accessed.
      */
-    public DigraphView getDigraphView() {return view;}
+    public DigraphView getDigraphView() {
+        return view;
+    }
 
     /**
      * See ViewableComponent method implemented.
      */
-    public List getInportNames()
-    {
+    public List getInportNames() {
         return ViewableComponentUtil.getPortNames(mh.getInports());
     }
 
     /**
      * See ViewableComponent method implemented.
      */
-    public List getOutportNames()
-    {
+    public List getOutportNames() {
         return ViewableComponentUtil.getPortNames(mh.getOutports());
     }
 
     /**
      * See full-signature method.
      */
-    public void addTestInput(String portName, entity value) {addTestInput(portName, value, 0);}
+    public void addTestInput(String portName, entity value) {
+        addTestInput(portName, value, 0);
+    }
 
     /**
      * Creates a test input structure from the given information,
      * and adds that input structure to the list of test inputs for
      * the given port.
      *
-     * @param   portName    The name of the port on which to inject the value.
-     * @param   value       The value to inject.
-     * @param   e           The amount of simulation time to wait before
-     *                      injecting the value.
+     * @param portName The name of the port on which to inject the value.
+     * @param value    The value to inject.
+     * @param e        The amount of simulation time to wait before
+     *                 injecting the value.
      */
-    public void addTestInput(String portName, entity value, double e)
-    {
+    public void addTestInput(String portName, entity value, double e) {
         ViewableComponentUtil.addTestInput(portName, value, e,
-            base.testInputs, base.testInputsByPortName);
+                base.testInputs, base.testInputsByPortName);
     }
 
     /**
      * See base member variable accessed.
      */
-    public List getTestInputs()
-    {
+    public List getTestInputs() {
         return base.testInputs;
     }
 
     /**
      * See ViewableComponent method implemented.
      */
-    public List getTestInputs(String portName)
-    {
-        return (List)base.testInputsByPortName.get(portName);
+    public List getTestInputs(String portName) {
+        return (List) base.testInputsByPortName.get(portName);
     }
 
     /**
      * See ViewableComponent method implemented.
      */
-    public atomicSimulator getSimulator()
-    {
+    public atomicSimulator getSimulator() {
         return getCoordinator();
     }
 
@@ -200,40 +202,49 @@ public class ViewableDigraph
      * This method may be overridden to provide programmatic layout
      * of this digraph's components.
      *
-     * @return  Whether the workings of this method obviate the need for
-     *          the automatically generated layoutForSimView() method
-     *          to be called.
+     * @return Whether the workings of this method obviate the need for
+     *         the automatically generated layoutForSimView() method
+     *         to be called.
      */
-    public boolean layoutForSimViewOverride() {return false;}
-
-    /**
-     * See member variable accessed.
-     */
-    public boolean getLayoutChanged() {return layoutChanged;}
-
-    /**
-     * See member variable accessed.
-     */
-    public void setLayoutChanged(boolean changed) {layoutChanged = changed;}
-
-    /**
-     * See member variable accessed.
-     */
-    public String getLayoutName()
-    {
-        return base.layoutName != null ? base.layoutName :
-            ViewableComponentUtil.buildLayoutName(name);
+    public boolean layoutForSimViewOverride() {
+        return false;
     }
 
     /**
      * See member variable accessed.
      */
-    public void setLayoutName(String name) {base.layoutName = name;}
+    public boolean getLayoutChanged() {
+        return layoutChanged;
+    }
 
     /**
      * See member variable accessed.
      */
-    public boolean isBlackBox() {return blackBox;}
+    public void setLayoutChanged(boolean changed) {
+        layoutChanged = changed;
+    }
+
+    /**
+     * See member variable accessed.
+     */
+    public String getLayoutName() {
+        return base.layoutName != null ? base.layoutName :
+                ViewableComponentUtil.buildLayoutName(name);
+    }
+
+    /**
+     * See member variable accessed.
+     */
+    public void setLayoutName(String name) {
+        base.layoutName = name;
+    }
+
+    /**
+     * See member variable accessed.
+     */
+    public boolean isBlackBox() {
+        return blackBox;
+    }
 
     /**
      * See member variable accessed.
@@ -242,170 +253,173 @@ public class ViewableDigraph
         blackBox = blackBox_;
 
     }
+
     //by saurabh
     public void setBlackBox(boolean blackBox_, boolean modifiedAtRun) {
-      blackBox = blackBox_;
+        blackBox = blackBox_;
 
-      if(blackBox)
-          this.updateComponentView();
+        if (blackBox)
+            this.updateComponentView();
         else
-          this.updateComponentViewExpand();
+            this.updateComponentViewExpand();
 
     }
 
     /**
      * See member variable accessed.
      */
-    public boolean isHidden() {return base.hidden;}
+    public boolean isHidden() {
+        return base.hidden;
+    }
 
     /**
      * See member variable accessed.
      */
-     public void setHidden(boolean hidden) {base.hidden = hidden;}
+    public void setHidden(boolean hidden) {
+        base.hidden = hidden;
+    }
 
     /**
      * See ViewableComponent method implemented.
      */
-    public int getNumInports()
-    {
+    public int getNumInports() {
         return mh.getInports().size();
     }
 
     /**
      * See ViewableComponent method implemented.
      */
-    public int getNumOutports()
-    {
+    public int getNumOutports() {
         return mh.getOutports().size();
     }
 
     //by saurabh
-    public void setMyParent(ViewableDigraph dg){
-    myParent = new ViewableDigraph("none");
-     myParent =dg;
+    public void setMyParent(ViewableDigraph dg) {
+        myParent = new ViewableDigraph("none");
+        myParent = dg;
     }
 
-    public ViewableDigraph getMyParent(){return myParent;}
-
-
-    public void add(ViewableAtomic iod){
-      setMyParent(this);
-      super.add((IODevs)iod);
+    public ViewableDigraph getMyParent() {
+        return myParent;
     }
 
-    public void add(ViewableDigraph iod){
-      setMyParent(this);
-      super.add((IODevs)iod);
+
+    public void add(ViewableAtomic iod) {
+        setMyParent(this);
+        super.add((IODevs) iod);
     }
 
-    public void printCouprel(couprel cr){
-      Iterator i = cr.iterator();
-      while(i.hasNext())
-        System.out.println("Now printing relations: "+i.next().toString());
+    public void add(ViewableDigraph iod) {
+        setMyParent(this);
+        super.add((IODevs) iod);
+    }
+
+    public void printCouprel(couprel cr) {
+        Iterator i = cr.iterator();
+        while (i.hasNext())
+            System.out.println("Now printing relations: " + i.next().toString());
 
     }
 
-    public void setSimView(SimView sv){
-      this.mySimView = sv;
+    public void setSimView(SimView sv) {
+        this.mySimView = sv;
     }
 
-    public SimView getSimView(){
-      return mySimView;
+    public SimView getSimView() {
+        return mySimView;
     }
 
-    public void printComponents(ViewableDigraph P){
+    public void printComponents(ViewableDigraph P) {
 
-      System.out.println("The components of the digraph "+P.getName()+ " are:---------->");
+        System.out.println("The components of the digraph " + P.getName() + " are:---------->");
 
-      ComponentsInterface cpi = P.getComponents();
-      componentIterator i = cpi.cIterator();
-      while(i.hasNext()){
-        IOBasicDevs iodb = i.nextComponent();
-        System.out.println("Printing the iodb name " + iodb.getName());
-      }
+        ComponentsInterface cpi = P.getComponents();
+        componentIterator i = cpi.cIterator();
+        while (i.hasNext()) {
+            IOBasicDevs iodb = i.nextComponent();
+            System.out.println("Printing the iodb name " + iodb.getName());
+        }
     }
 
 //    public void addNewModel(){}
 
 //    public void removeOldModel(String withName){}
 
-    public void removeInport(String port){
-      s.s("----------------------");
-      super.removeInport(port);
-      updateComponentView();
+    public void removeInport(String port) {
+        s.s("----------------------");
+        super.removeInport(port);
+        updateComponentView();
     }
 
-     public void removeOutport(String port){
-       s.s("----------------------");
-       super.removeOutport(port);
-       updateComponentView();
+    public void removeOutport(String port) {
+        s.s("----------------------");
+        super.removeOutport(port);
+        updateComponentView();
     }
 
-    public void addInport(String modelName, String port){
+    public void addInport(String modelName, String port) {
 
-      super.addInport(modelName,port);  //can drop the boolean addAtRunTIme version
-      s.s("----------------------");
-      s.s("Inport addedVD: "+port);
-      this.updateComponentView();
+        super.addInport(modelName, port);  //can drop the boolean addAtRunTIme version
+        s.s("----------------------");
+        s.s("Inport addedVD: " + port);
+        this.updateComponentView();
 
     }
 
-    public void addOutport(String modelName, String port){
-      super.addOutport(modelName, port);
-      s.s("----------------------");
-      s.s("Outport added: "+port);
-      this.updateComponentView();
+    public void addOutport(String modelName, String port) {
+        super.addOutport(modelName, port);
+        s.s("----------------------");
+        s.s("Outport added: " + port);
+        this.updateComponentView();
     }
 
-    public void updateComponentView(){
+    public void updateComponentView() {
 
-      ViewableDigraph parent = (ViewableDigraph)getParent();
-      //s.s("Inside ViewableDigraph update component");
-      // save the current Model Couplings
-      coordinator cd = parent.getCoordinator();
-      couprel savedCr = cd.getExternalModelCouplings(this);
+        ViewableDigraph parent = (ViewableDigraph) getParent();
+        //s.s("Inside ViewableDigraph update component");
+        // save the current Model Couplings
+        coordinator cd = parent.getCoordinator();
+        couprel savedCr = cd.getExternalModelCouplings(this);
 
-      try{
-        //clear the couplings from the modelView window
-        //remove the component View from the window
-        myModelView.getSim().usePrevModelLayout = true;
-        myModelView.savingModelViewCouplingsRemove(this,savedCr);
+        try {
+            //clear the couplings from the modelView window
+            //remove the component View from the window
+            myModelView.getSim().usePrevModelLayout = true;
+            myModelView.savingModelViewCouplingsRemove(this, savedCr);
 
-        //create a new componentView
-        //put back the saved couplings
-        s.s("Updating the componenet: "+this.getName());
-        myModelView.savedModelViewCouplingsAdd(this,savedCr);
-        myModelView.getSim().usePrevModelLayout = false;
+            //create a new componentView
+            //put back the saved couplings
+            s.s("Updating the componenet: " + this.getName());
+            myModelView.savedModelViewCouplingsAdd(this, savedCr);
+            myModelView.getSim().usePrevModelLayout = false;
+            myModelView.repaint();
+        } catch (Exception ex) {
+            //    ex.printStackTrace();
+            return;
+        }
+
+        couprel myCr = this.getCouprel();
+        myModelView.restoreInternalCouplings(this, myCr);
         myModelView.repaint();
-      }
-
-      catch(Exception ex){
-        //    ex.printStackTrace();
-        return;
-      }
-
-      couprel myCr = this.getCouprel();
-      myModelView.restoreInternalCouplings(this,myCr);
-      myModelView.repaint();
 
     }
 
-    public void updateComponentViewExpand(){
-      ViewableDigraph parent = (ViewableDigraph)getParent();
-      DigraphView parentView = parent.getDigraphView();
+    public void updateComponentViewExpand() {
+        ViewableDigraph parent = (ViewableDigraph) getParent();
+        DigraphView parentView = parent.getDigraphView();
 
 
-      coordinator cd = parent.getCoordinator();
-      couprel savedCr = this.getCouprel();
+        coordinator cd = parent.getCoordinator();
+        couprel savedCr = this.getCouprel();
 
-      s.s("Code currently not available. Patch will be sent soon");
+        s.s("Code currently not available. Patch will be sent soon");
 
 //      s.s("Printing the current couplings:");
 //      this.printCouprel(this.getCouprel());
 
-      try{
-        //clear the couplings from the modelView window
-        //remove the component View from the window
+        try {
+            //clear the couplings from the modelView window
+            //remove the component View from the window
 /*        myModelView.getSim().usePrevModelLayout = true;
 //        myModelView.savingModelViewCouplingsRemove(this,savedCr);
 
@@ -419,14 +433,11 @@ public class ViewableDigraph
         myModelView.getSim().usePrevModelLayout = false;
         myModelView.repaint();
 */
-      }
-
-      catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        return;
-      }
+            return;
+        }
     }
-
 
 
     /**
@@ -435,18 +446,17 @@ public class ViewableDigraph
      * desired.  Note that the expected format is HTML (so, use "<br>"
      * instead of "\n" for line breaks).
      */
-    public String getTooltipText()
-    {
+    public String getTooltipText() {
         return "class: <font size=\"-2\">" + getClass().getName() + "</font>";
     }
+
     /**
      * Automatically generated by the SimView program.
      * Do not edit this manually, as such changes will get overwritten.
      */
-    public void layoutForSimView()
-    {
+    public void layoutForSimView() {
         preferredSize = new Dimension(625, 341);
-        if((ViewableComponent)withName("carGenr")!=null)
-             ((ViewableComponent)withName("carGenr")).setPreferredLocation(new Point(180, 120));
+        if ((ViewableComponent) withName("DNAMEnzyme") != null)
+            ((ViewableComponent) withName("DNAMEnzyme")).setPreferredLocation(new Point(203, 145));
     }
 }

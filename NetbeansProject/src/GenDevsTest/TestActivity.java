@@ -5,28 +5,24 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 
 package GenDevsTest;
 
-import GenCol.*;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
+import GenCol.testGeneral;
+import genDevs.simulation.coupledSimulator;
 
-public class TestActivity extends testGeneral
-{
+public class TestActivity extends testGeneral {
     protected coupledSimulator as;
     protected static ActModel g;
-    public TestActivity(coupledSimulator as)
-    {
+
+    public TestActivity(coupledSimulator as) {
         super("GenDevsTest.testActivity");
         this.as = as;
     }
 
-    public static void main(String[ ] args)
-    {
+    public static void main(String[] args) {
         g = new ActModel("second", 10);
         //g = new actModel("first",10);
         coupledSimulator as = new coupledSimulator(g);
@@ -34,8 +30,7 @@ public class TestActivity extends testGeneral
         t.applyTests("activitySimulation of actModel is correct");
     }
 
-    public boolean testSimulation()
-    {
+    public boolean testSimulation() {
         description = "simulation of activity";
         precondition = new Boolean(true);
         as.initialize();

@@ -1,5 +1,5 @@
 package genDevs.modeling;
 
-public interface Coupled extends coupledDevs,IOBasicDevs{
+public interface Coupled extends coupledDevs, IOBasicDevs {
 
 }

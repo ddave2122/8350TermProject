@@ -8,39 +8,33 @@
  */
 
 
-package  statistics;
+package statistics;
 
-import GenCol.*;
-import java.lang.*;
-import java.util.*;
-
-
-public class randUniform extends rand{
-protected double lo, hi;
+public class randUniform extends rand {
+    protected double lo, hi;
 
 
-public randUniform(long seed,double lo ,double hi){
-  super(seed);
-  this.lo = lo;
-  this.hi = hi;
-}
+    public randUniform(long seed, double lo, double hi) {
+        super(seed);
+        this.lo = lo;
+        this.hi = hi;
+    }
 
-public randUniform(long seed){
-this(seed,0,1);
-}
+    public randUniform(long seed) {
+        this(seed, 0, 1);
+    }
 
-public randUniform(){
-this(1,0,1);
-}
+    public randUniform() {
+        this(1, 0, 1);
+    }
 
-public double sample(){
-return uniform(lo,hi);
-}
+    public double sample() {
+        return uniform(lo, hi);
+    }
 
-    static public void main(String[] args)
-    {
-       rand r = new randUniform();
-       for (int i = 0;i<10;i++)
-       System.out.println(r.sample());
+    static public void main(String[] args) {
+        rand r = new randUniform();
+        for (int i = 0; i < 10; i++)
+            System.out.println(r.sample());
     }
 }

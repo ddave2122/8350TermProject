@@ -5,20 +5,15 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
-
-
+ */
 
 
 package genDevs.simulation.realTime;
 
-import GenCol.*;
-
-import java.util.*;
-import genDevs.simulation.*;
+import genDevs.simulation.CoupledSimulatorInterface;
 
 
 public interface CoupledRTSimulatorInterface
-              extends CoupledSimulatorInterface,RTSimulatorInterface{
+        extends CoupledSimulatorInterface, RTSimulatorInterface {
 
 }

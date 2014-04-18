@@ -1,14 +1,8 @@
 
 package genDevs.modeling;
 
-import GenCol.*;
+public interface ContentIteratorInterface {
+    public boolean hasNext();
 
-import java.util.*;
-
-
-
-
-public interface ContentIteratorInterface{
-public boolean hasNext();
-public ContentInterface next();
+    public ContentInterface next();
 }

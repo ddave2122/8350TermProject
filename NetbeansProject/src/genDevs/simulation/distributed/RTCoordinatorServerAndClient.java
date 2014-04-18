@@ -1,11 +1,13 @@
 package genDevs.simulation.distributed;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
-import util.*;
+import GenCol.Pair;
+import genDevs.modeling.ContentInterface;
+import genDevs.modeling.Coupled;
+import genDevs.modeling.content;
+import genDevs.modeling.coupledDevs;
+import util.s;
+
+import java.util.Iterator;
 
 /**
  * A combination of an RTCoordinatorServer and an RTCoordinatorClient
@@ -13,8 +15,7 @@ import util.*;
  * real-time distributed simulation, while interfacing with a superordinate
  * server in the hierarchy of coordinators presiding over the simulation.
  */
-public class RTCoordinatorServerAndClient extends RTCoordinatorServer
-{
+public class RTCoordinatorServerAndClient extends RTCoordinatorServer {
     /**
      * The client coordinator aspect of this object.
      */
@@ -23,15 +24,14 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
     /**
      * Constructs an object of this class.
      *
-     * @param   devs            The devs component over whose simulation this
-     *                          coordinator will preside.
-     * @param   serverAddress   The superordinate server's IP address.
-     * @param   serverPort      The superordinate server's port number.
-     * @param   myPort          This server's port number.
+     * @param devs          The devs component over whose simulation this
+     *                      coordinator will preside.
+     * @param serverAddress The superordinate server's IP address.
+     * @param serverPort    The superordinate server's port number.
+     * @param myPort        This server's port number.
      */
     public RTCoordinatorServerAndClient(coupledDevs devs, String serverAddress,
-        int serverPort, int myPort)
-    {
+                                        int serverPort, int myPort) {
         super(devs, 0, myPort, false);
 
         // wait for all clients to be registered with this object's
@@ -40,7 +40,7 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
 
         // create the client-coordinator aspect of this server
         client = new RTCoordinatorClient(
-            (Coupled)devs, serverAddress, serverPort);
+                (Coupled) devs, serverAddress, serverPort);
     }
 
     /**
@@ -48,8 +48,7 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
      * this server's associated client coordinator pass its
      * output message on to the next-higher-up server.
      */
-    public void putMyMessages(ContentInterface content)
-    {
+    public void putMyMessages(ContentInterface content) {
         client.putMyMessages(content);
     }
 
@@ -57,14 +56,12 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
      * The client-coordinator aspect of this class.
      */
     protected class RTCoordinatorClient
-        extends genDevs.simulation.distributed.RTCoordinatorClient
-    {
+            extends genDevs.simulation.distributed.RTCoordinatorClient {
         /**
          * See parent constructor.
          */
         public RTCoordinatorClient(Coupled devs, String serverAddress,
-            int serverPort)
-        {
+                                   int serverPort) {
             super(devs, serverAddress, serverPort);
         }
 
@@ -72,8 +69,7 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
          * See parent method.
          */
         protected void createClient(Coupled devs, String serverAddress,
-            int serverPort)
-        {
+                                    int serverPort) {
             // create the client aspect of this simulator
             this.client = new Client(devs.getName(), serverAddress, serverPort);
         }
@@ -82,21 +78,18 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
          * See parent class.
          */
         protected class Client
-            extends genDevs.simulation.distributed.RTCoordinatorClient.Client
-        {
+                extends genDevs.simulation.distributed.RTCoordinatorClient.Client {
             /**
              * See parent constructor.
              */
-            public Client(String devsName, String serverAddress, int serverPort)
-            {
+            public Client(String devsName, String serverAddress, int serverPort) {
                 super(devsName, serverAddress, serverPort);
             }
 
             /**
              * See parent method.
              */
-            protected void startSimulateMessageReceived(int numIterations)
-            {
+            protected void startSimulateMessageReceived(int numIterations) {
                 // tell all subordinate simulators to start simulating
                 broadcast(Constants.startSimulateMessage + numIterations);
             }
@@ -104,12 +97,11 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
             /**
              * See parent method.
              */
-            protected void initializeMessageReceived(String message)
-            {
+            protected void initializeMessageReceived(String message) {
                 // broadcast an initialize message (including the time specified
                 // in the given message) to the subordinate simulators
                 double currentTime = Double.parseDouble(message.substring(
-                    message.indexOf(':') + 1));
+                        message.indexOf(':') + 1));
                 broadcast("initialize:" + currentTime);
             }
         }
@@ -119,8 +111,7 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
          * this client's input message transmitted
          * by its associated server down to its subordinate simulators.
          */
-        public void sendDownMessages()
-        {
+        public void sendDownMessages() {
             RTCoordinatorServerAndClient.this.input = input;
             RTCoordinatorServerAndClient.this.sendDownMessages();
         }
@@ -130,21 +121,20 @@ public class RTCoordinatorServerAndClient extends RTCoordinatorServer
      * Overrides the parent class method's behavior to transmit this
      * server's current input message down to its subordinate simulators.
      */
-    public void sendDownMessages()
-    {
+    public void sendDownMessages() {
         // if this server's current input message is non-empty
         if (!input.isEmpty()) {
             // for each content-destination pair in the input message
             Iterator i = convertInput(input).iterator();
             while (i.hasNext()) {
-                Pair p = (Pair)i.next();
+                Pair p = (Pair) i.next();
 
                 // if we can find the proxy of the simulator of the
                 // destination component of this content, pass it
                 // this content
                 SimulatorProxy proxy = (SimulatorProxy)
-                    modelToSim.get(p.getKey());
-                if (proxy != null) proxy.putMessages((content)p.getValue());
+                        modelToSim.get(p.getKey());
+                if (proxy != null) proxy.putMessages((content) p.getValue());
             }
         }
     }

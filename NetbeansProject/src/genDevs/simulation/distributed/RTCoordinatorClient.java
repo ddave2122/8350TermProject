@@ -1,13 +1,10 @@
 package genDevs.simulation.distributed;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import GenCol.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import genDevs.simulation.realTime.*;
-import util.*;
+import GenCol.ensembleBag;
+import genDevs.modeling.ContentInterface;
+import genDevs.modeling.Coupled;
+import genDevs.modeling.message;
+import genDevs.simulation.realTime.RTcoordinator;
 
 /**
  * A real-time coordinator that can interface with a remote coordinator-server
@@ -15,8 +12,7 @@ import util.*;
  * whose simulation this client will coordinate are all local to each other
  * and to this client.
  */
-public class RTCoordinatorClient extends RTcoordinator
-{
+public class RTCoordinatorClient extends RTcoordinator {
     /**
      * The client aspect of this class, which allows for communication
      * with a server.
@@ -26,14 +22,13 @@ public class RTCoordinatorClient extends RTcoordinator
     /**
      * Constructs an object of this class.
      *
-     * @param   devs            The coupled devs component over whose
-     *                          simulation this coordinator will preside.
-     * @param   serverAddress   The server's IP address.
-     * @param   serverPort      The server's port number.
+     * @param devs          The coupled devs component over whose
+     *                      simulation this coordinator will preside.
+     * @param serverAddress The server's IP address.
+     * @param serverPort    The server's port number.
      */
     public RTCoordinatorClient(Coupled devs, String serverAddress,
-        int serverPort)
-    {
+                               int serverPort) {
         super(devs);
 
         createClient(devs, serverAddress, serverPort);
@@ -43,8 +38,7 @@ public class RTCoordinatorClient extends RTcoordinator
      * This may be overridden to return a client object of a different class.
      */
     protected void createClient(Coupled devs, String serverAddress,
-        int serverPort)
-    {
+                                int serverPort) {
         // create the client aspect of this simulator
         client = new Client(devs.getName(), serverAddress, serverPort);
     }
@@ -53,11 +47,10 @@ public class RTCoordinatorClient extends RTcoordinator
      * Overrides the parent class method behavior to send this
      * coordinator's current output message to the server.
      *
-     * @param   content     A content to add to the output message
-     *                      before sending it.
+     * @param content A content to add to the output message
+     *                before sending it.
      */
-    public void putMyMessages(ContentInterface content)
-    {
+    public void putMyMessages(ContentInterface content) {
         // send this coordinator's current output message, augmented
         // with the given content, to the server
         output.add(content);
@@ -70,26 +63,25 @@ public class RTCoordinatorClient extends RTcoordinator
     /**
      * See parent class.
      */
-    protected class Client extends genDevs.simulation.distributed.Client
-    {
+    protected class Client extends genDevs.simulation.distributed.Client {
         /**
          * See parent constructor.
          */
-        public Client(String devsName, String serverAddress, int serverPort)
-        {
+        public Client(String devsName, String serverAddress, int serverPort) {
             super(devsName, serverAddress, serverPort);
         }
 
         /**
          * See parent method.
          */
-        protected void initializeMessageReceived(String message) {initialize();}
+        protected void initializeMessageReceived(String message) {
+            initialize();
+        }
 
         /**
          * See parent method.
          */
-        protected void startSimulateMessageReceived(int numIterations)
-        {
+        protected void startSimulateMessageReceived(int numIterations) {
             // tell all of this coordinator's subordinate simulators to
             // simulate
             Class[] classes = {ensembleBag.getTheClass("java.lang.Integer")};
@@ -100,8 +92,7 @@ public class RTCoordinatorClient extends RTcoordinator
         /**
          * See parent method.
          */
-        protected void inputReceived(message message)
-        {
+        protected void inputReceived(message message) {
             // pass the given message along to subordinate simulators as this
             // coordinator's input message
             input = message;

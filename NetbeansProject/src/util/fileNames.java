@@ -9,29 +9,19 @@
 
 package util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.TreeSet;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.io.*;
-import java.net.URL;
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.event.*;
-import java.text.DecimalFormat;
-import java.util.*;
-import java.util.List;
+public class fileNames {
 
-public class fileNames
-{
-
- static public void printNames(String packageName)
-    {
+    static public void printNames(String packageName) {
         // create a filename filter (to be used below) that will
         // match against ".class" files (and ignore inner classes)
         final String extension = ".java";
-        FilenameFilter filter =  new FilenameFilter() {
+        FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.endsWith(extension) && name.indexOf('$') == -1;
             }
@@ -39,7 +29,7 @@ public class fileNames
 
         // find all java class files (that aren't inner classes) in the
         // models-path
-        String modelsPath = "C:/GenDevsLast/src/"+packageName;
+        String modelsPath = "C:/GenDevsLast/src/" + packageName;
         ;
         File path = new File(modelsPath);
         File[] files = path.listFiles(filter);
@@ -58,20 +48,19 @@ public class fileNames
         Iterator i = sortedFiles.iterator();
         while (i.hasNext()) {
             // add this class file's name (minus its extension) to the box
-            String name = ((File)i.next()).getName();
+            String name = ((File) i.next()).getName();
             System.out.println(name);
 
 
         }
     }
 
-        public static void main(String[] args)
-    {
-    printNames("Introduction");
+    public static void main(String[] args) {
+        printNames("Introduction");
         printNames("Random");
-            printNames("SimpArc");
-              printNames("devsIntegration");
-                printNames("Continuity");
+        printNames("SimpArc");
+        printNames("devsIntegration");
+        printNames("Continuity");
 
     }
 }

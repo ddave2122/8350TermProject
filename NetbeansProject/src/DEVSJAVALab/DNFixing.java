@@ -20,30 +20,35 @@ public class DNFixing extends ViewableAtomic {
     protected double arrived, solved;
     protected double observation_time;
     private boolean enzyme, molecule;
-    
+
+
     private String messageToSend;
-    
-    public DNFixing() {this("DNGlucose", 20);}
-    
-    public DNFixing(String name) { this(name, 20); }
 
-    public DNFixing(String name, double observation_time){
-       super(name);
-       addInport("in1");
-       addInport("in2");
-       addOutport("out1");
-       addNameTestInput("in1", "startMolecule");
-       addNameTestInput("in2", "enzymeEntry");
-       this.observation_time = observation_time;
-       enzyme = false;
-       molecule = false;
+    public DNFixing() {
+        this("DNGlucose", 20);
     }
-    
-    public void initialize(){
-       holdIn("passive", observation_time);
-       r = new rand(12345);
-       count = 0;
 
+    public DNFixing(String name) {
+        this(name, 20);
+    }
+
+    public DNFixing(String name, double observation_time) {
+        super(name);
+        addInport("in1");
+        addInport("in2");
+        addOutport("out1");
+        addNameTestInput("in1", "startMolecule");
+        addNameTestInput("in2", "enzymeEntry");
+        this.observation_time = observation_time;
+        enzyme = false;
+        molecule = false;
+
+    }
+
+    public void initialize() {
+        holdIn("passive", observation_time);
+        r = new rand(12345);
+        count = 0;
     }
 
     public void deltext(double e, message x) {
@@ -56,9 +61,9 @@ public class DNFixing extends ViewableAtomic {
                     molecule = true;
                     arrived = this.getSimulationTime();
                     System.out.println(val.getName() + " arrived at time:" + arrived);
-                    if(enzyme)
+                    if (enzyme)
                         holdIn("active", 5);
-                    else 
+                    else
                         holdIn("Waiting", 10);
                 }
                 //numOfarrivingcars++;
@@ -68,9 +73,9 @@ public class DNFixing extends ViewableAtomic {
                 if (val.getName().compareTo("enzymeEntry") == 0) {
                     enzyme = true;
                     solved = this.getSimulationTime();
-                    if(molecule)
+                    if (molecule)
                         holdIn("active", 5);
-                    else 
+                    else
                         holdIn("Waiting", 10);
                     System.out.println(val.getName() + " is finished at time:" + solved);
                 }
@@ -79,45 +84,38 @@ public class DNFixing extends ViewableAtomic {
         }
     }
 
-    
-public void  deltint( )
-{
-    if(phaseIs("active"))
-    {
-        messageToSend = "startProcess";
-        enzyme = false;
-        molecule = false;
-        out();
-        passivate();
+
+    public void deltint() {
+        if (phaseIs("active")) {
+            messageToSend = "startProcess";
+            enzyme = false;
+            molecule = false;
+            out();
+            passivate();
+        } else if (phaseIs("passive")) {
+            System.out.println("the total service time is: " + (solved - arrived));
+            //System.out.println("arriving car: "+numOfarrivingcars+"  finshed car:"+numOfFinishedCars);
+            passivate();
+        }
+
     }
-    else if(phaseIs("passive"))
-    {
-        System.out.println("the total service time is: "+(solved-arrived));
-  //System.out.println("arriving car: "+numOfarrivingcars+"  finshed car:"+numOfFinishedCars);
-    passivate();
-    }
-    
-}
 
     @Override
-    public message out()
-    {
-       //System.out.println(name+" out count "+count);
-       message  m = new message();
-       //content con = makeContent("out", new entity("car" + count));
-       content con = makeContent("out1", new InputEntity(messageToSend, 1));
-       m.add(con);
+    public message out() {
+        //System.out.println(name+" out count "+count);
+        message m = new message();
+        //content con = makeContent("out", new entity("car" + count));
+        content con = makeContent("out1", new InputEntity(messageToSend, 1));
+        m.add(con);
 
-       return m;
+        return m;
     }
-    
-    private String getMessageOnPortZero(message x)
-    {
+
+    private String getMessageOnPortZero(message x) {
         return x.getValOnPort("in1", 0).toString();
     }
-    
-    private String getMessageOnPortOne(message x)
-    {
+
+    private String getMessageOnPortOne(message x) {
         return x.getValOnPort("in2", 0).toString();
     }
 

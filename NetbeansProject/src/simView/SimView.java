@@ -9,31 +9,37 @@
 
 package simView;
 
+import GenCol.Pair;
+import GenCol.entity;
+import genDevs.modeling.*;
+import genDevs.simulation.atomicSimulator;
+import genDevs.simulation.coordinator;
+import genDevs.simulation.coupledSimulator;
+import genDevs.simulation.realTime.TunableCoordinator;
+import genDevs.simulation.realTime.TunableCoupledCoordinator;
+import util.*;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.Keymap;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
+import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.URL;
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.event.*;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
-import GenCol.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import genDevs.simulation.realTime.*;
-import util.*;
 
 /**
  * An application that displays the execution of a simulation employing
  * a coupled devs model.
  *
- * @author      Jeff Mather
+ * @author Jeff Mather
  */
-public class SimView
-{
+public class SimView {
     /**
      * A label that displays whether the viewer is currently executing
      * a step (or running multiple steps) of a simulation, or is ready
@@ -102,9 +108,6 @@ public class SimView
 //    protected JScrollPane modelViewScrollPane;
     public ModelView modelView;
     public JScrollPane modelViewScrollPane;
-
-
-
 
 
     /**
@@ -184,8 +187,7 @@ public class SimView
     /**
      * Constructs a sim-view.
      */
-    public SimView()
-    {
+    public SimView() {
         loadSettings();
 
         constructUI();
@@ -204,22 +206,21 @@ public class SimView
         mainFrame.setVisible(true);
     }
 
-    /**by saurabh
+    /**
+     * by saurabh
      * Constructs an exploded window for the blackbox digraph
      */
-    public SimView(ViewableDigraph dg, String modelsPackage, String modelClass, boolean level, double prevSimTime)
-    {
-      showLevel = level;//false for the displaying the child in the network
-      constructUI_SM(dg, modelsPackage, modelClass, prevSimTime);
-      mainFrame.setVisible(true);
+    public SimView(ViewableDigraph dg, String modelsPackage, String modelClass, boolean level, double prevSimTime) {
+        showLevel = level;//false for the displaying the child in the network
+        constructUI_SM(dg, modelsPackage, modelClass, prevSimTime);
+        mainFrame.setVisible(true);
     }
 
 
     /**
      * Constructs the UI of the main window of this application.
      */
-    protected void constructUI()
-    {
+    protected void constructUI() {
         // create the app frame
         final JFrame frame = mainFrame = new JFrame("DEVSJAVA Simulation Viewer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -233,15 +234,16 @@ public class SimView
 
         // when the app frame is closing
         frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e)
-            {
+            public void windowClosing(WindowEvent e) {
                 // save the current model's layout, and the current program
                 // settings, but don't let an exception in the process of
                 // doing so halt the shutdown of the program
                 try {
                     saveModelLayout();
                     saveSettings();
-                } catch (Exception ex) {ex.printStackTrace();}
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -281,7 +283,7 @@ public class SimView
         // this keeps the combo-box from taking up extra height
         // unnecessarily under JRE 1.4
         combo.setMaximumSize(new Dimension(combo.getMaximumSize().width,
-            combo.getMinimumSize().height));
+                combo.getMinimumSize().height));
 
         // when the a choice is selected from the packages combo-box
         packagesBox.addActionListener(new ActionListener() {
@@ -292,8 +294,8 @@ public class SimView
                 if (packagesBox.getSelectedIndex() <= 0) return;
 
                 // make the selected item the current model package name
-                if(!showLevel) //by saurabh
-                modelsPackage = (String)packagesBox.getSelectedItem();
+                if (!showLevel) //by saurabh
+                    modelsPackage = (String) packagesBox.getSelectedItem();
 
                 populateModelsBox(modelsBox);
             }
@@ -308,7 +310,7 @@ public class SimView
         // this keeps the combo-box from taking up extra height
         // unnecessarily under JRE 1.4
         combo.setMaximumSize(new Dimension(combo.getMaximumSize().width,
-            combo.getMinimumSize().height));
+                combo.getMinimumSize().height));
 
         // when the a choice is selected from the models combo-box
         modelsBox.addActionListener(new ActionListener() {
@@ -318,17 +320,16 @@ public class SimView
                 // is selected
                 if (modelsBox.getSelectedIndex() <= 0) return;
 
-           //     useModelClass((String)modelsBox.getSelectedItem());
+                //     useModelClass((String)modelsBox.getSelectedItem());
 
                 //by saurabh
-                if(!showLevel)
-                  useModelClass((String)modelsBox.getSelectedItem());
-                else{
+                if (!showLevel)
+                    useModelClass((String) modelsBox.getSelectedItem());
+                else {
 //                  System.out.println("The data is package 2 <"+modelsPackage+"> class <"+className+"> model<"+model.getName()+">");
-                  useModelClass(className);
+                    useModelClass(className);
 
                 }
-
 
 
             }
@@ -345,7 +346,7 @@ public class SimView
             new JScrollPane(modelView);
 */
         JScrollPane scrollPane = modelViewScrollPane =
-            new JScrollPane(modelView);
+                new JScrollPane(modelView);
 
         main.add(scrollPane);
         modelViewScrollPane.show();
@@ -364,9 +365,9 @@ public class SimView
         // updating doesn't cause the other components in its row to
         // be moved around
         Dimension size = new Dimension(
-            label.getFontMetrics(label.getFont()).stringWidth("stepping")
-                + 10,
-            label.getMinimumSize().height);
+                label.getFontMetrics(label.getFont()).stringWidth("stepping")
+                        + 10,
+                label.getMinimumSize().height);
         label.setMinimumSize(size);
         label.setMaximumSize(size);
         label.setPreferredSize(size);
@@ -442,7 +443,7 @@ public class SimView
 
         // add the always-show-couplings check-box
         JCheckBox checkBox = new JCheckBox("always show couplings",
-            alwaysShowCouplings);
+                alwaysShowCouplings);
         checkBox.setFont(new Font("SansSerif", Font.PLAIN, 10));
         panel.add(checkBox);
 
@@ -450,7 +451,7 @@ public class SimView
         checkBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 alwaysShowCouplings =
-                    (e.getStateChange() == ItemEvent.SELECTED);
+                        (e.getStateChange() == ItemEvent.SELECTED);
                 modelView.repaint();
             }
         });
@@ -538,7 +539,7 @@ public class SimView
         panel.add(Box.createRigidArea(new Dimension(5, 0)));
 
         // add the restart button
-        button =  new JButton("restart");
+        button = new JButton("restart");
         button.setAlignmentX(0.5f);
         panel.add(button);
 
@@ -564,278 +565,274 @@ public class SimView
         manager.setReshowDelay(0);
     }
 
-    /**By Saurabh
+    /**
+     * By Saurabh
      * Constructs the UI of the child window of the blackbox digraph.
      */
-    protected void constructUI_SM(ViewableDigraph dg, String modelsPackage, String modelClass, double prevSimTime)
-    {
-      final JFrame frame;
-      // create the app frame
-      frame = mainFrame = new JFrame("DEVSJAVA Level Viewer ");
-      if(!showLevel)
-      {
-        //if the child is exploded; false indicates expansion
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-      }
-      frame.setSize(500, 350);
-      Container pane = frame.getContentPane();
-      pane.setBackground(Color.white);
-      JPanel main = new JPanel();
-      main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-      main.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-      pane.add(main);
+    protected void constructUI_SM(ViewableDigraph dg, String modelsPackage, String modelClass, double prevSimTime) {
+        final JFrame frame;
+        // create the app frame
+        frame = mainFrame = new JFrame("DEVSJAVA Level Viewer ");
+        if (!showLevel) {
+            //if the child is exploded; false indicates expansion
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        }
+        frame.setSize(500, 350);
+        Container pane = frame.getContentPane();
+        pane.setBackground(Color.white);
+        JPanel main = new JPanel();
+        main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+        main.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        pane.add(main);
 
-      JPanel panel = new JPanel();
-      panel.setOpaque(false);
-      panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-      main.add(panel);
-
-      panel.add(Box.createRigidArea(new Dimension(20, 0)));
-
-      // add the configure button
-      JButton button = new JButton("configure");
-
-      //added by saurabh
-      button = new JButton("");
-
-      //added by saurabh
-      useModelClass_SM(dg, modelClass, prevSimTime);
-
-      //to set the digraph back to blackbox as it has been exploded in the
-      //new window
-      dg.setBlackBox(true);
-
-      panel.add(Box.createRigidArea(new Dimension(20, 0)));
-      main.add(Box.createRigidArea(new Dimension(0, 5)));
-
-      JScrollPane scrollPane = modelViewScrollPane =
-          new JScrollPane(modelView);
-      main.add(scrollPane);
-
-      if(!showLevel){//////////if its a child or an updated parent
-        panel = new JPanel();
+        JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         main.add(panel);
 
-        // add the status label
-        JLabel label = statusLabel = new JLabel("", SwingConstants.CENTER);
-        panel.add(label);
-        setStatusLabelToReady();
-
-        // force the status label to remain a constant width, so that its
-        // updating doesn't cause the other components in its row to
-        // be moved around
-        Dimension size = new Dimension(
-            label.getFontMetrics(label.getFont()).stringWidth("stepping")
-            + 10,
-            label.getMinimumSize().height);
-        label.setMinimumSize(size);
-        label.setMaximumSize(size);
-        label.setPreferredSize(size);
-
         panel.add(Box.createRigidArea(new Dimension(20, 0)));
 
-        // add the clock display
-        Color labelColor = new Color(102, 102, 153);
-        label = new JLabel("clock: ");
-        label.setForeground(labelColor);
-        panel.add(label);
-        label = clockLabel = new JLabel();
-        label.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        label.setForeground(labelColor);
-        panel.add(label);
+        // add the configure button
+        JButton button = new JButton("configure");
+
+        //added by saurabh
+        button = new JButton("");
+
+        //added by saurabh
+        useModelClass_SM(dg, modelClass, prevSimTime);
+
+        //to set the digraph back to blackbox as it has been exploded in the
+        //new window
+        dg.setBlackBox(true);
 
         panel.add(Box.createRigidArea(new Dimension(20, 0)));
-
-        // add the real-time-factor label
-        label = new JLabel("real time factor: ");
-        label.setForeground(labelColor);
-        panel.add(label);
-
-        JPanel panel3 = new JPanel();
-        panel3.setOpaque(false);
-        panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
-        panel.add(panel3);
-
-        // add the real-time-factor value label
-        label = realTimeFactorLabel = new JLabel();
-        label.setFont(new Font("SansSerif", Font.PLAIN, 13));
-        label.setForeground(labelColor);
-        label.setAlignmentX(0.5f);
-        panel3.add(label);
-
-        // this will get the initial real-time-factor value shown by the label
-        realTimeFactor.set(realTimeFactor.get());
-
-        // add the real-time-factor slider
-        JSlider slider = realTimeFactorSlider = new JSlider();
-        slider.setMaximumSize(new Dimension(100, 20));
-        slider.setAlignmentX(0.5f);
-        slider.setMinimum(0);
-        slider.setMaximum(realTimeFactors.length - 1);
-        panel3.add(slider);
-
-        // set the real-time-factor slider to the notch that corresponds
-        // with the factor's value
-        for (int i = 0; i < realTimeFactors.length; i++) {
-          if (realTimeFactors[i] == realTimeFactor.get()) {
-            slider.setValue(i);
-            break;
-          }
-        }
-
-        // when the real-time-factor slider is adjusted
-        slider.addChangeListener(new ChangeListener() {
-          public void stateChanged(ChangeEvent e) {
-            // store the new real-time-factor value
-            JSlider slider1 = realTimeFactorSlider;
-            realTimeFactor.set(realTimeFactors[slider1.getValue()]);
-
-            // if the slider knob isn't still being dragged
-            if (!slider1.getValueIsAdjusting() && coordinator != null) {
-              // have the coodinator halt its current sleep period, so
-              // the new value may take effect right away
-              coordinator.interrupt();
-            }
-          }
-        });
-
-        panel.add(Box.createRigidArea(new Dimension(20, 0)));
-
-        // add the always-show-couplings check-box
-        JCheckBox checkBox = new JCheckBox("always show couplings",
-            alwaysShowCouplings);
-        checkBox.setFont(new Font("SansSerif", Font.PLAIN, 10));
-        panel.add(checkBox);
-
-        // when the always-show-couplings checkbox is clicked
-        checkBox.addItemListener(new ItemListener() {
-          public void itemStateChanged(ItemEvent e) {
-            alwaysShowCouplings =
-                (e.getStateChange() == ItemEvent.SELECTED);
-            modelView.repaint();
-          }
-        });
-
-        panel.add(Box.createRigidArea(new Dimension(20, 0)));
-
-        // add the help button
-        button = new JButton("help");
-        button.setFont(new Font("SansSerif", Font.PLAIN, 10));
-        panel.add(button);
-
-        // when the help button is clicked
-        button.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            // if the help dialog hasn't yet been created
-            if (helpDialog == null) {
-              // create it
-              helpDialog = new HelpDialog(frame);
-            }
-
-            // display the help dialog
-            helpDialog.setVisible(true);
-          }
-        });
-
         main.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        main.add(panel);
+        JScrollPane scrollPane = modelViewScrollPane =
+                new JScrollPane(modelView);
+        main.add(scrollPane);
 
-        // add the step button
-        button = new JButton("step");
-        button.setAlignmentX(0.5f);
-        panel.add(button);
+        if (!showLevel) {//////////if its a child or an updated parent
+            panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            main.add(panel);
 
-        // when the step button is clicked
-        button.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            if (coordinator == null) return;
+            // add the status label
+            JLabel label = statusLabel = new JLabel("", SwingConstants.CENTER);
+            panel.add(label);
+            setStatusLabelToReady();
 
-            // inform the model view that a step is to be taken
-            modelView.stepToBeTaken();
+            // force the status label to remain a constant width, so that its
+            // updating doesn't cause the other components in its row to
+            // be moved around
+            Dimension size = new Dimension(
+                    label.getFontMetrics(label.getFont()).stringWidth("stepping")
+                            + 10,
+                    label.getMinimumSize().height);
+            label.setMinimumSize(size);
+            label.setMaximumSize(size);
+            label.setPreferredSize(size);
 
-            // simluate one iteration
-            setStatusLabelToStepping();
-            coordinator.simulate(1);
+            panel.add(Box.createRigidArea(new Dimension(20, 0)));
 
-            // update this sim-view's clock
-            clock.set(coordinator.getTimeOfLastEvent());
-          }
-        });
+            // add the clock display
+            Color labelColor = new Color(102, 102, 153);
+            label = new JLabel("clock: ");
+            label.setForeground(labelColor);
+            panel.add(label);
+            label = clockLabel = new JLabel();
+            label.setFont(new Font("SansSerif", Font.PLAIN, 16));
+            label.setForeground(labelColor);
+            panel.add(label);
 
-        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+            panel.add(Box.createRigidArea(new Dimension(20, 0)));
 
-        // add the run button
-        final JToggleButton runButton = new JToggleButton("run");
-        runButton.setAlignmentX(0.5f);
-        panel.add(runButton);
+            // add the real-time-factor label
+            label = new JLabel("real time factor: ");
+            label.setForeground(labelColor);
+            panel.add(label);
 
-        // when the run button is clicked
-        runButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            if (coordinator == null) return;
+            JPanel panel3 = new JPanel();
+            panel3.setOpaque(false);
+            panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
+            panel.add(panel3);
 
-            // if the run button is now selected
-            if (runButton.isSelected()) {
-              modelView.runToOccur();
+            // add the real-time-factor value label
+            label = realTimeFactorLabel = new JLabel();
+            label.setFont(new Font("SansSerif", Font.PLAIN, 13));
+            label.setForeground(labelColor);
+            label.setAlignmentX(0.5f);
+            panel3.add(label);
 
-              // simulate iterations until interrupted
-              setStatusLabelToRunning();
-              coordinator.simulate(Integer.MAX_VALUE);
+            // this will get the initial real-time-factor value shown by the label
+            realTimeFactor.set(realTimeFactor.get());
+
+            // add the real-time-factor slider
+            JSlider slider = realTimeFactorSlider = new JSlider();
+            slider.setMaximumSize(new Dimension(100, 20));
+            slider.setAlignmentX(0.5f);
+            slider.setMinimum(0);
+            slider.setMaximum(realTimeFactors.length - 1);
+            panel3.add(slider);
+
+            // set the real-time-factor slider to the notch that corresponds
+            // with the factor's value
+            for (int i = 0; i < realTimeFactors.length; i++) {
+                if (realTimeFactors[i] == realTimeFactor.get()) {
+                    slider.setValue(i);
+                    break;
+                }
             }
 
-            // otherwise
-            else {
-              // stop the current simulation run
-              coordinator.simulate(0);
-              setStatusLabelToReady();
-            }
-          }
-        });
+            // when the real-time-factor slider is adjusted
+            slider.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    // store the new real-time-factor value
+                    JSlider slider1 = realTimeFactorSlider;
+                    realTimeFactor.set(realTimeFactors[slider1.getValue()]);
 
-        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+                    // if the slider knob isn't still being dragged
+                    if (!slider1.getValueIsAdjusting() && coordinator != null) {
+                        // have the coodinator halt its current sleep period, so
+                        // the new value may take effect right away
+                        coordinator.interrupt();
+                    }
+                }
+            });
 
-        // add the restart button
-        button =  new JButton("restart");
-        button.setAlignmentX(0.5f);
-        panel.add(button);
+            panel.add(Box.createRigidArea(new Dimension(20, 0)));
 
-        // when the restart button is clicked
-        button.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            if (coordinator == null) return;
+            // add the always-show-couplings check-box
+            JCheckBox checkBox = new JCheckBox("always show couplings",
+                    alwaysShowCouplings);
+            checkBox.setFont(new Font("SansSerif", Font.PLAIN, 10));
+            panel.add(checkBox);
 
-            modelView.simulationRestarted();
+            // when the always-show-couplings checkbox is clicked
+            checkBox.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    alwaysShowCouplings =
+                            (e.getStateChange() == ItemEvent.SELECTED);
+                    modelView.repaint();
+                }
+            });
 
-            coordinator.initialize();
+            panel.add(Box.createRigidArea(new Dimension(20, 0)));
 
-            clock.set(0);
-          }
-        });
+            // add the help button
+            button = new JButton("help");
+            button.setFont(new Font("SansSerif", Font.PLAIN, 10));
+            panel.add(button);
 
-        panel.add(Box.createRigidArea(new Dimension(10, 0)));
+            // when the help button is clicked
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    // if the help dialog hasn't yet been created
+                    if (helpDialog == null) {
+                        // create it
+                        helpDialog = new HelpDialog(frame);
+                    }
 
-      }
-      // adjust tooltip delay settings to make tooltips show up immediately and
-      // not go away
-      ToolTipManager manager = ToolTipManager.sharedInstance();
-      manager.setInitialDelay(0);
-      manager.setReshowDelay(0);
+                    // display the help dialog
+                    helpDialog.setVisible(true);
+                }
+            });
+
+            main.add(Box.createRigidArea(new Dimension(0, 5)));
+
+            panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            main.add(panel);
+
+            // add the step button
+            button = new JButton("step");
+            button.setAlignmentX(0.5f);
+            panel.add(button);
+
+            // when the step button is clicked
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (coordinator == null) return;
+
+                    // inform the model view that a step is to be taken
+                    modelView.stepToBeTaken();
+
+                    // simluate one iteration
+                    setStatusLabelToStepping();
+                    coordinator.simulate(1);
+
+                    // update this sim-view's clock
+                    clock.set(coordinator.getTimeOfLastEvent());
+                }
+            });
+
+            panel.add(Box.createRigidArea(new Dimension(5, 0)));
+
+            // add the run button
+            final JToggleButton runButton = new JToggleButton("run");
+            runButton.setAlignmentX(0.5f);
+            panel.add(runButton);
+
+            // when the run button is clicked
+            runButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (coordinator == null) return;
+
+                    // if the run button is now selected
+                    if (runButton.isSelected()) {
+                        modelView.runToOccur();
+
+                        // simulate iterations until interrupted
+                        setStatusLabelToRunning();
+                        coordinator.simulate(Integer.MAX_VALUE);
+                    }
+
+                    // otherwise
+                    else {
+                        // stop the current simulation run
+                        coordinator.simulate(0);
+                        setStatusLabelToReady();
+                    }
+                }
+            });
+
+            panel.add(Box.createRigidArea(new Dimension(5, 0)));
+
+            // add the restart button
+            button = new JButton("restart");
+            button.setAlignmentX(0.5f);
+            panel.add(button);
+
+            // when the restart button is clicked
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (coordinator == null) return;
+
+                    modelView.simulationRestarted();
+
+                    coordinator.initialize();
+
+                    clock.set(0);
+                }
+            });
+
+            panel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+        }
+        // adjust tooltip delay settings to make tooltips show up immediately and
+        // not go away
+        ToolTipManager manager = ToolTipManager.sharedInstance();
+        manager.setInitialDelay(0);
+        manager.setReshowDelay(0);
     }
-
-
 
 
     /**
      * Starts this application.
      */
-    static public void main(String[] args)
-    {
+    static public void main(String[] args) {
         new SimView();
     }
 
@@ -843,11 +840,10 @@ public class SimView
      * The panel which displays the components of the current model.
      */
     public class ModelView extends JLayeredPane
-        implements TunableCoordinator.Listener,
-        TunableCoupledCoordinator.Listener, ViewableAtomicSimulator.Listener,
-        ViewableAtomicSimulator.TimeScaleKeeper,
-        variableStructureViewer
-    {
+            implements TunableCoordinator.Listener,
+            TunableCoupledCoordinator.Listener, ViewableAtomicSimulator.Listener,
+            ViewableAtomicSimulator.TimeScaleKeeper,
+            variableStructureViewer {
         /**
          * The thread responsible for moving the currently displayed
          * content views around this model-view.
@@ -916,7 +912,7 @@ public class SimView
         /**
          * Constructs a model-view.
          */
-        public ModelView(SimView simview_){
+        public ModelView(SimView simview_) {
             simview = simview_;
             setOpaque(true);
             setBackground(Color.white);
@@ -942,34 +938,32 @@ public class SimView
         /**
          * Adds the given devs-component view to this model view.
          *
-         * @param   view        The view to add.
+         * @param view The view to add.
          */
-        public void addView(ComponentView view, JComponent parent)
-        {
+        public void addView(ComponentView view, JComponent parent) {
             componentViews.add(view);
 
             // add the view's GUI component to the given parent component
             // as a layer-0 component
-            JComponent comp = (JComponent)view;
+            JComponent comp = (JComponent) view;
             parent.add(comp, new Integer(0));
             // set the view's location and size to their preferred values
             comp.setLocation(view.getPreferredLocation());
             comp.setSize(view.getPreferredSize());
         }
 
-        public void removeView(ComponentView view, JComponent parent){
+        public void removeView(ComponentView view, JComponent parent) {
             componentViews.remove(view);
-            JComponent comp = (JComponent)view;
-            ((DigraphView)parent).remove(comp, new Integer(0));
-   //         System.out.println("remove view:"+view.getViewableComponent().getName());
+            JComponent comp = (JComponent) view;
+            ((DigraphView) parent).remove(comp, new Integer(0));
+            //         System.out.println("remove view:"+view.getViewableComponent().getName());
         }
 
         /**
          * Informs this model view that the user has injected an input
          * into one of the components being viewed.
          */
-        public void inputInjected()
-        {
+        public void inputInjected() {
             // eliminate all previous content views, as they are now old
             removeContentViews();
         }
@@ -978,8 +972,7 @@ public class SimView
          * See genDevs.simulation.realTime.TunableCoordinator.Listener
          * interface method.
          */
-        public void iterationsCompleted()
-        {
+        public void iterationsCompleted() {
             setStatusLabelToReady();
         }
 
@@ -987,13 +980,14 @@ public class SimView
          * Returns the time-scale (or, real time factor), currently in
          * use by this sim-view's coordinator for the current model.
          */
-        public double getTimeScale() {return coordinator.getTimeScale();}
+        public double getTimeScale() {
+            return coordinator.getTimeScale();
+        }
 
         /**
          * See ViewableAtomicSimulator.Listener interface method.
          */
-        public void clockChanged(double newTime)
-        {
+        public void clockChanged(double newTime) {
             // update the clock only if the given value is greater than the
             // clock's current value, because sometimes lesser values are
             // reported, though I'm not sure why
@@ -1003,8 +997,7 @@ public class SimView
         /**
          * Removes all atomic views from this model-view.
          */
-        public void removeAllViews()
-        {
+        public void removeAllViews() {
             componentViews.clear();
             modelView.removeAll();
             modelView.add(couplingsPanel);
@@ -1014,8 +1007,7 @@ public class SimView
          * Informs this model-view that a single iteration of the simulation
          * is about to be executed.
          */
-        public void stepToBeTaken()
-        {
+        public void stepToBeTaken() {
             // get any old content views removed
             removeContentViews();
 
@@ -1026,8 +1018,7 @@ public class SimView
          * Informs this model-view that a run of simulation iterations
          * (versus individual iteration steps) is about to occur.
          */
-        public void runToOccur()
-        {
+        public void runToOccur() {
             // get any old content views removed
             removeContentViews();
 
@@ -1038,8 +1029,7 @@ public class SimView
          * See ViewableAtomicSimulator.Listener interface method.
          */
         public void contentOutputted(content content,
-            devs source, String sourcePortName)
-        {
+                                     devs source, String sourcePortName) {
             // this method requires the source component to be viewable
             if (!(source instanceof ViewableComponent)) return;
 
@@ -1050,7 +1040,7 @@ public class SimView
             // create a content-path-step to hold this first (source) step
             // in the content's path to its destination
             ContentPathStep step = new ContentPathStep();
-            step.view = ((ViewableComponent)source).getView();
+            step.view = ((ViewableComponent) source).getView();
             step.portName = sourcePortName;
 
             // create this content's path object and add to it the source step
@@ -1068,9 +1058,8 @@ public class SimView
          * See ViewableAtomicSimulator.Listener interface method.
          */
         public void couplingAddedToContentPath(content oldContent,
-            devs destComponent, String destPortName,
-            content newContent, String sourceComponentName)
-        {
+                                               devs destComponent, String destPortName,
+                                               content newContent, String sourceComponentName) {
             // this method requires the destination component to be viewable
             if (!(destComponent instanceof ViewableComponent)) return;
 
@@ -1081,14 +1070,14 @@ public class SimView
             // create a content-path-step to hold this step
             // in the content's path to its destination
             ContentPathStep step = new ContentPathStep();
-            step.view = ((ViewableComponent)destComponent).getView();
+            step.view = ((ViewableComponent) destComponent).getView();
             step.portName = destPortName;
 
             // use the old-content as part of a key to find the content's
             // path up to this point in the content-path-map
             ContentPathKey key = new ContentPathKey(
-                oldContent, sourceComponentName);
-            List path = (List)contentPathMap.get(key);
+                    oldContent, sourceComponentName);
+            List path = (List) contentPathMap.get(key);
 
             // if no path was found above, then abort this method
             if (path == null) return;
@@ -1096,7 +1085,7 @@ public class SimView
             // use the content's path to find its movement object (if it
             // has one)
             ContentViewMovement movement =
-                (ContentViewMovement)contentViewMovementMap.remove(path);
+                    (ContentViewMovement) contentViewMovementMap.remove(path);
 
             // make a copy of the path, so that if this same content
             // branches off along multiple couplings at this point,
@@ -1155,8 +1144,7 @@ public class SimView
          * Sizes this model-view to be just larger than the size of its
          * top-level model.
          */
-        public Dimension getPreferredSize()
-        {
+        public Dimension getPreferredSize() {
             // if the model or its view have not yet been created
             if (model == null || model.getView() == null) {
                 return super.getPreferredSize();
@@ -1164,31 +1152,36 @@ public class SimView
 
             // return the size of the model's view,
             // plus some space for an empty border
-            Dimension size = ((JComponent)model.getView()).getSize();
+            Dimension size = ((JComponent) model.getView()).getSize();
             return new Dimension(size.width + modelBorderWidth * 2,
-                size.height + modelBorderWidth * 2);
+                    size.height + modelBorderWidth * 2);
         }
 
         /**
          * Together, these force this model-view's size to be its
          * preferred size.
          */
-        public Dimension getMinimumSize() {return getPreferredSize();}
-        public Dimension getMaximumSize() {return getPreferredSize();}
-
-
-        public SimView getSim(){
-          return this.simview;
+        public Dimension getMinimumSize() {
+            return getPreferredSize();
         }
+
+        public Dimension getMaximumSize() {
+            return getPreferredSize();
+        }
+
+
+        public SimView getSim() {
+            return this.simview;
+        }
+
         /**
          * Removes from this model-view each of the content-views
          * it is displaying.
          */
-        protected void removeContentViews()
-        {
+        protected void removeContentViews() {
             // for each content view this view contains
             for (int i = 0; i < contentViews.size(); i++) {
-                ContentView view = (ContentView)contentViews.get(i);
+                ContentView view = (ContentView) contentViews.get(i);
 
                 // remove this content view
                 remove(view);
@@ -1203,8 +1196,7 @@ public class SimView
          * Informs this model-view that the mouse has entered a port-box
          * on one of the model's components.
          */
-        public void mouseEnteredPort()
-        {
+        public void mouseEnteredPort() {
             showCouplings = true;
             repaint();
         }
@@ -1213,8 +1205,7 @@ public class SimView
          * Informs this model-view that the mouse has exited a port-box
          * on one of the model's components.
          */
-        public void mouseExitedPort()
-        {
+        public void mouseExitedPort() {
             showCouplings = false;
             repaint();
         }
@@ -1223,8 +1214,7 @@ public class SimView
          * An object associating a content-view with various information
          * about its movement along a path within the model-view.
          */
-        protected class ContentViewMovement
-        {
+        protected class ContentViewMovement {
             /**
              * The content-view to be moved.
              */
@@ -1269,8 +1259,7 @@ public class SimView
          * Moves each content view in its list along a series of steps
          * (i.e. couplings) to its final destination port.
          */
-        protected class MoveContentViewThread extends Thread
-        {
+        protected class MoveContentViewThread extends Thread {
             /**
              * The content view movements this thread is currently performing.
              */
@@ -1279,18 +1268,16 @@ public class SimView
             /**
              * Tells this thread to execute the given content-view movement.
              *
-             * @param   movement        The content-view movement to execute.
+             * @param movement The content-view movement to execute.
              */
-            public void addContentViewMovement(ContentViewMovement movement)
-            {
+            public void addContentViewMovement(ContentViewMovement movement) {
                 movements.add(movement);
             }
 
             /**
              * See parent method.
              */
-            public void run()
-            {
+            public void run() {
                 // keep doing this
                 while (true) {
                     moveContentViews();
@@ -1303,12 +1290,11 @@ public class SimView
             /**
              * Performs the actual movements of the content views.
              */
-            protected void moveContentViews()
-            {
+            protected void moveContentViews() {
                 // for each content view movement currently being performed
                 for (int i = 0; i < movements.size(); i++) {
                     ContentViewMovement movement = (ContentViewMovement)
-                        movements.get(i);
+                            movements.get(i);
 
                     // if, for the current step of this movement, no moves
                     // have yet been performed
@@ -1316,7 +1302,7 @@ public class SimView
                         // if the destination component of the current step
                         // is hidden
                         ContentPathStep step = (ContentPathStep)
-                            movement.path.get(movement.currentStepIndex);
+                                movement.path.get(movement.currentStepIndex);
                         if (step.view.getViewableComponent().isHidden()) {
                             // move on to the next step
                             movement.currentStepIndex++;
@@ -1333,17 +1319,17 @@ public class SimView
                         // movement's path, or is a later step but no
                         // previous step could assign the movement a
                         // location
-                        JComponent view = (JComponent)movement.view;
+                        JComponent view = (JComponent) movement.view;
                         if (movement.currentStepIndex == 0
-                            || movement.location == null) {
+                                || movement.location == null) {
                             // use this step as the starting location for the
                             // movement of the content view
                             Point start = modelView.getLocation(
-                                (JComponent)step.view);
+                                    (JComponent) step.view);
                             PointUtil.translate(start,
-                                step.view.getPortLocation(step.portName));
+                                    step.view.getPortLocation(step.portName));
                             int viewX = start.x - view.getWidth() / 2,
-                                viewY = start.y - view.getHeight() / 2;
+                                    viewY = start.y - view.getHeight() / 2;
                             view.setLocation(viewX, viewY);
 
                             // show the content view
@@ -1351,7 +1337,7 @@ public class SimView
 
                             // remember the content view's starting location
                             movement.location = new Point2D.Double(
-                                viewX, viewY);
+                                    viewX, viewY);
 
                             // go on to the next step in the movement
                             movement.currentStepIndex++;
@@ -1366,19 +1352,19 @@ public class SimView
 
                         // detm the starting location for this step
                         Point start = new Point(
-                            (int)movement.location.x + view.getWidth() / 2,
-                            (int)movement.location.y + view.getHeight() / 2);
+                                (int) movement.location.x + view.getWidth() / 2,
+                                (int) movement.location.y + view.getHeight() / 2);
 
                         // detm the finish location for this step
-                        Point finish = modelView.getLocation((JComponent)step.view);
+                        Point finish = modelView.getLocation((JComponent) step.view);
                         PointUtil.translate(finish,
-                            step.view.getPortLocation(step.portName));
+                                step.view.getPortLocation(step.portName));
 
                         // compute the x and y offsets to take with each step
                         // along the line
                         movement.location = new Point2D.Double(start.x, start.y);
                         double angle = Math.atan2(finish.y - start.y,
-                            finish.x - start.x);
+                                finish.x - start.x);
                         final int speed = 2;
                         movement.dx = speed * Math.cos(angle);
                         movement.dy = speed * Math.sin(angle);
@@ -1386,14 +1372,14 @@ public class SimView
                         // detm how many moves it will take to get to the destination
                         Point2D.Double location = movement.location;
                         movement.movesRequired =
-                            (int)Math.rint(location.distance(finish) / speed);
+                                (int) Math.rint(location.distance(finish) / speed);
                         movement.movesDone = 0;
 
                         // start the content view centered over the source port location
                         location.x -= view.getWidth() / 2;
                         location.y -= view.getHeight() / 2;
-                        view.setLocation((int)Math.rint(location.x),
-                            (int)Math.rint(location.y));
+                        view.setLocation((int) Math.rint(location.x),
+                                (int) Math.rint(location.y));
                     }
 
                     // if not all the moves for the current step in the
@@ -1403,8 +1389,8 @@ public class SimView
                         Point2D.Double location = movement.location;
                         location.x += movement.dx;
                         location.y += movement.dy;
-                        movement.view.setLocation((int)Math.rint(location.x),
-                            (int)Math.rint(location.y));
+                        movement.view.setLocation((int) Math.rint(location.x),
+                                (int) Math.rint(location.y));
                         movement.movesDone++;
                     }
 
@@ -1426,10 +1412,9 @@ public class SimView
              * Removes the given movement and its associated objects from
              * further consideration, so they may be gc'd.
              *
-             * @param   movement        The movement object to discard.
+             * @param movement The movement object to discard.
              */
-            protected void discardMovement(ContentViewMovement movement)
-            {
+            protected void discardMovement(ContentViewMovement movement) {
                 contentPathMap.remove(movement.view.getContent());
                 contentViewMovementMap.remove(movement.path);
                 movements.remove(movement);
@@ -1441,29 +1426,26 @@ public class SimView
          * the lines meant to represent the couplings between the components
          * in the model.
          */
-        protected class CouplingsPanel extends JPanel
-        {
-            public CouplingsPanel()
-            {
+        protected class CouplingsPanel extends JPanel {
+            public CouplingsPanel() {
                 setOpaque(false);
             }
 
-            public void paint(Graphics g)
-            {
+            public void paint(Graphics g) {
                 // if the couplings are currently supposed to be shown
                 if (showCouplings || alwaysShowCouplings) {
                     // for each coupling
                     g.setColor(Color.lightGray);
                     int cz = couplings.size();
                     for (int i = 0; i < couplings.size(); i++) {
-                        Coupling coupling = (Coupling)couplings.get(i);
+                        Coupling coupling = (Coupling) couplings.get(i);
 
                         // if either the source of destination views of the
                         // coupling are hidden
                         if (coupling.sourceView.getViewableComponent().
-                            isHidden()
-                            || coupling.destView.getViewableComponent().
-                            isHidden()) {
+                                isHidden()
+                                || coupling.destView.getViewableComponent().
+                                isHidden()) {
                             // don't draw this coupling
                             continue;
                         }
@@ -1471,18 +1453,18 @@ public class SimView
                         // detm the pixel location within this model-view
                         // of the source port of the coupling
                         Point source = ModelView.this.getLocation(
-                            (JComponent)coupling.sourceView);
+                                (JComponent) coupling.sourceView);
                         PointUtil.translate(source,
-                            coupling.sourceView.getPortLocation(
-                            coupling.sourcePortName));
+                                coupling.sourceView.getPortLocation(
+                                        coupling.sourcePortName));
 
                         // detm the pixel location within this model-view
                         // of the destination port of the coupling
                         Point dest = ModelView.this.getLocation(
-                            (JComponent)coupling.destView);
+                                (JComponent) coupling.destView);
                         PointUtil.translate(dest,
-                            coupling.destView.getPortLocation(
-                            coupling.destPortName));
+                                coupling.destView.getPortLocation(
+                                        coupling.destPortName));
 
                         // draw this coupling's line
                         g.drawLine(source.x, source.y, dest.x, dest.y);
@@ -1494,8 +1476,7 @@ public class SimView
         /**
          * Informs this model-view that the simulation has been restarted.
          */
-        protected void simulationRestarted()
-        {
+        protected void simulationRestarted() {
             removeContentViews();
         }
 
@@ -1503,408 +1484,400 @@ public class SimView
          * Returns the location of the given descendant component within
          * this view.
          *
-         * @param   component       The descendent component whose location is
-         *                          desired.
-         * @return                  The location of the component, relative to
-         *                          the upper-left corner of this view.
+         * @param component The descendent component whose location is
+         *                  desired.
+         * @return The location of the component, relative to
+         *         the upper-left corner of this view.
          */
-        public Point getLocation(JComponent component)
-        {
+        public Point getLocation(JComponent component) {
             return ComponentUtil.getLocationRelativeToAncestor(component, this);
         }
 
         /**
          * Adds a coupling to this view's list of couplings.
          *
-         * @param   coupling        The coupling to add.
+         * @param coupling The coupling to add.
          */
-        public void addCoupling(Coupling coupling) {couplings.add(coupling);}
+        public void addCoupling(Coupling coupling) {
+            couplings.add(coupling);
+        }
 
         //To display variable structure DEVS, Xiaolin Hu
-        public void couplingAdded(IODevs src, String p1, IODevs dest, String p2){
-          if(!(src instanceof ViewableComponent && dest instanceof ViewableComponent)){
-             // skip this coupling - it can't be displayed
-             System.out.println("Coupling could not be displayed."
-                 + "\n\tFrom: " + src.getName()
-                 + ", port " + p1
-                 + "\n\tTo: " + dest.getName()
-                 + ", port " + p2);
-             return;
-          }
-          Coupling coupling = new Coupling();
-          coupling.sourceView = ((ViewableComponent)src).getView();
-          coupling.sourcePortName = p1;
-          coupling.destView = ((ViewableComponent)dest).getView();
-          coupling.destPortName = p2;
+        public void couplingAdded(IODevs src, String p1, IODevs dest, String p2) {
+            if (!(src instanceof ViewableComponent && dest instanceof ViewableComponent)) {
+                // skip this coupling - it can't be displayed
+                System.out.println("Coupling could not be displayed."
+                        + "\n\tFrom: " + src.getName()
+                        + ", port " + p1
+                        + "\n\tTo: " + dest.getName()
+                        + ", port " + p2);
+                return;
+            }
+            Coupling coupling = new Coupling();
+            coupling.sourceView = ((ViewableComponent) src).getView();
+            coupling.sourcePortName = p1;
+            coupling.destView = ((ViewableComponent) dest).getView();
+            coupling.destPortName = p2;
 
-          addCoupling(coupling);
-          repaint();
+            addCoupling(coupling);
+            repaint();
         }
 
-        public void couplingAdded(Coupling cp){
-          cp.printCoupling();
-          addCoupling(cp);
-          repaint();
+        public void couplingAdded(Coupling cp) {
+            cp.printCoupling();
+            addCoupling(cp);
+            repaint();
         }
 
-        public void savingModelViewCouplingsRemove(ViewableComponent iod, couprel savedCr){
-          couprel mc = savedCr;
-          Iterator it = mc.iterator();
-          ViewableDigraph parent = new ViewableDigraph("none");
+        public void savingModelViewCouplingsRemove(ViewableComponent iod, couprel savedCr) {
+            couprel mc = savedCr;
+            Iterator it = mc.iterator();
+            ViewableDigraph parent = new ViewableDigraph("none");
 
-          while (it.hasNext()){
-            Pair pr = (Pair)it.next();
-            Pair cs = (Pair)pr.getKey();
-            Pair cd = (Pair)pr.getValue();
-            String src =  (String)cs.getKey();
-            String dst =  (String)cd.getKey();
+            while (it.hasNext()) {
+                Pair pr = (Pair) it.next();
+                Pair cs = (Pair) pr.getKey();
+                Pair cd = (Pair) pr.getValue();
+                String src = (String) cs.getKey();
+                String dst = (String) cd.getKey();
 
-            //model = (ViewableDigraph)coordinator.getModel();
-            atomicSimulator as = (atomicSimulator)coordinator;
-            parent = (ViewableDigraph)as.getModel();
-            IODevs source, dest;
-            if(src.equals(parent.getName())){
-              source = parent;
+                //model = (ViewableDigraph)coordinator.getModel();
+                atomicSimulator as = (atomicSimulator) coordinator;
+                parent = (ViewableDigraph) as.getModel();
+                IODevs source, dest;
+                if (src.equals(parent.getName())) {
+                    source = parent;
+                } else {
+                    source = parent.withName(src);
+                }
+
+                if (dst.equals(parent.getName())) {
+                    dest = parent;
+                } else {
+                    dest = parent.withName(dst);
+                }
+                //s.s("Saving the coupling: "+src+"----"+(String)cs.getValue()+"----"+dst+"----"+(String)cd.getValue());
+
+                this.couplingRemoved(source, (String) cs.getValue(), dest, (String) cd.getValue());
+
             }
-            else{
-              source = parent.withName(src);
+            this.modelRemoved(iod, parent);
+
+
+            //redraw the compponent
+            DigraphView parentView = parent.getDigraphView();
+            if (iod instanceof ViewableAtomic) {
+                // tell the viewable atomic to create a view for itself
+                ViewableAtomic atomic = (ViewableAtomic) iod;
+                atomic.createView(modelView);
+                // add the atomic view to the model's view
+                AtomicView view1 = atomic.getAtomicView();
+                //s.s(view1.getViewableComponent().getLayoutName());
+                addView(view1, parentView);
+            }
+            // if this component is a viewable digraph
+            if (iod instanceof ViewableDigraph) {
+                // call this method recursively to get this digraph's
+                // components' views created
+
+
+                ViewableDigraph digraph = (ViewableDigraph) iod;
+                //         if(digraph.isBlackBox())
+                createViews(digraph, parentView);
+                //       digraph.mySimView.detmCouplings((ViewableDigraph)iod);
+                //       simview.detmCouplings((ViewableDigraph)iod);
             }
 
-            if(dst.equals(parent.getName())){
-              dest = parent;
-            }
-            else{
-              dest = parent.withName(dst);
-            }
-            //s.s("Saving the coupling: "+src+"----"+(String)cs.getValue()+"----"+dst+"----"+(String)cd.getValue());
-
-            this.couplingRemoved(source,(String)cs.getValue(),dest,(String)cd.getValue());
-
-          }
-          this.modelRemoved(iod,parent);
-
-
-          //redraw the compponent
-          DigraphView parentView = parent.getDigraphView();
-          if (iod instanceof ViewableAtomic) {
-            // tell the viewable atomic to create a view for itself
-            ViewableAtomic atomic = (ViewableAtomic)iod;
-            atomic.createView(modelView);
-            // add the atomic view to the model's view
-            AtomicView view1 = atomic.getAtomicView();
-            //s.s(view1.getViewableComponent().getLayoutName());
-            addView(view1, parentView);
-          }
-          // if this component is a viewable digraph
-             if (iod instanceof ViewableDigraph) {
-               // call this method recursively to get this digraph's
-               // components' views created
-
-
-                    ViewableDigraph digraph = (ViewableDigraph)iod;
-           //         if(digraph.isBlackBox())
-                    createViews(digraph, parentView);
-             //       digraph.mySimView.detmCouplings((ViewableDigraph)iod);
-             //       simview.detmCouplings((ViewableDigraph)iod);
-              }
-
-          repaint();
+            repaint();
         }
-        public void expandDigraph(ViewableDigraph graph, couprel cr){
-          ViewableDigraph parent =(ViewableDigraph)graph.getParent();
-          DigraphView parentView = parent.getDigraphView();
-          s.s("Inside the expand graph in simview");
-          this.modelRemoved(graph, parent);
+
+        public void expandDigraph(ViewableDigraph graph, couprel cr) {
+            ViewableDigraph parent = (ViewableDigraph) graph.getParent();
+            DigraphView parentView = parent.getDigraphView();
+            s.s("Inside the expand graph in simview");
+            this.modelRemoved(graph, parent);
 
 //          graph.createView(this);
 //          this.addView(graph.getDigraphView(),parentView);
-          graph.printComponents(graph);
-          graph.printCouprel(graph.getCouprel());
+            graph.printComponents(graph);
+            graph.printCouprel(graph.getCouprel());
 //          graph.setBlackBox(false);
 //          this.createViews(graph,parentView);
 //          this.modelAdded(graph,parent);
 
 //          createViews(graph, parentView);
-          //       digraph.mySimView.detmCouplings((ViewableDigraph)iod);
+            //       digraph.mySimView.detmCouplings((ViewableDigraph)iod);
 //          simview.detmCouplings(graph);
 
-          repaint();
+            repaint();
         }
 
-        public void savedModelViewCouplingsAdd(ViewableComponent iod, couprel savedCr){
+        public void savedModelViewCouplingsAdd(ViewableComponent iod, couprel savedCr) {
 
-          couprel mc = savedCr;
-          Iterator it = mc.iterator();
-          atomicSimulator as = (atomicSimulator)coordinator;
-          ViewableDigraph parent = (ViewableDigraph)as.getModel();
+            couprel mc = savedCr;
+            Iterator it = mc.iterator();
+            atomicSimulator as = (atomicSimulator) coordinator;
+            ViewableDigraph parent = (ViewableDigraph) as.getModel();
 
-          while (it.hasNext()){
-            Pair pr = (Pair)it.next();
-            Pair cs = (Pair)pr.getKey();
-            Pair cd = (Pair)pr.getValue();
-            String src =  (String)cs.getKey();
-            String dst =  (String)cd.getKey();
+            while (it.hasNext()) {
+                Pair pr = (Pair) it.next();
+                Pair cs = (Pair) pr.getKey();
+                Pair cd = (Pair) pr.getValue();
+                String src = (String) cs.getKey();
+                String dst = (String) cd.getKey();
 
-            IODevs source, dest;
-            if(src.equals(parent.getName())){
-              source = parent;
+                IODevs source, dest;
+                if (src.equals(parent.getName())) {
+                    source = parent;
+                } else {
+                    source = parent.withName(src);
+                }
+
+                if (dst.equals(parent.getName())) {
+                    dest = parent;
+                } else {
+                    dest = parent.withName(dst);
+                }
+                //     s.s("Drawing the coupling: "+src+"----"+(String)cs.getValue()+"----"+dst+"----"+(String)cd.getValue());
+
+                this.couplingAdded(source, (String) cs.getValue(), dest, (String) cd.getValue());
+
             }
-            else{
-              source = parent.withName(src);
-            }
-
-            if(dst.equals(parent.getName())){
-              dest = parent;
-            }
-            else{
-              dest = parent.withName(dst);
-            }
-       //     s.s("Drawing the coupling: "+src+"----"+(String)cs.getValue()+"----"+dst+"----"+(String)cd.getValue());
-
-            this.couplingAdded(source,(String)cs.getValue(),dest,(String)cd.getValue());
-
-          }
         }
 
-        public void restoreInternalCouplings(ViewableDigraph digraph, couprel cr_){
-          couprel mc = cr_;
-          Iterator it = mc.iterator();
-          ViewableDigraph parent = (ViewableDigraph)digraph;
+        public void restoreInternalCouplings(ViewableDigraph digraph, couprel cr_) {
+            couprel mc = cr_;
+            Iterator it = mc.iterator();
+            ViewableDigraph parent = (ViewableDigraph) digraph;
 
-          while (it.hasNext()){
-            Pair pr = (Pair)it.next();
-            Pair cs = (Pair)pr.getKey();
-            Pair cd = (Pair)pr.getValue();
-            String src =  (String)cs.getKey();
-            String dst =  (String)cd.getKey();
+            while (it.hasNext()) {
+                Pair pr = (Pair) it.next();
+                Pair cs = (Pair) pr.getKey();
+                Pair cd = (Pair) pr.getValue();
+                String src = (String) cs.getKey();
+                String dst = (String) cd.getKey();
 
-            //s.s("Drawing the coupling: "+src+"----"+(String)cs.getValue()+"----"+dst+"----"+(String)cd.getValue());
-            //s.s(parent.getName());
+                //s.s("Drawing the coupling: "+src+"----"+(String)cs.getValue()+"----"+dst+"----"+(String)cd.getValue());
+                //s.s(parent.getName());
 
-            IODevs source, dest;
-            if(src.equals(parent.getName())){
-              source = parent;
+                IODevs source, dest;
+                if (src.equals(parent.getName())) {
+                    source = parent;
+                } else {
+                    source = parent.withName(src);
+                }
+
+                if (dst.equals(parent.getName())) {
+                    dest = parent;
+                } else {
+                    dest = parent.withName(dst);
+                }
+                //s.s("source: "+source.getName());
+                //s.s("dest :"+dest.getName());
+                this.couplingAdded(source, (String) cs.getValue(), dest, (String) cd.getValue());
+
             }
-            else{
-              source = parent.withName(src);
-            }
-
-            if(dst.equals(parent.getName())){
-              dest = parent;
-            }
-            else{
-              dest = parent.withName(dst);
-            }
-            //s.s("source: "+source.getName());
-            //s.s("dest :"+dest.getName());
-            this.couplingAdded(source,(String)cs.getValue(),dest,(String)cd.getValue());
-
-          }
-
-
 
 
         }
 
 
-
-
-
-        public void couplingRemoved(IODevs src, String p1, IODevs dest, String p2){
+        public void couplingRemoved(IODevs src, String p1, IODevs dest, String p2) {
             String srcName, destName;
             ViewableDigraph parent;
             for (int i = 0; i < couplings.size(); i++) {
-                Coupling coupling = (Coupling)couplings.get(i);
+                Coupling coupling = (Coupling) couplings.get(i);
                 srcName = (coupling.sourceView).getViewableComponent().getName();
                 ViewableComponent srcView = (coupling.sourceView).getViewableComponent();
-                if(srcView instanceof ViewableDigraph){
-                  parent = ((ViewableDigraph)srcView).getMyParent();
-                }
-                else{
-                  parent = ((ViewableAtomic)srcView).getMyParent();
+                if (srcView instanceof ViewableDigraph) {
+                    parent = ((ViewableDigraph) srcView).getMyParent();
+                } else {
+                    parent = ((ViewableAtomic) srcView).getMyParent();
                 }
                 destName = (coupling.destView).getViewableComponent().getName();
                 ViewableComponent destView = (coupling.destView).getViewableComponent();
-                if(srcName.compareTo(src.getName())==0&&coupling.sourcePortName.compareTo(p1)==0&&
-                    destName.compareTo(dest.getName())==0&&coupling.destPortName.compareTo(p2)==0){
-                      couplings.remove(i);
-                      //modelRemoved(destView,parent);
- //                     removeView(coupling.destView, parent.getDigraphView());
+                if (srcName.compareTo(src.getName()) == 0 && coupling.sourcePortName.compareTo(p1) == 0 &&
+                        destName.compareTo(dest.getName()) == 0 && coupling.destPortName.compareTo(p2) == 0) {
+                    couplings.remove(i);
+                    //modelRemoved(destView,parent);
+                    //                     removeView(coupling.destView, parent.getDigraphView());
 
-                      break;
-                    }
+                    break;
+                }
             }
 
         }
 
-        public void modelAdded(ViewableComponent iod, ViewableDigraph parent){
+        public void modelAdded(ViewableComponent iod, ViewableDigraph parent) {
 
-          DigraphView parentView = parent.getDigraphView();
-          if (parent.isBlackBox() || parent.isHidden()) iod.setHidden(true);
-          if (iod instanceof ViewableAtomic) {
+            DigraphView parentView = parent.getDigraphView();
+            if (parent.isBlackBox() || parent.isHidden()) iod.setHidden(true);
+            if (iod instanceof ViewableAtomic) {
                 // tell the viewable atomic to create a view for itself
-                ViewableAtomic atomic = (ViewableAtomic)iod;
+                ViewableAtomic atomic = (ViewableAtomic) iod;
                 atomic.createView(modelView);
                 // add the atomic view to the model's view
                 AtomicView view1 = atomic.getAtomicView();
                 addView(view1, parentView);
-          }
-          // if this component is a viewable digraph
-          if (iod instanceof ViewableDigraph) {
-                // call this method recursively to get this digraph's
-                // components' views created
-                ViewableDigraph digraph = (ViewableDigraph)iod;
-                createViews(digraph, parentView);
-                simview.detmCouplings((ViewableDigraph)iod);
-          }
-          repaint();
-
-        }
-
-        public void modelRemoved(ViewableComponent iod, ViewableDigraph parent){
-
-          DigraphView parentView = parent.getDigraphView();
-          if (iod instanceof ViewableAtomic)
-            removeView(((ViewableAtomic)iod).getAtomicView(),parentView);
-          else if(iod instanceof ViewableDigraph)
-            destroyModelView((ViewableDigraph)iod,parentView);
-          repaint();
-
-
-        }
-
-        public void destroyModelView(ViewableDigraph model, ComponentView parentView){
-          String srcName, destName, compName="";
-          // for each component in the digraph
-          Iterator i = model.getComponents().iterator();
-          while (i.hasNext()) {
-            Object component = i.next();
-            // if this component is a viewable atomic
-            if (component instanceof ViewableAtomic){
-                compName = ((ViewableAtomic)component).getName();
-                removeView(((ViewableAtomic)component).getView(),(JComponent)(model.getView()));
             }
             // if this component is a viewable digraph
-            if (component instanceof ViewableDigraph){
-                compName = ((ViewableDigraph)component).getName();
-                destroyModelView((ViewableDigraph)component, model.getView());
+            if (iod instanceof ViewableDigraph) {
+                // call this method recursively to get this digraph's
+                // components' views created
+                ViewableDigraph digraph = (ViewableDigraph) iod;
+                createViews(digraph, parentView);
+                simview.detmCouplings((ViewableDigraph) iod);
             }
-            //need to remove the coupling connected to that component from the CouplingsPanel
-            int csize = couplings.size();  // the size of the couplings
-            for (int j = csize-1; j >=0; j--) { // a special way to check all the elements in the Arraylist while removing element dynamicly
-                Coupling coupling = (Coupling)couplings.get(j);
-                srcName = (coupling.sourceView).getViewableComponent().getName();
-                destName = (coupling.destView).getViewableComponent().getName();
-                if(srcName.compareTo(compName)==0||destName.compareTo(compName)==0) couplings.remove(j);
-            }
-          }
-          removeView(model.getView(),(JComponent)parentView);
+            repaint();
+
         }
 
-    /**
-     * Creates an atomic-view for each viewable atomic in the given
-     * digraph model, as well as for those recursively found contained
-     * within in the given model's children models.  Each new
-     * atomic-view is added to the model-view.
-     *
-     * @param   model       The model for whose atomic components views are
-     *                      to be created.
-     * @param   parent      The parent component to which the given model's
-     *                      views are to be added.
-     */
-    protected void createViews(ViewableDigraph model, JComponent parent)
-    {
-        // tell the model to create a view for itself
-        model.createView(modelView);
+        public void modelRemoved(ViewableComponent iod, ViewableDigraph parent) {
 
-        // if the given model isn't to be displayed as a black box
-        if (!model.isBlackBox()) {
-            // tell the model to lay itself out for the viewer (but don't
-            // let any problems in that process cause things to halt, as it
-            // is not a critical objective)
-          if(!usePrevModelLayout)
-          try {
-                // if the override layout method doesn't get the layout done
-                if (!model.layoutForSimViewOverride()) {
-                    // call the automatically-generated layout method
-                    model.layoutForSimView();
+            DigraphView parentView = parent.getDigraphView();
+            if (iod instanceof ViewableAtomic)
+                removeView(((ViewableAtomic) iod).getAtomicView(), parentView);
+            else if (iod instanceof ViewableDigraph)
+                destroyModelView((ViewableDigraph) iod, parentView);
+            repaint();
+
+
+        }
+
+        public void destroyModelView(ViewableDigraph model, ComponentView parentView) {
+            String srcName, destName, compName = "";
+            // for each component in the digraph
+            Iterator i = model.getComponents().iterator();
+            while (i.hasNext()) {
+                Object component = i.next();
+                // if this component is a viewable atomic
+                if (component instanceof ViewableAtomic) {
+                    compName = ((ViewableAtomic) component).getName();
+                    removeView(((ViewableAtomic) component).getView(), (JComponent) (model.getView()));
                 }
-            } catch (Exception e) {e.printStackTrace();}
+                // if this component is a viewable digraph
+                if (component instanceof ViewableDigraph) {
+                    compName = ((ViewableDigraph) component).getName();
+                    destroyModelView((ViewableDigraph) component, model.getView());
+                }
+                //need to remove the coupling connected to that component from the CouplingsPanel
+                int csize = couplings.size();  // the size of the couplings
+                for (int j = csize - 1; j >= 0; j--) { // a special way to check all the elements in the Arraylist while removing element dynamicly
+                    Coupling coupling = (Coupling) couplings.get(j);
+                    srcName = (coupling.sourceView).getViewableComponent().getName();
+                    destName = (coupling.destView).getViewableComponent().getName();
+                    if (srcName.compareTo(compName) == 0 || destName.compareTo(compName) == 0) couplings.remove(j);
+                }
+            }
+            removeView(model.getView(), (JComponent) parentView);
         }
 
-        // add the model's view to the given parent
-        DigraphView view;
-        //       if(!showLevel){
-        view = model.getDigraphView();
-        modelView.addView(view, parent);
+        /**
+         * Creates an atomic-view for each viewable atomic in the given
+         * digraph model, as well as for those recursively found contained
+         * within in the given model's children models.  Each new
+         * atomic-view is added to the model-view.
+         *
+         * @param model  The model for whose atomic components views are
+         *               to be created.
+         * @param parent The parent component to which the given model's
+         *               views are to be added.
+         */
+        protected void createViews(ViewableDigraph model, JComponent parent) {
+            // tell the model to create a view for itself
+            model.createView(modelView);
 
-        // add the model's view to the given parent
+            // if the given model isn't to be displayed as a black box
+            if (!model.isBlackBox()) {
+                // tell the model to lay itself out for the viewer (but don't
+                // let any problems in that process cause things to halt, as it
+                // is not a critical objective)
+                if (!usePrevModelLayout)
+                    try {
+                        // if the override layout method doesn't get the layout done
+                        if (!model.layoutForSimViewOverride()) {
+                            // call the automatically-generated layout method
+                            model.layoutForSimView();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+            }
+
+            // add the model's view to the given parent
+            DigraphView view;
+            //       if(!showLevel){
+            view = model.getDigraphView();
+            modelView.addView(view, parent);
+
+            // add the model's view to the given parent
 //        DigraphView view = model.getDigraphView();
 //        addView(view, parent);
 
 
-
-        // if the given digraph is the top-level digraph in the model being viewed
-        if (parent == modelView) {
-            // set the location of the digraph's view to the upper-left hand
-            // corner of the model-view
-          modelView.model = this.model;//by saurabh
-          modelView.modelDigView = view;//by saurabh
-          view.setLocation(new Point(modelBorderWidth, modelBorderWidth));
-        }
-
-        // for each component in the digraph
-        Iterator i = model.getComponents().iterator();
-        while (i.hasNext()) {
-            Object component = i.next();
-
-            // if the given digraph is itself a black box, or is hidden
-            if (model.isBlackBox() || model.isHidden()) {
-                // if this component is viewable
-                if (component instanceof ViewableComponent) {
-                    // tell this component it's hidden
-                    ViewableComponent comp = (ViewableComponent)component;
-                    comp.setHidden(true);
-                }
+            // if the given digraph is the top-level digraph in the model being viewed
+            if (parent == modelView) {
+                // set the location of the digraph's view to the upper-left hand
+                // corner of the model-view
+                modelView.model = this.model;//by saurabh
+                modelView.modelDigView = view;//by saurabh
+                view.setLocation(new Point(modelBorderWidth, modelBorderWidth));
             }
 
-            // if this component is a viewable atomic
-            if (component instanceof ViewableAtomic) {
-                // tell the viewable atomic to create a view for itself
-                ViewableAtomic atomic = (ViewableAtomic)component;
-                atomic.createView(modelView);
+            // for each component in the digraph
+            Iterator i = model.getComponents().iterator();
+            while (i.hasNext()) {
+                Object component = i.next();
 
-                // add the atomic view to the model's view
-                AtomicView view1 = atomic.getAtomicView();
+                // if the given digraph is itself a black box, or is hidden
+                if (model.isBlackBox() || model.isHidden()) {
+                    // if this component is viewable
+                    if (component instanceof ViewableComponent) {
+                        // tell this component it's hidden
+                        ViewableComponent comp = (ViewableComponent) component;
+                        comp.setHidden(true);
+                    }
+                }
+
+                // if this component is a viewable atomic
+                if (component instanceof ViewableAtomic) {
+                    // tell the viewable atomic to create a view for itself
+                    ViewableAtomic atomic = (ViewableAtomic) component;
+                    atomic.createView(modelView);
+
+                    // add the atomic view to the model's view
+                    AtomicView view1 = atomic.getAtomicView();
 //                atomic.setView(view1);//added by sm
-                modelView.addView(view1, view);
+                    modelView.addView(view1, view);
 //                addView(view1, view);
 
-                // if this atomic is the whole model being viewed (and thus,
-                // is wrapped in a wrapper digraph)
-                if (model.getName().equals(wrapperDigraphName)) {
-                    // center the atomic in the model-view
-                    view1.setLocation(
-                        modelViewScrollPane.getWidth() / 2 - view.getWidth() / 2,
-                        modelViewScrollPane.getHeight() / 2 - view.getHeight() / 2);
+                    // if this atomic is the whole model being viewed (and thus,
+                    // is wrapped in a wrapper digraph)
+                    if (model.getName().equals(wrapperDigraphName)) {
+                        // center the atomic in the model-view
+                        view1.setLocation(
+                                modelViewScrollPane.getWidth() / 2 - view.getWidth() / 2,
+                                modelViewScrollPane.getHeight() / 2 - view.getHeight() / 2);
+                    }
+                }
+
+                // if this component is a viewable digraph
+                if (component instanceof ViewableDigraph) {
+                    // call this method recursively to get this digraph's
+                    // components' views created
+                    ViewableDigraph digraph = (ViewableDigraph) component;
+                    createViews(digraph, view);
                 }
             }
-
-            // if this component is a viewable digraph
-            if (component instanceof ViewableDigraph) {
-                // call this method recursively to get this digraph's
-                // components' views created
-                ViewableDigraph digraph = (ViewableDigraph)component;
-                createViews(digraph, view);
-            }
         }
-    }
 
 
         /**
          * Clears this view's list of couplings.
          */
-        public void clearCouplings() {couplings.clear();}
+        public void clearCouplings() {
+            couplings.clear();
+        }
     }
 
     /**
@@ -1912,14 +1885,13 @@ public class SimView
      * be compiled devs java models) in the models-path to
      * the given combo-box.
      *
-     * @param   box     The combo-box to which to add the model names.
+     * @param box The combo-box to which to add the model names.
      */
-    protected void populateModelsBox(JComboBox box)
-    {
+    protected void populateModelsBox(JComboBox box) {
         // create a filename filter (to be used below) that will
         // match against ".class" files (and ignore inner classes)
         final String extension = ".class";
-        FilenameFilter filter =  new FilenameFilter() {
+        FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.endsWith(extension) && name.indexOf('$') == -1;
             }
@@ -1932,7 +1904,7 @@ public class SimView
         // if the models-path doesn't exist
         if (files == null) {
             JOptionPane.showMessageDialog(mainFrame,
-                "The selected models package does not appear to be available for loading.  Please select another.");
+                    "The selected models package does not appear to be available for loading.  Please select another.");
             return;
         }
 
@@ -1948,9 +1920,9 @@ public class SimView
         Iterator i = sortedFiles.iterator();
         while (i.hasNext()) {
             // add this class file's name (minus its extension) to the box
-            String name = ((File)i.next()).getName();
+            String name = ((File) i.next()).getName();
             box.addItem(name.substring(0,
-                name.length() - extension.length()));
+                    name.length() - extension.length()));
         }
     }
 
@@ -1959,90 +1931,87 @@ public class SimView
      * the package name).  Also, creates the views and coordinator for the
      * model instance.
      *
-     * @param   name        The name of the model class to instantiate.
+     * @param name The name of the model class to instantiate.
      */
-    protected void useModelClass(String name)
-    {
-      // if there is a previous model in use
-      if (model != null) {
-        // stop the previous model's simulation execution
-        coordinator.simulate(0);
+    protected void useModelClass(String name) {
+        // if there is a previous model in use
+        if (model != null) {
+            // stop the previous model's simulation execution
+            coordinator.simulate(0);
 
-        // for each frame existing in this application
-        Frame[] frames = mainFrame.getFrames();
-        for (int i = 0; i < frames.length; i++) {
-          // if this frame isn't this sim-view's main frame
-          if (frames[i] != mainFrame) {
-            // dispose of this frame
-            frames[i].setVisible(true);
-            frames[i].dispose();
-          }
+            // for each frame existing in this application
+            Frame[] frames = mainFrame.getFrames();
+            for (int i = 0; i < frames.length; i++) {
+                // if this frame isn't this sim-view's main frame
+                if (frames[i] != mainFrame) {
+                    // dispose of this frame
+                    frames[i].setVisible(true);
+                    frames[i].dispose();
+                }
+            }
+
+            saveModelLayout();
         }
 
-        saveModelLayout();
-      }
-
-      // create an instance of the selected class
-      Object instance = new Object(); //new object created by saurabh
-
-
-      if(!showLevel){
         // create an instance of the selected class
-        try {
-          Class modelClass = Class.forName(modelsPackage + "." + name);
-          instance = modelClass.newInstance();
-        } catch (Exception e) {
-          JOptionPane.showMessageDialog(mainFrame,
-                                        "That does not appear to be a valid model class.  Please select another.");
-          e.printStackTrace();
-          return;
-        }
+        Object instance = new Object(); //new object created by saurabh
 
 
-        // if the instance is a viewable-atomic
-        if (instance instanceof ViewableAtomic) {
-          // wrap the instance in a digraph, and have the digraph be our model
-          model = new ViewableDigraph(wrapperDigraphName);
-          model.add((atomic)instance);
+        if (!showLevel) {
+            // create an instance of the selected class
+            try {
+                Class modelClass = Class.forName(modelsPackage + "." + name);
+                instance = modelClass.newInstance();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(mainFrame,
+                        "That does not appear to be a valid model class.  Please select another.");
+                e.printStackTrace();
+                return;
+            }
 
-          // for each of the names of the outports of the atomic
-          ViewableAtomic atomic = (ViewableAtomic)instance;
-          List names = atomic.getOutportNames();
-          for (int i = 0; i < names.size(); i++) {
-            String portName = (String)names.get(i);
 
-            // add an outport with this port name to the wrapper digraph,
-            // and couple it to the atomic's outport of this name,
-            // so that outputs from that outport will be visible
-            // when they are emitted
-            model.addOutport(portName);
-            model.addCoupling(atomic, portName, model, portName);
-          }
-        }
+            // if the instance is a viewable-atomic
+            if (instance instanceof ViewableAtomic) {
+                // wrap the instance in a digraph, and have the digraph be our model
+                model = new ViewableDigraph(wrapperDigraphName);
+                model.add((atomic) instance);
 
-        // else, if the instance is a viewable-digraph
-        else if (instance instanceof ViewableDigraph) {
-          // have the instance itself be our model
-          ViewableDigraph dig = (ViewableDigraph)instance;
-          //dig.setSimView(this);
-          model = (ViewableDigraph)instance;
+                // for each of the names of the outports of the atomic
+                ViewableAtomic atomic = (ViewableAtomic) instance;
+                List names = atomic.getOutportNames();
+                for (int i = 0; i < names.size(); i++) {
+                    String portName = (String) names.get(i);
 
-        }
+                    // add an outport with this port name to the wrapper digraph,
+                    // and couple it to the atomic's outport of this name,
+                    // so that outputs from that outport will be visible
+                    // when they are emitted
+                    model.addOutport(portName);
+                    model.addCoupling(atomic, portName, model, portName);
+                }
+            }
 
-        // otherwise
-        else {
-          // don't use the model
-          JOptionPane.showMessageDialog(mainFrame,
-                                        "That does not appear to be a viewable model class.  Please select another.");
-          return;
-        }
+            // else, if the instance is a viewable-digraph
+            else if (instance instanceof ViewableDigraph) {
+                // have the instance itself be our model
+                ViewableDigraph dig = (ViewableDigraph) instance;
+                //dig.setSimView(this);
+                model = (ViewableDigraph) instance;
 
+            }
+
+            // otherwise
+            else {
+                // don't use the model
+                JOptionPane.showMessageDialog(mainFrame,
+                        "That does not appear to be a viewable model class.  Please select another.");
+                return;
+            }
 
 
         }//for showLevel
-        else{
+        else {
         }
-
 
 
         // get rid of any old views
@@ -2065,16 +2034,16 @@ public class SimView
 
         // get the model-view scrollpane resized to take into account
         // the possibly new model-view size
-        ((JComponent)modelViewScrollPane.getParent()).revalidate();
+        ((JComponent) modelViewScrollPane.getParent()).revalidate();
 
         // if the model is an atomic (being wrapped by a dummy digraph)
         if (instance instanceof ViewableAtomic) {
             // center the atomic within the wrapper digraph
-            AtomicView view = ((ViewableAtomic)instance).getAtomicView();
+            AtomicView view = ((ViewableAtomic) instance).getAtomicView();
             Dimension viewSize = view.getPreferredSize();
             Dimension wrapperSize = model.getPreferredSize();
             view.setLocation(wrapperSize.width / 2 - viewSize.width / 2,
-                wrapperSize.height / 2 - viewSize.height / 2);
+                    wrapperSize.height / 2 - viewSize.height / 2);
         }
 
         // reset the clock
@@ -2085,80 +2054,78 @@ public class SimView
         lastModelViewed = name;
     }
 
-        /*added by Saurabh
-    */
+    /*added by Saurabh
+*/
     public void useModelClass_SM(ViewableDigraph dg, String className, double prevSimTime)
     //protected void useModelClass_SM()
     {
 
-      Object instance = new Object();
+        Object instance = new Object();
 //      System.out.println("ModelName is ...the top part   " + dg.getName());
 
-      // create an instance of the selected class
-      if(showLevel){
-        model = (ViewableDigraph)dg;
-        model.setSimView(this);
-      }
-      else{
-        if(!showLevel){
-          try {
-            //Class modelClass = Class.forName(className);
-            Class modelClass = dg.getClass();
-            instance = modelClass.newInstance();
-          } catch (Exception e) {
-            JOptionPane.showMessageDialog(mainFrame,
-                "That does not appear to be a valid operation.");
-            e.printStackTrace();
-            return;
-          }
-          model = (ViewableDigraph)instance;
-          model.setSimView(this);
+        // create an instance of the selected class
+        if (showLevel) {
+            model = (ViewableDigraph) dg;
+            model.setSimView(this);
+        } else {
+            if (!showLevel) {
+                try {
+                    //Class modelClass = Class.forName(className);
+                    Class modelClass = dg.getClass();
+                    instance = modelClass.newInstance();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(mainFrame,
+                            "That does not appear to be a valid operation.");
+                    e.printStackTrace();
+                    return;
+                }
+                model = (ViewableDigraph) instance;
+                model.setSimView(this);
 //          System.out.println("ModelName is " + model.getName());
+            }
         }
-      }
 
-      if(model.isBlackBox()){
-        model.setBlackBox(false);
-      }
+        if (model.isBlackBox()) {
+            model.setBlackBox(false);
+        }
 
-      modelView = new ModelView(this);
-      modelView.removeAllViews();
+        modelView = new ModelView(this);
+        modelView.removeAllViews();
 
-      // create a coordinator
-      coordinator ncoordinator = new SimViewCoordinator(model, modelView);
-      ncoordinator.initialize(prevSimTime); ///get the prev clock from the earliee simView
-      coordinator = (SimViewCoordinator)ncoordinator;
+        // create a coordinator
+        coordinator ncoordinator = new SimViewCoordinator(model, modelView);
+        ncoordinator.initialize(prevSimTime); ///get the prev clock from the earliee simView
+        coordinator = (SimViewCoordinator) ncoordinator;
 
-      // have the coordinator use the currently selected real time factor
-      coordinator.setTimeScale(realTimeFactor.get());
+        // have the coordinator use the currently selected real time factor
+        coordinator.setTimeScale(realTimeFactor.get());
 
-      model.getSimView().modelView.createViews(model, modelView);
-      model.getSimView().detmCouplings(model);
+        model.getSimView().modelView.createViews(model, modelView);
+        model.getSimView().detmCouplings(model);
 
     }
 
 ////////////////////////////////////////////////
 
 
-
     /**
      * A wrapper for a clock value, changes to which must be accompanied
      * by other actions.
      */
-    protected class Clock
-    {
+    protected class Clock {
         /**
          * The value being wrapped.
          */
         private double clock;
 
-        public double get() {return clock;}
+        public double get() {
+            return clock;
+        }
 
         /**
          * Updates the wrapped variable, and performs resulting side effects.
          */
-        public void set(double clock_)
-        {
+        public void set(double clock_) {
             clock = clock_;
 
             // update the clock label
@@ -2170,21 +2137,21 @@ public class SimView
      * A wrapper for a real-time-factor value, changes to which must be
      * accompanied by other actions.
      */
-    protected class RealTimeFactor
-    {
+    protected class RealTimeFactor {
         /**
          * The value being wrapped.
          */
         private double realTimeFactor =
-            realTimeFactors[realTimeFactors.length / 2];
+                realTimeFactors[realTimeFactors.length / 2];
 
-        public double get() {return realTimeFactor;}
+        public double get() {
+            return realTimeFactor;
+        }
 
         /**
          * Updates the wrapped variable, and performs resulting side effects.
          */
-        public void set(double realTimeFactor_)
-        {
+        public void set(double realTimeFactor_) {
             realTimeFactor = realTimeFactor_;
 
             // update the speed label
@@ -2203,10 +2170,9 @@ public class SimView
      * Adds the names of all the user-specified java packages containing
      * models to the given combo-box.
      *
-     * @param   box     The combo-box to which to add the model names.
+     * @param box The combo-box to which to add the model names.
      */
-    protected void populatePackagesBox(JComboBox box)
-    {
+    protected void populatePackagesBox(JComboBox box) {
         box.removeAllItems();
 
         box.addItem("Select a package");
@@ -2216,7 +2182,7 @@ public class SimView
             // for each model package in the list
             for (int i = 0; i < modelPackages.size(); i++) {
                 // add this package's name to the given combo-box
-                box.addItem((String)modelPackages.get(i));
+                box.addItem((String) modelPackages.get(i));
             }
         }
     }
@@ -2224,15 +2190,13 @@ public class SimView
     /**
      * A dialog in which the user may specify various program-wide settings.
      */
-    protected class ConfigureDialog extends JDialog
-    {
+    protected class ConfigureDialog extends JDialog {
         /**
          * Constructs a configure-dialog.
          *
-         * @param   owner       The parent frame of this dialog.
+         * @param owner The parent frame of this dialog.
          */
-        public ConfigureDialog(Frame owner)
-        {
+        public ConfigureDialog(Frame owner) {
             super(owner, "Configure", true);
 
             setSize(400, 300);
@@ -2244,8 +2208,7 @@ public class SimView
         /**
          * Constructs the UI of this dialog.
          */
-        protected void constructUI()
-        {
+        protected void constructUI() {
             // have the close-window button do nothing for this dialog
             setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -2269,7 +2232,7 @@ public class SimView
 
             // limit the height of the class path field
             field.setMaximumSize(new Dimension(1000,
-                (int)(1.5 * getFontMetrics(field.getFont()).getHeight())));
+                    (int) (1.5 * getFontMetrics(field.getFont()).getHeight())));
 
             main.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -2286,7 +2249,7 @@ public class SimView
 
             // limit the height of the source path field
             field.setMaximumSize(new Dimension(1000,
-                (int)(1.5 * getFontMetrics(field.getFont()).getHeight())));
+                    (int) (1.5 * getFontMetrics(field.getFont()).getHeight())));
 
             main.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -2306,20 +2269,20 @@ public class SimView
             String text = "";
             for (int i = 0; i < modelPackages.size(); i++) {
                 // add this entry as a line to the text area's text
-                text += ((String)modelPackages.get(i)) + "\n";
+                text += ((String) modelPackages.get(i)) + "\n";
             }
             area.setText(text);
 
             // have ctrl-insert do a copy action in the text area
             Keymap keymap = area.addKeymap(null, area.getKeymap());
             KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT,
-                Event.CTRL_MASK);
+                    Event.CTRL_MASK);
             keymap.addActionForKeyStroke(key, new DefaultEditorKit.CopyAction());
 
             // have shift-insert do a paste action in the text area
             key = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.SHIFT_MASK);
             keymap.addActionForKeyStroke(key,
-                new DefaultEditorKit.PasteAction());
+                    new DefaultEditorKit.PasteAction());
             area.setKeymap(keymap);
 
             main.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -2350,7 +2313,7 @@ public class SimView
                     if (modelsPath.endsWith("/")) {
                         // remove it
                         modelsPath = modelsPath.substring(0,
-                            modelsPath.length() - 1);
+                                modelsPath.length() - 1);
                     }
 
                     // store the source path field entry
@@ -2363,13 +2326,13 @@ public class SimView
                     if (sourcePath.endsWith("/")) {
                         // remove it
                         sourcePath = sourcePath.substring(0,
-                            sourcePath.length() - 1);
+                                sourcePath.length() - 1);
                     }
 
                     // keep doing this
                     modelPackages = new ArrayList();
                     StringReader stringReader =
-                        new StringReader(packagesArea.getText());
+                            new StringReader(packagesArea.getText());
                     BufferedReader reader = new BufferedReader(stringReader);
                     while (true) {
                         // read the next line specified in the packages text
@@ -2377,7 +2340,10 @@ public class SimView
                         String line = null;
                         try {
                             line = reader.readLine();
-                        } catch (IOException ex) {ex.printStackTrace(); continue;}
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                            continue;
+                        }
 
                         // if there are no more lines
                         if (line == null) break;
@@ -2404,15 +2370,13 @@ public class SimView
     /**
      * A dialog in which displays the program's help text.
      */
-    protected class HelpDialog extends JDialog
-    {
+    protected class HelpDialog extends JDialog {
         /**
          * Constructs an object of this class.
          *
-         * @param   owner       The parent frame of this dialog.
+         * @param owner The parent frame of this dialog.
          */
-        public HelpDialog(Frame owner)
-        {
+        public HelpDialog(Frame owner) {
             super(owner, "Help", true);
 
             setSize(550, 400);
@@ -2424,8 +2388,7 @@ public class SimView
         /**
          * Constructs the UI of this dialog.
          */
-        protected void constructUI()
-        {
+        protected void constructUI() {
             // add the main panel
             Container pane = getContentPane();
             JPanel main = new JPanel();
@@ -2437,7 +2400,9 @@ public class SimView
             JTextPane textPane = new JTextPane();
             try {
                 textPane.setPage(new URL("file:SimView.html"));
-            } catch (Exception e) {e.printStackTrace();}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             textPane.setEditable(false);
             textPane.setFont(new Font("monospaced", Font.PLAIN, 12));
             JScrollPane scrollPane = new JScrollPane(textPane);
@@ -2467,19 +2432,18 @@ public class SimView
     /**
      * Loads this program's settings from its settings files.
      */
-    protected void loadSettings()
-    {
+    protected void loadSettings() {
         try {
             // read in the settings from the settings file
             InputStream in = new FileInputStream(settingsFileName);
             ObjectInputStream s = new ObjectInputStream(in);
-            modelsPath = (String)s.readObject();
-            modelPackages = (List)s.readObject();
+            modelsPath = (String) s.readObject();
+            modelPackages = (List) s.readObject();
             alwaysShowCouplings = s.readBoolean();
             realTimeFactor.set(s.readDouble());
-            modelsPackage = (String)s.readObject();
-            lastModelViewed = (String)s.readObject();
-            sourcePath = (String)s.readObject();
+            modelsPackage = (String) s.readObject();
+            lastModelViewed = (String) s.readObject();
+            sourcePath = (String) s.readObject();
         } catch (Exception e) {
             System.out.println("Couldn't read settings from file.");
             if (modelsPath == null) modelsPath = ".";
@@ -2491,8 +2455,7 @@ public class SimView
     /**
      * Saves this program's settings to its settings files.
      */
-    protected void saveSettings()
-    {
+    protected void saveSettings() {
         try {
             // write out the current settings to the settings file
             FileOutputStream out = new FileOutputStream(settingsFileName);
@@ -2505,15 +2468,16 @@ public class SimView
             s.writeObject(lastModelViewed);
             s.writeObject(sourcePath);
             s.flush();
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * A coupling between a source port on one devs component view, and
      * a destination port on another.
      */
-    protected class Coupling
-    {
+    protected class Coupling {
         /**
          * The source and destination component views.
          */
@@ -2524,8 +2488,8 @@ public class SimView
          */
         public String sourcePortName, destPortName;
 
-        public void printCoupling(){
-          System.out.println("Inside coupling: source:<"+sourceView.getViewableComponent().getLayoutName()+"> <sourcePort:"+sourcePortName+"> destination:<"+destView.getViewableComponent().getLayoutName()+"> <destPort:"+destPortName);
+        public void printCoupling() {
+            System.out.println("Inside coupling: source:<" + sourceView.getViewableComponent().getLayoutName() + "> <sourcePort:" + sourcePortName + "> destination:<" + destView.getViewableComponent().getLayoutName() + "> <destPort:" + destPortName);
         }
     }
 
@@ -2533,11 +2497,10 @@ public class SimView
      * Determines all the couplings present within the given model, and adds
      * them to the model-view for display.
      *
-     * @param   model       The model for which to find all the couplings.
+     * @param model The model for which to find all the couplings.
      */
-    protected void detmCouplings(ViewableDigraph model)
-    {
-        detmCouplings((ViewableComponent)model);
+    protected void detmCouplings(ViewableDigraph model) {
+        detmCouplings((ViewableComponent) model);
 
         // for each component in the model
         Iterator i = model.getComponents().iterator();
@@ -2548,13 +2511,13 @@ public class SimView
             if (component instanceof ViewableDigraph) {
                 // call this method recursively to get this digraph's
                 // components' couplings detm'd
-                ViewableDigraph digraph = (ViewableDigraph)component;
+                ViewableDigraph digraph = (ViewableDigraph) component;
                 detmCouplings(digraph);
             }
 
             // else, if this component is a viewable component
             else if (component instanceof ViewableComponent) {
-                detmCouplings((ViewableComponent)component);
+                detmCouplings((ViewableComponent) component);
             }
         }
     }
@@ -2563,10 +2526,9 @@ public class SimView
      * Determines all the couplings for which a port on the given component
      * is the source, and adds those couplings to the model-view for display.
      *
-     * @param   comp       The devs component whose couplings are to be found.
+     * @param comp The devs component whose couplings are to be found.
      */
-    protected void detmCouplings(ViewableComponent comp)
-    {
+    protected void detmCouplings(ViewableComponent comp) {
         // find all the couplings for which an outport of the component
         // is the source
         detmCouplings(comp, comp.getOutportNames());
@@ -2584,31 +2546,29 @@ public class SimView
      * (on the given component) is the source, and adds those couplings
      * to the model-view for display.
      *
-     * @param   comp        The devs component to which the ports belong.
-     * @param   portNames   The list of port names on the above component
-     *                      to look for couplings.
+     * @param comp      The devs component to which the ports belong.
+     * @param portNames The list of port names on the above component
+     *                  to look for couplings.
      */
-    protected void detmCouplings(ViewableComponent comp, List portNames)
-    {
+    protected void detmCouplings(ViewableComponent comp, List portNames) {
         // for each port in the given list
         for (int i = 0; i < portNames.size(); i++) {
-            String portName = (String)portNames.get(i);
+            String portName = (String) portNames.get(i);
 
             // ask the given component's simulator or coordinator for the
             // couplings for which this port is a source
             List couplings = null;
             if (comp instanceof ViewableAtomic) {
-                couplings = ((coupledSimulator)((atomic)comp).getSim()).
-                    getCouplingsToSourcePort(portName);
-            }
-            else if (comp instanceof ViewableDigraph) {
-                couplings = ((digraph)comp).getCoordinator().
-                    getCouplingsToSourcePort(portName);
+                couplings = ((coupledSimulator) ((atomic) comp).getSim()).
+                        getCouplingsToSourcePort(portName);
+            } else if (comp instanceof ViewableDigraph) {
+                couplings = ((digraph) comp).getCoordinator().
+                        getCouplingsToSourcePort(portName);
             }
 
             // for each coupling to this port
             for (int j = 0; j < couplings.size(); j++) {
-                Pair pair = (Pair)couplings.get(j);
+                Pair pair = (Pair) couplings.get(j);
 
                 // create a coupling object and store this coupling's
                 // source component-view and port
@@ -2618,20 +2578,20 @@ public class SimView
 
                 // if the component at the destination end of this coupling
                 // is not a viewable-component
-                entity destEntity = (entity)pair.getKey();
-                String destPortName = (String)pair.getValue();
+                entity destEntity = (entity) pair.getKey();
+                String destPortName = (String) pair.getValue();
                 if (!(destEntity instanceof ViewableComponent)) {
                     // skip this coupling - it can't be displayed
                     System.out.println("Coupling could not be displayed."
-                        + "\n\tFrom: " + comp.getName()
-                        + ", port " + portName
-                        + "\n\tTo: " + destEntity.getName()
-                        + ", port " + destPortName);
+                            + "\n\tFrom: " + comp.getName()
+                            + ", port " + portName
+                            + "\n\tTo: " + destEntity.getName()
+                            + ", port " + destPortName);
                     continue;
                 }
 
                 // store this coupling's destination component-view and port
-                coupling.destView = ((ViewableComponent)destEntity).getView();
+                coupling.destView = ((ViewableComponent) destEntity).getView();
                 coupling.destPortName = destPortName;
 
                 // add the coupling to the model-view
@@ -2643,8 +2603,7 @@ public class SimView
     /**
      * A step in a content-path list of such steps.
      */
-    protected class ContentPathStep
-    {
+    protected class ContentPathStep {
         /**
          * At which view the content should be displayed for this step.
          */
@@ -2660,13 +2619,14 @@ public class SimView
     /**
      * Returns this sim-view's model-view.
      */
-    public ModelView getModelView() {return modelView;}
+    public ModelView getModelView() {
+        return modelView;
+    }
 
     /**
      * A key used to find a particular content-path in the content-path-map.
      */
-    protected class ContentPathKey
-    {
+    protected class ContentPathKey {
         /**
          * The latest incarnation of the content traversing the path.
          */
@@ -2680,8 +2640,7 @@ public class SimView
         /**
          * Constructs a key.
          */
-        public ContentPathKey(ContentInterface content_, String componentName_)
-        {
+        public ContentPathKey(ContentInterface content_, String componentName_) {
             content = content_;
             componentName = componentName_;
         }
@@ -2691,12 +2650,11 @@ public class SimView
          * if its content port and values match this key's,
          * and if its component name matches this key's.
          */
-        public boolean equals(Object o)
-        {
+        public boolean equals(Object o) {
             if (o instanceof ContentPathKey) {
-                ContentPathKey pair = (ContentPathKey)o;
+                ContentPathKey pair = (ContentPathKey) o;
                 return content.equals(pair.content) &&
-                    componentName.equals(pair.componentName);
+                        componentName.equals(pair.componentName);
             }
 
             return false;
@@ -2706,18 +2664,16 @@ public class SimView
          * Returns a hash-code for this key that is based on a combination
          * of its component-name and its content's port-name and value.
          */
-        public int hashCode()
-        {
+        public int hashCode() {
             return (componentName + content.getPort() + content.getValue())
-                .hashCode();
+                    .hashCode();
         }
     }
 
     /**
      * Puts this sim-view's status label in "stepping" mode.
      */
-    protected void setStatusLabelToStepping()
-    {
+    protected void setStatusLabelToStepping() {
         statusLabel.setForeground(Color.red.darker());
         statusLabel.setText("stepping");
     }
@@ -2725,8 +2681,7 @@ public class SimView
     /**
      * Puts this sim-view's status label in "running" mode.
      */
-    protected void setStatusLabelToRunning()
-    {
+    protected void setStatusLabelToRunning() {
         statusLabel.setForeground(Color.blue.darker());
         statusLabel.setText("running");
     }
@@ -2734,8 +2689,7 @@ public class SimView
     /**
      * Puts this sim-view's status label in "ready" mode.
      */
-    protected void setStatusLabelToReady()
-    {
+    protected void setStatusLabelToReady() {
         statusLabel.setForeground(Color.green.darker());
         statusLabel.setText("ready");
     }
@@ -2744,14 +2698,15 @@ public class SimView
      * Saves the current top-level model's layout (within this sim-view)
      * to its source code file.
      */
-    protected void saveModelLayout() {saveModelLayout(model);}
+    protected void saveModelLayout() {
+        saveModelLayout(model);
+    }
 
     /**
      * Saves the given model's layout (within this sim-view)
      * to its source code file.
      */
-    protected void saveModelLayout(ViewableDigraph model)
-    {
+    protected void saveModelLayout(ViewableDigraph model) {
         // if no model is currently being viewed, or the given model
         // is being viewed as black box (or is hidden), then abort this method
         if (model == null || model.isBlackBox() || model.isHidden()) return;
@@ -2788,7 +2743,7 @@ public class SimView
 
             // remove the method and its comment
             code = code.substring(0, startIndex)
-                + code.substring(endIndex, code.length());
+                    + code.substring(endIndex, code.length());
         }
 
         // find the ending brace in the file, which is assumed to be the
@@ -2810,7 +2765,7 @@ public class SimView
         if (!model.isBlackBox()) {
             // add the call to set the model's preferred size
             method.append("        preferredSize = new Dimension(");
-            Dimension size = ((JComponent)model.getView()).getSize();
+            Dimension size = ((JComponent) model.getView()).getSize();
             method.append(size.width);
             method.append(", ");
             method.append(size.height);
@@ -2823,7 +2778,7 @@ public class SimView
             // if this component isn't a viewable-component, skip it
             Object next = i.next();
             if (!(next instanceof ViewableComponent)) continue;
-            ViewableComponent component = (ViewableComponent)next;
+            ViewableComponent component = (ViewableComponent) next;
 
             // if this component is hidden, skip it
             if (component.isHidden()) continue;
@@ -2831,11 +2786,11 @@ public class SimView
             // add the call to set this component's location
             method.append("        ");
             method.append("if((ViewableComponent)withName("
-                + component.getLayoutName());
+                    + component.getLayoutName());
             method.append(")!=null)\n");   // Xiaolin Hu, Sept. 2007
             method.append("             ");
             method.append("((ViewableComponent)withName("
-                + component.getLayoutName());
+                    + component.getLayoutName());
             method.append(")).setPreferredLocation(new Point(");
             Point location = component.getPreferredLocation();
             method.append(location.x);
@@ -2849,7 +2804,7 @@ public class SimView
 
         // insert the method into the code
         code = code.substring(0, index) + method
-            + code.substring(index + 1, code.length());
+                + code.substring(index + 1, code.length());
 
         // write the updated source code back to the java file
         file = new File(file.getPath());
@@ -2857,7 +2812,9 @@ public class SimView
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
             out.write(code, 0, code.length());
             out.flush();
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // tell the model its layout now hasn't changed since its last save
         model.setLayoutChanged(false);
@@ -2869,19 +2826,18 @@ public class SimView
      * Saves the layouts (within this sim-view) of the children components
      * of the given model to their associated source code files.
      */
-    protected void saveLayoutsOfChildren(ViewableDigraph model)
-    {
+    protected void saveLayoutsOfChildren(ViewableDigraph model) {
         // for each child component of the model
         Iterator i = model.getComponents().iterator();
         while (i.hasNext()) {
             // if this component isn't a viewable-component, skip it
             Object next = i.next();
             if (!(next instanceof ViewableComponent)) continue;
-            ViewableComponent component = (ViewableComponent)next;
+            ViewableComponent component = (ViewableComponent) next;
 
             // if this component is itself a viewable digraph
             if (component instanceof ViewableDigraph) {
-                ViewableDigraph digraph = (ViewableDigraph)component;
+                ViewableDigraph digraph = (ViewableDigraph) component;
 
                 // call this method recursively to get this digraph's
                 // layout method created/updated

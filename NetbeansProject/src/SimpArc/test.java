@@ -1,27 +1,25 @@
 package SimpArc;
 
 
-import GenCol.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import genDevs.simulation.realTime.*;
+import genDevs.modeling.digraph;
+import genDevs.simulation.realTime.TunableCoordinator;
 
 
-public class test{
+public class test {
 
-protected static digraph testDig;
+    protected static digraph testDig;
 
-  public test(){}
+    public test() {
+    }
 
-  public static void main(String[ ] args)
-  {
-      testDig = new efp();
+    public static void main(String[] args) {
+        testDig = new efp();
 //      genDevs.simulation.coordinator cs = new genDevs.simulation.coordinator(testDig);
 
-      TunableCoordinator cs = new TunableCoordinator(testDig);
-      cs.setTimeScale(0.04);
+        TunableCoordinator cs = new TunableCoordinator(testDig);
+        cs.setTimeScale(0.04);
 
-      cs.initialize();
-      cs.simulate(50);
-  }
+        cs.initialize();
+        cs.simulate(50);
+    }
 }

@@ -1,13 +1,5 @@
 package genDevs.modeling;
 
-import GenCol.*;
-
-import java.util.*;
-import java.awt.Color;
-
-
-
-
 /*
 interface coupledDevs extends EntityInterface{
 
@@ -22,8 +14,8 @@ public couprel getCouprel();
 */
 
 
-public interface DevsInterface extends AtomicInterface,Coupled{
-public final double INFINITY = Double.POSITIVE_INFINITY;
+public interface DevsInterface extends AtomicInterface, Coupled {
+    public final double INFINITY = Double.POSITIVE_INFINITY;
 }
 
 

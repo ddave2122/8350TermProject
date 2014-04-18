@@ -9,18 +9,15 @@
 
 package genDevs.plots;
 
-import java.awt.*;
-import java.io.*;
 import javax.swing.*;
-import util.*;
+import java.awt.*;
 
 /**
  * A display of a grid of cells.
  *
- * @author      Bernard Zeigler, Jeff Mather
+ * @author Bernard Zeigler, Jeff Mather
  */
-public class MRCellGridView extends JFrame
-{
+public class MRCellGridView extends JFrame {
     /**
      * The color of each cell in the grid.
      */
@@ -72,16 +69,15 @@ public class MRCellGridView extends JFrame
     /**
      * Constructor.
      *
-     * @param   title               The title to display in this view's
-     *                              title bar.
-     * @param   spaceSize_          The size of the cell space being depicted
-     *                              (in cells).
-     * @param   cellSize_           The size of each cell (in pixels).
-     * @param   xLabel_, yLabel_    The axes labels.
+     * @param title      The title to display in this view's
+     *                   title bar.
+     * @param spaceSize_ The size of the cell space being depicted
+     *                   (in cells).
+     * @param cellSize_  The size of each cell (in pixels).
+     * @param xLabel_,   yLabel_    The axes labels.
      */
     public MRCellGridView(String title, Dimension spaceSize_, int cellSize_,
-        String xLabel_, String yLabel_)
-    {
+                          String xLabel_, String yLabel_) {
         super(title);
 
         if (xLabel_ != null) xLabel = xLabel_;
@@ -101,7 +97,7 @@ public class MRCellGridView extends JFrame
         JPanel main = new JPanel();
         main.setLayout(new BorderLayout());
         main.setBorder(BorderFactory.createEmptyBorder(
-            borderWidth, borderWidth, borderWidth, borderWidth));
+                borderWidth, borderWidth, borderWidth, borderWidth));
         pane.add(main, BorderLayout.CENTER);
 
         // add the grid panel
@@ -112,32 +108,28 @@ public class MRCellGridView extends JFrame
     /**
      * A convenience constructor.
      */
-    public MRCellGridView(String title, Dimension spaceSize, int cellSize)
-    {
+    public MRCellGridView(String title, Dimension spaceSize, int cellSize) {
         this(title, spaceSize, cellSize, null, null);
     }
 
     /**
      * A convenience constructor.
      */
-    public MRCellGridView(String title, String xLabel, String yLabel)
-    {
+    public MRCellGridView(String title, String xLabel, String yLabel) {
         this(title, null, 0, xLabel, yLabel);
     }
 
     /**
      * A convenience constructor.
      */
-    public MRCellGridView(String title)
-    {
+    public MRCellGridView(String title) {
         this(title, null, 0);
     }
 
     /**
      * See parent method.
      */
-    public void addNotify()
-    {
+    public void addNotify() {
         super.addNotify();
 
         adjustSizeToHoldGridPanel();
@@ -147,24 +139,22 @@ public class MRCellGridView extends JFrame
      * Adjusts the size of this view's frame to just contain the grid
      * panel and its border.
      */
-    protected void adjustSizeToHoldGridPanel()
-    {
+    protected void adjustSizeToHoldGridPanel() {
         // adjust the size of this view to just contain the grid and
         // its border
         Insets insets = getInsets();
         setSize(gridPanel.getPreferredSize().width
-            + insets.left + insets.right + borderWidth * 2,
-            gridPanel.getPreferredSize().height
-            + insets.top + insets.bottom + borderWidth * 2);
+                + insets.left + insets.right + borderWidth * 2,
+                gridPanel.getPreferredSize().height
+                        + insets.top + insets.bottom + borderWidth * 2);
     }
 
     /**
      * Returns the given x limited to the cell-space's width (and zero).
      *
-     * @param   x       The cell x to limit.
+     * @param x The cell x to limit.
      */
-    protected int forceXInBounds(int x)
-    {
+    protected int forceXInBounds(int x) {
         x = (x < 0) ? 0 : x;
         x = (x >= spaceSize.width) ? spaceSize.width - 1 : x;
         return x;
@@ -173,10 +163,9 @@ public class MRCellGridView extends JFrame
     /**
      * Returns the given y limited to the cell-space's height (and zero).
      *
-     * @param   y       The cell y to limit.
+     * @param y The cell y to limit.
      */
-    protected int forceYInBounds(int y)
-    {
+    protected int forceYInBounds(int y) {
         y = (y < 0) ? 0 : y;
         y = (y >= spaceSize.height) ? spaceSize.height - 1 : y;
         return y;
@@ -186,12 +175,11 @@ public class MRCellGridView extends JFrame
      * Sets the x scale factor to use when depicting a range that is larger
      * than the space-size.
      *
-     * @param   range       The x-range the cell space is supposed to depict.
+     * @param range The x-range the cell space is supposed to depict.
      */
-    public void setXScale(double range)
-    {
-      if(cellSize > 0) xScaleFactor = 1/((double)cellSize);  //Xiaolin Hu
-      else xScaleFactor = spaceSize.width / range;
+    public void setXScale(double range) {
+        if (cellSize > 0) xScaleFactor = 1 / ((double) cellSize);  //Xiaolin Hu
+        else xScaleFactor = spaceSize.width / range;
 
     }
 
@@ -199,24 +187,22 @@ public class MRCellGridView extends JFrame
      * Sets the y scale factor to use when depicting a range that is larger
      * than the space-size.
      *
-     * @param   range       The y-range the cell space is supposed to depict.
+     * @param range The y-range the cell space is supposed to depict.
      */
-    public void setYScale(double range)
-    {
-      if(cellSize > 0) yScaleFactor = 1/((double)cellSize); // Xiaolin Hu
-      else yScaleFactor = spaceSize.height / range;
+    public void setYScale(double range) {
+        if (cellSize > 0) yScaleFactor = 1 / ((double) cellSize); // Xiaolin Hu
+        else yScaleFactor = spaceSize.height / range;
     }
 
     /**
      * Returns the given x scaled according to the current x-scale-factor.
      *
-     * @param   x       The x to scale.
-     * @return          The x-value, scaled.
+     * @param x The x to scale.
+     * @return The x-value, scaled.
      */
-    protected int scaleX(double x)
-    {
-        int centerX = (int)Math.rint(spaceSize.width / 2.0);
-        int scaled = centerX + (int)Math.rint(x * xScaleFactor);
+    protected int scaleX(double x) {
+        int centerX = (int) Math.rint(spaceSize.width / 2.0);
+        int scaled = centerX + (int) Math.rint(x * xScaleFactor);
         return forceXInBounds(scaled);
     }
 
@@ -224,11 +210,10 @@ public class MRCellGridView extends JFrame
      * Returns the given time value scaled according to the current
      * time-scale-factor.
      *
-     * @param   time        The time value to scale.
-     * @return              The time value, scaled.
+     * @param time The time value to scale.
+     * @return The time value, scaled.
      */
-    protected int scaleTime(double time, double timeScale)
-    {
+    protected int scaleTime(double time, double timeScale) {
         setXScale(timeScale);
         return scaleX(time);
     }
@@ -236,24 +221,22 @@ public class MRCellGridView extends JFrame
     /**
      * Returns the given y scaled according to the current y-scale-factor.
      *
-     * @param   y       The y to scale.
-     * @return          The y-value, scaled.
+     * @param y The y to scale.
+     * @return The y-value, scaled.
      */
-    protected int scaleY(double y)
-    {
-        int centerY = (int)Math.rint(spaceSize.height / 2.0);
-        int scaled = centerY + (int)Math.rint(y * yScaleFactor);
+    protected int scaleY(double y) {
+        int centerY = (int) Math.rint(spaceSize.height / 2.0);
+        int scaled = centerY + (int) Math.rint(y * yScaleFactor);
         return forceYInBounds(scaled);
     }
 
     /**
      * Draws a cell at the given cell location using the given color.
      *
-     * @param   cellX, cellY        The cell location.
-     * @param   color               The color to fill the cell with.
+     * @param cellX, cellY        The cell location.
+     * @param color  The color to fill the cell with.
      */
-    public void drawCell(int cellX, int cellY, Color color)
-    {
+    public void drawCell(int cellX, int cellY, Color color) {
         // detm the pixel location of the cell
         int x = (forceXInBounds(cellX) * cellSize) + 1;
         int y = (forceYInBounds(cellY) * cellSize) + 1;
@@ -265,24 +248,23 @@ public class MRCellGridView extends JFrame
      * Draws a cell at the location determined by scaling the given
      * cell location by the current scale factors.
      *
-     * @param   cellX, cellY        The cell location to scale.
-     * @param   color               The color to fill the cell with.
+     * @param cellX, cellY        The cell location to scale.
+     * @param color  The color to fill the cell with.
      */
-    public void drawCellToScale(double cellX, double cellY, Color color)
-    {
+    public void drawCellToScale(double cellX, double cellY, Color color) {
         // detm the scaled pixel location of the cell
         int x = (scaleX(cellX) * cellSize) + 1;
         int y = (scaleY(-cellY) * cellSize) + 1;
 
         fillCellOnSwingThread(x, y, color);
     }
+
     /**
-     *  Draw a cell with resolution res.
+     * Draw a cell with resolution res.
      * For a cell with resolution res, its cell size equals to the default size divided by res
      * Xiaolin Hu, Nov 14th, 2005
      */
-    public void drawMRCellToScale(double cellX, double cellY, int resIndex, Color color)
-    {
+    public void drawMRCellToScale(double cellX, double cellY, int resIndex, Color color) {
         // detm the scaled pixel location of the cell
         int x = (scaleX(cellX) * cellSize) + 1;
         int y = (scaleY(-cellY) * cellSize) + 1;
@@ -295,14 +277,13 @@ public class MRCellGridView extends JFrame
      * is treated as a time value and is scaled by the given time-scale,
      * rather than the current x-scale-factor.
      *
-     * @param   timeScale           The factor by which to scale the given
-     *                              cell x-value.
-     *
-     * See drawCellToScale() for the other parameter explanations.
+     * @param timeScale The factor by which to scale the given
+     *                  cell x-value.
+     *                  <p/>
+     *                  See drawCellToScale() for the other parameter explanations.
      */
     public void drawCellToTimeScale(double cellX, double timeScale,
-        double cellY, Color color)
-    {
+                                    double cellY, Color color) {
         // detm the scaled pixel location of the cell
         int x = (scaleTime(cellX, timeScale) * cellSize) + 1;
         int y = (scaleY(-cellY) * cellSize) + 1;
@@ -313,12 +294,11 @@ public class MRCellGridView extends JFrame
     /**
      * This is just like drawCellToTimeScale(), except that a column is drawn
      * at the scaled location, rather than just a cell.
-     *
+     * <p/>
      * See drawCellToTimeScale() for the parameter explanations.
      */
     public void drawPulseToTimeScale(double cellX, double timeScale,
-        double cellY, Color color)
-    {
+                                     double cellY, Color color) {
         // detm the scaled pixel location of the cell
         int x = (scaleTime(cellX, timeScale) * cellSize) + 1;
         int y = (scaleY(-cellY) * cellSize) + 1;
@@ -332,12 +312,11 @@ public class MRCellGridView extends JFrame
      * are filled; this keeps the cell from obliterating the axis lines and
      * provides a border between adjacent cells.
      *
-     * @param   pixelX, pixelY      The pixel location of the upper-left-hand
-     *                              corner of the cell to fill.
-     * @param   color               The fill color.
+     * @param pixelX, pixelY      The pixel location of the upper-left-hand
+     *                corner of the cell to fill.
+     * @param color   The fill color.
      */
-    protected void fillCell(int pixelX, int pixelY, Color color)
-    {
+    protected void fillCell(int pixelX, int pixelY, Color color) {
         // fill in the cell's rectangle
         Graphics g = gridPanel.getGraphics();
         g.setColor(color);
@@ -349,66 +328,60 @@ public class MRCellGridView extends JFrame
 
     /**
      * @param pixelX, pixelY, color --- see fillCell() above
-     * @param size: cell size
-     * Author: Xiaolin Hu --- Nov 16th, 2005
+     * @param size:   cell size
+     *                Author: Xiaolin Hu --- Nov 16th, 2005
      */
-    protected void fillMRCell(int pixelX, int pixelY, int resIndex, Color color)
-    {
+    protected void fillMRCell(int pixelX, int pixelY, int resIndex, Color color) {
         int x, y;
         // fill in the cell's rectangle
         Graphics g = gridPanel.getGraphics();
         g.setColor(color);
 
-        if(resIndex==0){  // this is the regular case
-          x= pixelX;
-          y = pixelY;
-          g.fillRect(x, y, cellSize - 1, cellSize - 1);
-          grid[pixelX / cellSize][pixelY / cellSize][resIndex] = color;
-        }
-        else{
-          if(grid[pixelX / cellSize][pixelY / cellSize][0] != null){
-            grid[pixelX / cellSize][pixelY / cellSize][0] = null;
-            // draw two white lines to separate thr four cells
-            g.setColor(Color.WHITE); //
-            g.fillRect(pixelX, pixelY + (int) (cellSize / 2)-1, cellSize - 1, 1);
-            g.fillRect(pixelX + (int) (cellSize / 2)-1, pixelY ,  1, cellSize - 1);
-            g.setColor(color);  // restore the color
-          }
+        if (resIndex == 0) {  // this is the regular case
+            x = pixelX;
+            y = pixelY;
+            g.fillRect(x, y, cellSize - 1, cellSize - 1);
+            grid[pixelX / cellSize][pixelY / cellSize][resIndex] = color;
+        } else {
+            if (grid[pixelX / cellSize][pixelY / cellSize][0] != null) {
+                grid[pixelX / cellSize][pixelY / cellSize][0] = null;
+                // draw two white lines to separate thr four cells
+                g.setColor(Color.WHITE); //
+                g.fillRect(pixelX, pixelY + (int) (cellSize / 2) - 1, cellSize - 1, 1);
+                g.fillRect(pixelX + (int) (cellSize / 2) - 1, pixelY, 1, cellSize - 1);
+                g.setColor(color);  // restore the color
+            }
 
-          if (resIndex == 1) {
-            x = pixelX;
-            y = pixelY + (int) (cellSize / 2);
-            g.fillRect(x, y, (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
-          }
-          else if (resIndex == 2) {
-            x = pixelX + (int) (cellSize / 2);
-            y = pixelY + (int) (cellSize / 2);
-            g.fillRect(x, y, (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
-          }
-          else if (resIndex == 3) {
-            x = pixelX;
-            y = pixelY;
-            g.fillRect(x, y, (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
-          }
-          else if (resIndex == 4) {
-            x = pixelX + (int) (cellSize / 2);
-            y = pixelY;
-            g.fillRect(x, y, (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
-          }
-          // remember the cell's new color
-          grid[pixelX / cellSize][pixelY / cellSize][resIndex] = color;
+            if (resIndex == 1) {
+                x = pixelX;
+                y = pixelY + (int) (cellSize / 2);
+                g.fillRect(x, y, (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
+            } else if (resIndex == 2) {
+                x = pixelX + (int) (cellSize / 2);
+                y = pixelY + (int) (cellSize / 2);
+                g.fillRect(x, y, (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
+            } else if (resIndex == 3) {
+                x = pixelX;
+                y = pixelY;
+                g.fillRect(x, y, (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
+            } else if (resIndex == 4) {
+                x = pixelX + (int) (cellSize / 2);
+                y = pixelY;
+                g.fillRect(x, y, (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
+            }
+            // remember the cell's new color
+            grid[pixelX / cellSize][pixelY / cellSize][resIndex] = color;
         }
 
     }
 
     /**
      * Makes a call to the fillCell() method on the swing thread.
-     *
+     * <p/>
      * See fillCell() for parameter descriptions.
      */
     protected void fillCellOnSwingThread(final int pixelX, final int pixelY,
-        final Color color)
-    {
+                                         final Color color) {
         // run this code on the swing thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -416,15 +389,14 @@ public class MRCellGridView extends JFrame
             }
         });
     }
+
     /**
-     *
-     * @params, see fillCellOnSwingThread() above
      * @param size: cell size
-     * Author: Xiaolin Hu -- Nov 16th, 2005
+     *              Author: Xiaolin Hu -- Nov 16th, 2005
+     * @params, see fillCellOnSwingThread() above
      */
     protected void fillMRCellOnSwingThread(final int pixelX, final int pixelY, final int resIndex,
-        final Color color)
-    {
+                                           final Color color) {
         // run this code on the swing thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -437,14 +409,13 @@ public class MRCellGridView extends JFrame
      * Fills the vertical column of cells that starts at the given
      * pixel location and extends to the x-axis.
      *
-     * @param   pixelX, pixelY      The pixel location of the upper-left-hand
-     *                              (or bottom-left-hand, if cellY is negative)
-     *                              corner of the column to fill.
-     * @param   color               The fill color.
+     * @param pixelX, pixelY      The pixel location of the upper-left-hand
+     *                (or bottom-left-hand, if cellY is negative)
+     *                corner of the column to fill.
+     * @param color   The fill color.
      */
     protected void fillColumn(final int pixelX, final int pixelY,
-        final Color color)
-    {
+                              final Color color) {
         // run this code on the swing thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -478,14 +449,13 @@ public class MRCellGridView extends JFrame
     /**
      * Draws a string at the given cell location using the given color.
      *
-     * @param   cellX, cellY        The cell location at which to draw
-     *                              the string.
-     * @param   string              The text string to draw.
-     * @param   color               The color with which to draw the string.
+     * @param cellX, cellY        The cell location at which to draw
+     *               the string.
+     * @param string The text string to draw.
+     * @param color  The color with which to draw the string.
      */
     public void drawString(int cellX, int cellY, final String string,
-        final Color color)
-    {
+                           final Color color) {
         // detm the pixel location of the cell
         final int x = forceXInBounds(cellX) * cellSize;
         final int y = forceYInBounds(-cellY) * cellSize;
@@ -505,31 +475,27 @@ public class MRCellGridView extends JFrame
     /**
      * The panel on which the actual grid is drawn.
      */
-    protected class GridPanel extends JPanel
-    {
+    protected class GridPanel extends JPanel {
         /**
          * Constructor.
          */
-        public GridPanel()
-        {
+        public GridPanel() {
             setBackground(Color.white);
         }
 
         /**
          * See parent method.
          */
-        public Dimension getPreferredSize()
-        {
+        public Dimension getPreferredSize() {
             return new Dimension(spaceSize.width * cellSize,
-                spaceSize.height * cellSize);
+                    spaceSize.height * cellSize);
         }
 
         /**
          * Paints this view's static graphical elements, such as its border
          * and axes labels.
          */
-        public void paint(Graphics g)
-        {
+        public void paint(Graphics g) {
             super.paint(g);
 
             // draw and label the 0,0 cell
@@ -540,8 +506,8 @@ public class MRCellGridView extends JFrame
 
             // label the axes
             g.drawString(xLabel,
-                width - labelFontMetrics.stringWidth(xLabel) - 4,
-                halfY - 4);
+                    width - labelFontMetrics.stringWidth(xLabel) - 4,
+                    halfY - 4);
             g.drawString(yLabel, halfX + 4, labelFontAscent + 4);
 
             // draw the two lines that form the four quadrants
@@ -556,33 +522,32 @@ public class MRCellGridView extends JFrame
                         // fill in this cell with its color
                         g.setColor(grid[i][j][0]);
                         g.fillRect(i * cellSize + 1, j * cellSize + 1,
-                            cellSize - 1, cellSize - 1);
-                    }
-                    else{  // for the high resolution cases
-                      if (grid[i][j][1] != null) {
-                        // fill in this cell with its color
-                        g.setColor(grid[i][j][1]);
-                        g.fillRect(i * cellSize + 1, j * cellSize + (int) (cellSize / 2) + 1,
-                                   (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
-                      }
-                      if (grid[i][j][2] != null) {
-                        // fill in this cell with its color
-                        g.setColor(grid[i][j][2]);
-                        g.fillRect(i * cellSize + (int) (cellSize / 2) + 1, j * cellSize + (int) (cellSize / 2) + 1,
-                                   (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
-                      }
-                      if (grid[i][j][3] != null) {
-                        // fill in this cell with its color
-                        g.setColor(grid[i][j][3]);
-                        g.fillRect(i * cellSize + 1, j * cellSize + 1,
-                                   (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
-                      }
-                      if (grid[i][j][4] != null) {
-                        // fill in this cell with its color
-                        g.setColor(grid[i][j][4]);
-                        g.fillRect(i * cellSize + (int) (cellSize / 2) + 1, j * cellSize + 1,
-                                   (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
-                      }
+                                cellSize - 1, cellSize - 1);
+                    } else {  // for the high resolution cases
+                        if (grid[i][j][1] != null) {
+                            // fill in this cell with its color
+                            g.setColor(grid[i][j][1]);
+                            g.fillRect(i * cellSize + 1, j * cellSize + (int) (cellSize / 2) + 1,
+                                    (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
+                        }
+                        if (grid[i][j][2] != null) {
+                            // fill in this cell with its color
+                            g.setColor(grid[i][j][2]);
+                            g.fillRect(i * cellSize + (int) (cellSize / 2) + 1, j * cellSize + (int) (cellSize / 2) + 1,
+                                    (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
+                        }
+                        if (grid[i][j][3] != null) {
+                            // fill in this cell with its color
+                            g.setColor(grid[i][j][3]);
+                            g.fillRect(i * cellSize + 1, j * cellSize + 1,
+                                    (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
+                        }
+                        if (grid[i][j][4] != null) {
+                            // fill in this cell with its color
+                            g.setColor(grid[i][j][4]);
+                            g.fillRect(i * cellSize + (int) (cellSize / 2) + 1, j * cellSize + 1,
+                                    (int) (cellSize / 2) - 1, (int) (cellSize / 2) - 1);
+                        }
                     }
                 }
             }
@@ -592,9 +557,11 @@ public class MRCellGridView extends JFrame
     /**
      * See member variable accessed.
      */
-    public Dimension getSpaceSize() {return spaceSize;}
-    public void setSpaceSize(Dimension size)
-    {
+    public Dimension getSpaceSize() {
+        return spaceSize;
+    }
+
+    public void setSpaceSize(Dimension size) {
         spaceSize = size;
 
         createGrid();
@@ -605,29 +572,35 @@ public class MRCellGridView extends JFrame
     /**
      * See member variable accessed.
      */
-    public int getCellSize() {return cellSize;}
-    public void setCellSize(int size)
-    {
+    public int getCellSize() {
+        return cellSize;
+    }
+
+    public void setCellSize(int size) {
         cellSize = size;
         adjustSizeToHoldGridPanel();
 
         //Xiaolin Hu
-        xScaleFactor = 1/ ((double)cellSize);
-        yScaleFactor = 1/ ((double)cellSize);
+        xScaleFactor = 1 / ((double) cellSize);
+        yScaleFactor = 1 / ((double) cellSize);
 
     }
 
     /**
      * See member variable accessed.
      */
-    public String getXLabel() {return xLabel;}
-    public void setXLabel(String label) {xLabel = label;}
+    public String getXLabel() {
+        return xLabel;
+    }
+
+    public void setXLabel(String label) {
+        xLabel = label;
+    }
 
     /**
      * Creates the grid associated with the grid member variable.
      */
-    protected void createGrid()
-    {
+    protected void createGrid() {
         // create the grid data structure
         grid = new Color[spaceSize.width][spaceSize.height][resN];
     }
@@ -635,15 +608,14 @@ public class MRCellGridView extends JFrame
     /**
      * Clears the grid.
      */
-    public void clearGrid()
-    {
+    public void clearGrid() {
         // for each cell in the grid
         for (int i = 0; i < spaceSize.width; i++) {
             for (int j = 0; j < spaceSize.height; j++) {
-              for(int k=0;k<resN;k++){
-                // clear this cell's color value
-                grid[i][j] = null;
-              }
+                for (int k = 0; k < resN; k++) {
+                    // clear this cell's color value
+                    grid[i][j] = null;
+                }
             }
         }
 

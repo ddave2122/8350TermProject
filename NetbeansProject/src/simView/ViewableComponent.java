@@ -9,17 +9,16 @@
 
 package simView;
 
-import java.awt.Point;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
+import genDevs.simulation.atomicSimulator;
+
+import java.awt.*;
+import java.util.List;
 
 /**
  * Defines methods that are common to both ViewableAtomic
  * and ViewableDigraph.
  */
-public interface ViewableComponent
-{
+public interface ViewableComponent {
     /**
      * Returns the name of this devs component.
      */
@@ -59,8 +58,8 @@ public interface ViewableComponent
      * Returns the list of test inputs for this component's port of the
      * given name.
      *
-     * @param   portName    The name of the port whose test inputs are
-     *                      desired.
+     * @param portName The name of the port whose test inputs are
+     *                 desired.
      */
     List getTestInputs(String portName);
 

@@ -5,14 +5,9 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package GenDevsTest;
-
-import GenCol.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import simView.*;
 
 public class Processor //extends ViewableAtomic
 {

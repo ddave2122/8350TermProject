@@ -9,23 +9,23 @@
 
 package simView;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
+import util.HtmlUtil;
+import util.StringUtil;
+
 import javax.swing.*;
-import javax.swing.event.*;
-import genDevs.modeling.*;
-import util.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A view meant to depict aspects of a digraphs devs component, such as
  * which child devs components its contains.
  *
- * @author      Jeff Mather
+ * @author Jeff Mather
  */
-public class DigraphView extends JPanel implements ComponentView
-{
+public class DigraphView extends JPanel implements ComponentView {
     /**
      * A cache of the size values for when this view displays its digraph
      * as a black box.
@@ -66,12 +66,11 @@ public class DigraphView extends JPanel implements ComponentView
     /**
      * Constructs a digraph view on the given digraph.
      *
-     * @param   digraph_        The digraph on which to construct this view.
-     * @param   modelView_      The sim-view model-view that will contain this
-     *                          view.
+     * @param digraph_   The digraph on which to construct this view.
+     * @param modelView_ The sim-view model-view that will contain this
+     *                   view.
      */
-    public DigraphView(ViewableDigraph digraph_, SimView.ModelView modelView_)
-    {
+    public DigraphView(ViewableDigraph digraph_, SimView.ModelView modelView_) {
         digraph = digraph_;
         modelView = modelView_;
 
@@ -90,7 +89,7 @@ public class DigraphView extends JPanel implements ComponentView
         add(panel);
 
         ComponentViewUtil.createPortBoxes(panel, digraph.getInportNames(),
-            true, false, nameToPortBox, digraph, modelView, dragListener);
+                true, false, nameToPortBox, digraph, modelView, dragListener);
 
         // add the components panel
         panel = componentsPanel = new ComponentsPanel();
@@ -108,7 +107,7 @@ public class DigraphView extends JPanel implements ComponentView
         add(panel);
 
         ComponentViewUtil.createPortBoxes(panel, digraph.getOutportNames(),
-            false, true, nameToPortBox, null, modelView, dragListener);
+                false, true, nameToPortBox, null, modelView, dragListener);
 
         // cache the width of the name string
         String name = digraph.getName();
@@ -117,19 +116,18 @@ public class DigraphView extends JPanel implements ComponentView
         // cache the minimum size of this component when displayed as a
         // black box
         blackBoxWidth = nameWidth + 2 * 10
-            + inportsPanel.getPreferredSize().width
-            + outportsPanel.getPreferredSize().width;
+                + inportsPanel.getPreferredSize().width
+                + outportsPanel.getPreferredSize().width;
         blackBoxHeight = Math.max(digraph.getNumInports(),
-            digraph.getNumOutports()) * PortBox.nameFontAscent * 3 / 2;
+                digraph.getNumOutports()) * PortBox.nameFontAscent * 3 / 2;
         blackBoxHeight = Math.max(blackBoxHeight,
-            nameFontMetrics.getHeight() + 2 * 5);
+                nameFontMetrics.getHeight() + 2 * 5);
     }
 
     /**
      * Draws this view's border, and the name of the digraph.
      */
-    public void paint(Graphics g)
-    {
+    public void paint(Graphics g) {
         // draw a line border around this view
         int width = getWidth();
         g.drawRect(0, 0, width - 1, getHeight() - 1);
@@ -141,13 +139,14 @@ public class DigraphView extends JPanel implements ComponentView
      * Returns where this view would like its upper-left corner to be
      * positioned, relative to its parent component.
      */
-    public Point getPreferredLocation() {return digraph.getPreferredLocation();}
+    public Point getPreferredLocation() {
+        return digraph.getPreferredLocation();
+    }
 
     /**
      * Returns how large this view would like to be.
      */
-    public Dimension getPreferredSize()
-    {
+    public Dimension getPreferredSize() {
         if (!digraph.isBlackBox()) {
             return digraph.getPreferredSize();
         }
@@ -159,8 +158,7 @@ public class DigraphView extends JPanel implements ComponentView
      * Overrides the behavior of the parent method to add the given component
      * to this view's component's panel, rather than directly to this view.
      */
-    public void add(Component comp, Object constraints)
-    {
+    public void add(Component comp, Object constraints) {
         // if the given component is an atomic-view or a digraph-view
         if (comp instanceof AtomicView || comp instanceof DigraphView) {
             // add it to the components-panel, instead of directly to this
@@ -173,7 +171,7 @@ public class DigraphView extends JPanel implements ComponentView
     }
 
     // added by Xiaolin Hu to remove a view dynamicly
-    public void remove(Component comp,Object constraints){
+    public void remove(Component comp, Object constraints) {
         if (comp instanceof AtomicView || comp instanceof DigraphView) {
             // add it to the components-panel, instead of directly to this
             // digraph-view
@@ -187,36 +185,40 @@ public class DigraphView extends JPanel implements ComponentView
      * Returns the offset within this view of the lollipop circle
      * of the port-box associated with the port of the given name.
      *
-     * @param   portName        The port whose port-box pollipop location
-     *                          should be returned.
-     * @return                  The offset of the port-box's lollipop within
-     *                          this view.
+     * @param portName The port whose port-box pollipop location
+     *                 should be returned.
+     * @return The offset of the port-box's lollipop within
+     *         this view.
      */
-    public Point getPortLocation(String portName)
-    {
+    public Point getPortLocation(String portName) {
         return ComponentViewUtil.getPortLocation(this, portName, nameToPortBox);
     }
 
     /**
      * Returns the viewable devs component on which this is a view.
      */
-    public ViewableComponent getViewableComponent() {return digraph;}
+    public ViewableComponent getViewableComponent() {
+        return digraph;
+    }
 
     /**
      * Returns the viewable-digraph on which this is a view.
      */
-    public ViewableDigraph getDigraph() {return digraph;}
+    public ViewableDigraph getDigraph() {
+        return digraph;
+    }
 
     /**
      * Injects all test inputs on their associated inports.
      */
-    public void injectAll() {ComponentViewUtil.injectAll(this);}
+    public void injectAll() {
+        ComponentViewUtil.injectAll(this);
+    }
 
     /**
      * The panel that displays the subcomponent's of this view's digraph.
      */
-    protected class ComponentsPanel extends JPanel
-    {
+    protected class ComponentsPanel extends JPanel {
         /**
          * A cache of the rectangle enclosing this panel's name display.
          * This rectangle is the only area within this entire view
@@ -227,56 +229,55 @@ public class DigraphView extends JPanel implements ComponentView
         /**
          * Constructor.
          */
-        public ComponentsPanel()
-        {
+        public ComponentsPanel() {
             // when the mouse cursor enters this panel
             addMouseListener(new MouseAdapter() {
                 public void mouseEntered(MouseEvent e) {
                     updateTooltip();
 
                 }
-                public void mouseClicked(MouseEvent e){
 
-                  if(e.isShiftDown()){
-                      if(digraph.isBlackBox()){
-                      showMe(digraph);
+                public void mouseClicked(MouseEvent e) {
 
+                    if (e.isShiftDown()) {
+                        if (digraph.isBlackBox()) {
+                            showMe(digraph);
+
+                        }
                     }
-                  }
                 }
-                public void mousePressed(MouseEvent e){
 
-                  if(e.isControlDown()){
+                public void mousePressed(MouseEvent e) {
 
-                      System.out.println("Control is pressed along with mouse");
-                      ViewableDigraph parent = digraph.getMyParent();
-                     try{
+                    if (e.isControlDown()) {
+
+                        System.out.println("Control is pressed along with mouse");
+                        ViewableDigraph parent = digraph.getMyParent();
+                        try {
 //                      System.out.println("The parent inside ViewD is : "+parent.getName());
-                       parent.addNewModel();
-                    }
-                    catch(NullPointerException ex){
-                      JOptionPane.showMessageDialog(modelView.getSim().mainFrame,
-                          "That does not appear to be a valid operation.");
-                     // ex.printStackTrace();
-                      return;
-                      }
+                            parent.addNewModel();
+                        } catch (NullPointerException ex) {
+                            JOptionPane.showMessageDialog(modelView.getSim().mainFrame,
+                                    "That does not appear to be a valid operation.");
+                            // ex.printStackTrace();
+                            return;
+                        }
 
                     }
 
-                    if(e.isAltDown()){
-                      System.out.println("Alt is pressed along with mouse");
-                      ViewableDigraph parent = digraph.getMyParent();
-                      try{
-                        ViewableDigraph dig = (ViewableDigraph)digraph;
-                        System.out.println("My name inside the digraphView is: .>>  "+dig.getName());
-                        parent.removeOldModel(dig.getName());
-                      }
-                      catch(NullPointerException ex){
-                        JOptionPane.showMessageDialog(modelView.getSim().mainFrame,
-                          "That does not appear to be a valid Remove operation.");
-                     // ex.printStackTrace();
-                      return;
-                      }
+                    if (e.isAltDown()) {
+                        System.out.println("Alt is pressed along with mouse");
+                        ViewableDigraph parent = digraph.getMyParent();
+                        try {
+                            ViewableDigraph dig = (ViewableDigraph) digraph;
+                            System.out.println("My name inside the digraphView is: .>>  " + dig.getName());
+                            parent.removeOldModel(dig.getName());
+                        } catch (NullPointerException ex) {
+                            JOptionPane.showMessageDialog(modelView.getSim().mainFrame,
+                                    "That does not appear to be a valid Remove operation.");
+                            // ex.printStackTrace();
+                            return;
+                        }
                     }
 
                 }
@@ -284,21 +285,16 @@ public class DigraphView extends JPanel implements ComponentView
             });
 
 
-
-
-
-
         }
 
-        protected void showMe(ViewableDigraph digraph_){
-          LevelView dView = new LevelView(digraph_);
-      }
+        protected void showMe(ViewableDigraph digraph_) {
+            LevelView dView = new LevelView(digraph_);
+        }
 
         /**
          * See parent method.
          */
-        public void paint(Graphics g)
-        {
+        public void paint(Graphics g) {
             // if we haven't yet cached the rectangular area
             // enclosing this panel's name display
             if (nameBox.height == 0) {
@@ -324,8 +320,7 @@ public class DigraphView extends JPanel implements ComponentView
         /**
          * See parent method.
          */
-        public String getToolTipText(MouseEvent event)
-        {
+        public String getToolTipText(MouseEvent event) {
             // if the mouse is over this view's name display
             if (nameBox.contains(event.getPoint())) {
                 // display a tooltip
@@ -340,8 +335,7 @@ public class DigraphView extends JPanel implements ComponentView
          * Updates this atomic view's tooltip text with the current state from
          * the atomic.
          */
-        protected void updateTooltip()
-        {
+        protected void updateTooltip() {
             StringBuffer text = new StringBuffer();
 
             // add the opening html
@@ -349,7 +343,7 @@ public class DigraphView extends JPanel implements ComponentView
 
             // add the atomic's state
             text.append(StringUtil.replaceAll(
-                digraph.getTooltipText(), "\n", "<br>"));
+                    digraph.getTooltipText(), "\n", "<br>"));
 
             // add the closing html
             text.append("</font></body></html>");

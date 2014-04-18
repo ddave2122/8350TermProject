@@ -10,18 +10,17 @@
 
 package GenDevsTest;
 
-import java.awt.Color;
-import GenCol.*;
-import java.util.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import simView.*;
+import GenCol.entity;
+import genDevs.modeling.ContentIteratorInterface;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
+import genDevs.modeling.port;
+import simView.ViewableAtomic;
 
-public class Genr extends ViewableAtomic
-{
+public class Genr extends ViewableAtomic {
     private int count;
-    public Genr(String nm)
-    {
+
+    public Genr(String nm) {
         super(nm);
         addInport("start");
         addInport("stop");
@@ -32,13 +31,11 @@ public class Genr extends ViewableAtomic
         addTestInput("stop", new entity("stop"), 4);
     }
 
-    public Genr()
-    {
+    public Genr() {
         this("genr");
     }
 
-    public void initialize()
-    {
+    public void initialize() {
         super.initialize();
         count = 0;
         if (name.startsWith("first"))
@@ -46,8 +43,7 @@ public class Genr extends ViewableAtomic
         else passivate();
     }
 
-    public void deltext(double e, message x)
-    {
+    public void deltext(double e, message x) {
         Continue(e);
         for (int i = 0; i < x.getLength(); i++)
             if (messageOnPort(x, "stop", i)) {
@@ -66,28 +62,24 @@ public class Genr extends ViewableAtomic
         }
     }
 
-    public void deltint()
-    {
+    public void deltint() {
         count++;
         if (phaseIs("active"))
             holdIn("active", 10);
     }
 
-    public message out()
-    {
+    public message out() {
         message m = new message();
         m.add(makeContent("out", new entity("job" + count)));
         return m;
     }
 
-    public void showState()
-    {
+    public void showState() {
         super.showState();
         System.out.println(stringState());
     }
 
-    public String stringState()
-    {
+    public String stringState() {
         return "\n" + "count :" + count;
     }
 }

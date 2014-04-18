@@ -17,77 +17,69 @@ public class DNCoSubstrate extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
-    
+
     private String messageToSend;
-    public DNCoSubstrate() {this("Screen");}
 
-    public DNCoSubstrate(String name){
-       super(name);
-       addInport("in2");
-       addInport("in1");
-       addOutport("out");
-
-       //int_gen_time = period ;
-    }
-    
-    public void initialize(){
-       holdIn("passive", int_gen_time);
-       r = new rand(12345);
-       count = 0;
+    public DNCoSubstrate() {
+        this("Screen");
     }
 
-    public void  deltext(double e,message x)
-    {
+    public DNCoSubstrate(String name) {
+        super(name);
+        addInport("in2");
+        addInport("in1");
+        addOutport("out");
+
+        //int_gen_time = period ;
+    }
+
+    public void initialize() {
+        holdIn("passive", int_gen_time);
+        r = new rand(12345);
+        count = 0;
+    }
+
+    public void deltext(double e, message x) {
         Continue(e);
 
-        if(messageOnPort(x, "in", 0))
-        {
-            if(getMessageOnPortZero(x).equals("movement"))
+        if (messageOnPort(x, "in", 0)) {
+            if (getMessageOnPortZero(x).equals("movement"))
                 holdIn("passive", 300);  //Hold in active for 5 minutes
-            else if(getMessageOnPortZero(x).equals("active"))
+            else if (getMessageOnPortZero(x).equals("active"))
                 holdIn("active", 1800);  //Hold in active for 30 minutes
-            else if(getMessageOnPortZero(x).equals("hibernate"))
+            else if (getMessageOnPortZero(x).equals("hibernate"))
                 holdIn("hibernate", Integer.MAX_VALUE);
             else
                 System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
         }
-}
+    }
 
-public void  deltint( )
-{
-    if(phaseIs("passive"))
-    {
-        messageToSend = "on";
-        out();
+    public void deltint() {
+        if (phaseIs("passive")) {
+            messageToSend = "on";
+            out();
+        } else if (phaseIs("active")) {
+            messageToSend = "sleep";
+            out();
+        } else if (phaseIs("hibernate")) {
+            messageToSend = "hibernate";
+            out();
+        } else
+            System.out.println("UNKNOWN PHASE: " + getPhase());
     }
-    else if(phaseIs("active"))
-        {
-        messageToSend = "sleep";
-        out();
-    }
-    else if(phaseIs("hibernate"))
-        {
-        messageToSend = "hibernate";
-        out();
-    }
-    else
-        System.out.println("UNKNOWN PHASE: " + getPhase());
-}
 
-    
-    public message out()
-    {
-       //System.out.println(name+" out count "+count);
-       message  m = new message();
-       //content con = makeContent("out", new entity("car" + count));
-       content con = makeContent("out", new InputEntity(messageToSend, 1));
-       m.add(con);
 
-       return m;
+    public message out() {
+        //System.out.println(name+" out count "+count);
+        message m = new message();
+        //content con = makeContent("out", new entity("car" + count));
+        content con = makeContent("out", new InputEntity(messageToSend, 1));
+        m.add(con);
+
+        return m;
     }
-    
-    private String getMessageOnPortZero(message x)
-    {
+
+    private String getMessageOnPortZero(message x) {
         return x.getValOnPort("in", 0).toString();
     }
 

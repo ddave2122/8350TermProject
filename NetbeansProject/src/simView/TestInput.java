@@ -5,18 +5,17 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package simView;
 
-import GenCol.*;
+import GenCol.entity;
 
 /**
  * A value-port pair whose value may be injected into the associated port
  * of a viewable component during the viewing of a simulation.
  */
-public class TestInput
-{
+public class TestInput {
     /**
      * The name of the port into which to inject the value.
      */
@@ -35,8 +34,7 @@ public class TestInput
     /**
      * Constructor.
      */
-    public TestInput(String portName_, entity value_, double e_)
-    {
+    public TestInput(String portName_, entity value_, double e_) {
         portName = portName_;
         value = value_;
         e = e_;
@@ -45,8 +43,7 @@ public class TestInput
     /**
      * See parent method.
      */
-    public String toString()
-    {
+    public String toString() {
         return "port: " + portName + ", value: " + value + ", e: " + e;
     }
 }

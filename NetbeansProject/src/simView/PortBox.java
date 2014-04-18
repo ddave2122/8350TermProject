@@ -5,25 +5,25 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package simView;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
+import genDevs.modeling.content;
+import genDevs.modeling.message;
+
 import javax.swing.*;
-import javax.swing.event.*;
-import genDevs.modeling.*;
-import genDevs.simulation.*;
-import util.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 
 /**
  * A panel that displays a depiction of a port.
  */
-public class PortBox extends JPanel
-{
+public class PortBox extends JPanel {
     /**
      * The viewable-component to which this box's port belongs.
      */
@@ -89,18 +89,17 @@ public class PortBox extends JPanel
      * Constructs a view on the given port, taking into account whether
      * the port is an inport or an outport.
      *
-     * @param   portName_       The name of the port being depicted.
-     * @param   in_             Whether the port is an inport or an outport.
-     * @param   extendsLeft_    Whether this port-box's pin is to extend
-     *                          to the left (vs. to the right).
-     * @param   component_      The component to which the port belongs,
-     *                          for test-input functionality.
-     * @param   modelView_      The model-view containing the above atomic
-     *                          (this may also be left null).
+     * @param portName_    The name of the port being depicted.
+     * @param in_          Whether the port is an inport or an outport.
+     * @param extendsLeft_ Whether this port-box's pin is to extend
+     *                     to the left (vs. to the right).
+     * @param component_   The component to which the port belongs,
+     *                     for test-input functionality.
+     * @param modelView_   The model-view containing the above atomic
+     *                     (this may also be left null).
      */
     public PortBox(String portName_, boolean in_, boolean extendsLeft_,
-        ViewableComponent component_, SimView.ModelView modelView_)
-    {
+                   ViewableComponent component_, SimView.ModelView modelView_) {
         portName = portName_;
         in = in_;
         extendsLeft = extendsLeft_;
@@ -122,14 +121,14 @@ public class PortBox extends JPanel
                     // otherwise, all test-inputs for this component will
                     // be displayed
                     List inputs = event.isControlDown() ?
-                        component.getTestInputs(portName) :
-                        component.getTestInputs();
+                            component.getTestInputs(portName) :
+                            component.getTestInputs();
 
                     // show this port-box's popup menu
                     Dialog dialog = new InputsDialog(inputs);
                     Point location = new Point(PortBox.this.getLocation());
                     SwingUtilities.convertPointToScreen(
-                        location, PortBox.this);
+                            location, PortBox.this);
                     dialog.setLocation(location);
                     dialog.setVisible(true);
                 }
@@ -153,15 +152,14 @@ public class PortBox extends JPanel
     /**
      * Draws this port-box's pin and port name.
      */
-    public void paint(Graphics g)
-    {
+    public void paint(Graphics g) {
         // draw the pin head
         g.setColor(Color.black);
         int width = getWidth();
         int pinHeight = pinWidth;
         pinX = extendsLeft ? width - lineLength - pinWidth : 0 + lineLength;
         g.fillOval(pinX, getHeight() / 2 - pinHeight / 2 + 1,
-            pinWidth, pinHeight);
+                pinWidth, pinHeight);
 
         // draw the pin line
         int lineY = getHeight() / 2 + 1;
@@ -171,53 +169,48 @@ public class PortBox extends JPanel
         g.setColor(Color.black);
         g.setFont(nameFont);
         final int nameX = !extendsLeft ? pinWidth + spaceBetweenPinAndName :
-            width - pinWidth - spaceBetweenPinAndName - labelWidth;
+                width - pinWidth - spaceBetweenPinAndName - labelWidth;
         g.drawString(portName, nameX,
-            getHeight() / 2 + nameFontAscent / 3 + 1);
+                getHeight() / 2 + nameFontAscent / 3 + 1);
     }
 
     /**
      * Returns the offset within this port-box of the center of
      * its pin graphic.
      */
-    public Point getPinLocation()
-    {
+    public Point getPinLocation() {
         return new Point(pinX + pinWidth / 2, getHeight() / 2 + 1);
     }
 
     /**
      * Returns the total width of this port-box's pin and name label.
      */
-    public Dimension getPreferredSize()
-    {
+    public Dimension getPreferredSize() {
         int width = lineLength + pinWidth + spaceBetweenPinAndName * 2
-            + labelWidth;
+                + labelWidth;
         return new Dimension(width, super.getPreferredSize().height);
     }
 
     /**
      * Limits the width of this port-box to its preferred width.
      */
-    public Dimension getMaximumSize()
-    {
+    public Dimension getMaximumSize() {
         return new Dimension(getPreferredSize().width, Integer.MAX_VALUE);
     }
 
     /**
      * A dialog of test-inputs-to-inject when this port box is clicked.
      */
-    protected class InputsDialog extends JDialog
-    {
+    protected class InputsDialog extends JDialog {
         /**
          * Constuctor.
          *
-         * @param   inputs      The test inputs to display in this dialog.
+         * @param inputs The test inputs to display in this dialog.
          */
-        public InputsDialog(List inputs)
-        {
-            super((Frame)SwingUtilities.getWindowAncestor(PortBox.this),
-                "Inputs");
-            
+        public InputsDialog(List inputs) {
+            super((Frame) SwingUtilities.getWindowAncestor(PortBox.this),
+                    "Inputs");
+
             setModal(true);
             setSize(200, 150);
             Container pane = getContentPane();
@@ -260,20 +253,19 @@ public class PortBox extends JPanel
          * Injects the given list of inputs into this port-box's port
          * as a single message.
          *
-         * @param   inputs      The test inputs to inject.
+         * @param inputs The test inputs to inject.
          */
-        protected void inject(Object[] inputs)
-        {
+        protected void inject(Object[] inputs) {
             // there must be at least one input in the given list
             if (inputs.length == 0) return;
-            
+
             // for each test input
             message m = new message();
             double e = Double.MAX_VALUE;
             for (int i = 0; i < inputs.length; i++) {
                 // add a content for this input to the message to
                 // be injected
-                TestInput input = (TestInput)inputs[i];
+                TestInput input = (TestInput) inputs[i];
                 m.add(new content(input.portName, input.value));
 
                 // if this input has the smallest e value so far, record

@@ -5,17 +5,20 @@
  * 
  *  Version    : DEVSJAVA 2.7 
  *  Date       : 08-15-02 
- */ 
+ */
 
 package simView;
 
 import java.awt.*;
 
-public interface ComponentView
-{
+public interface ComponentView {
     Point getPreferredLocation();
+
     Dimension getPreferredSize();
+
     Point getPortLocation(String portName);
+
     void injectAll();
+
     ViewableComponent getViewableComponent();
 }

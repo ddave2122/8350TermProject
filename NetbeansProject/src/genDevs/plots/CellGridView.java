@@ -9,18 +9,15 @@
 
 package genDevs.plots;
 
-import java.awt.*;
-import java.io.*;
 import javax.swing.*;
-import util.*;
+import java.awt.*;
 
 /**
  * A display of a grid of cells.
  *
- * @author      Bernard Zeigler, Jeff Mather
+ * @author Bernard Zeigler, Jeff Mather
  */
-public class CellGridView extends JFrame
-{
+public class CellGridView extends JFrame {
     /**
      * The color of each cell in the grid.
      */
@@ -72,16 +69,15 @@ public class CellGridView extends JFrame
     /**
      * Constructor.
      *
-     * @param   title               The title to display in this view's
-     *                              title bar.
-     * @param   spaceSize_          The size of the cell space being depicted
-     *                              (in cells).
-     * @param   cellSize_           The size of each cell (in pixels).
-     * @param   xLabel_, yLabel_    The axes labels.
+     * @param title      The title to display in this view's
+     *                   title bar.
+     * @param spaceSize_ The size of the cell space being depicted
+     *                   (in cells).
+     * @param cellSize_  The size of each cell (in pixels).
+     * @param xLabel_,   yLabel_    The axes labels.
      */
     public CellGridView(String title, Dimension spaceSize_, int cellSize_,
-        String xLabel_, String yLabel_)
-    {
+                        String xLabel_, String yLabel_) {
         super(title);
 
         if (xLabel_ != null) xLabel = xLabel_;
@@ -101,7 +97,7 @@ public class CellGridView extends JFrame
         JPanel main = new JPanel();
         main.setLayout(new BorderLayout());
         main.setBorder(BorderFactory.createEmptyBorder(
-            borderWidth, borderWidth, borderWidth, borderWidth));
+                borderWidth, borderWidth, borderWidth, borderWidth));
         pane.add(main, BorderLayout.CENTER);
 
         // add the grid panel
@@ -112,32 +108,28 @@ public class CellGridView extends JFrame
     /**
      * A convenience constructor.
      */
-    public CellGridView(String title, Dimension spaceSize, int cellSize)
-    {
+    public CellGridView(String title, Dimension spaceSize, int cellSize) {
         this(title, spaceSize, cellSize, null, null);
     }
 
     /**
      * A convenience constructor.
      */
-    public CellGridView(String title, String xLabel, String yLabel)
-    {
+    public CellGridView(String title, String xLabel, String yLabel) {
         this(title, null, 0, xLabel, yLabel);
     }
 
     /**
      * A convenience constructor.
      */
-    public CellGridView(String title)
-    {
+    public CellGridView(String title) {
         this(title, null, 0);
     }
 
     /**
      * See parent method.
      */
-    public void addNotify()
-    {
+    public void addNotify() {
         super.addNotify();
 
         adjustSizeToHoldGridPanel();
@@ -147,24 +139,22 @@ public class CellGridView extends JFrame
      * Adjusts the size of this view's frame to just contain the grid
      * panel and its border.
      */
-    protected void adjustSizeToHoldGridPanel()
-    {
+    protected void adjustSizeToHoldGridPanel() {
         // adjust the size of this view to just contain the grid and
         // its border
         Insets insets = getInsets();
         setSize(gridPanel.getPreferredSize().width
-            + insets.left + insets.right + borderWidth * 2,
-            gridPanel.getPreferredSize().height
-            + insets.top + insets.bottom + borderWidth * 2);
+                + insets.left + insets.right + borderWidth * 2,
+                gridPanel.getPreferredSize().height
+                        + insets.top + insets.bottom + borderWidth * 2);
     }
 
     /**
      * Returns the given x limited to the cell-space's width (and zero).
      *
-     * @param   x       The cell x to limit.
+     * @param x The cell x to limit.
      */
-    protected int forceXInBounds(int x)
-    {
+    protected int forceXInBounds(int x) {
         x = (x < 0) ? 0 : x;
         x = (x >= spaceSize.width) ? spaceSize.width - 1 : x;
         return x;
@@ -173,10 +163,9 @@ public class CellGridView extends JFrame
     /**
      * Returns the given y limited to the cell-space's height (and zero).
      *
-     * @param   y       The cell y to limit.
+     * @param y The cell y to limit.
      */
-    protected int forceYInBounds(int y)
-    {
+    protected int forceYInBounds(int y) {
         y = (y < 0) ? 0 : y;
         y = (y >= spaceSize.height) ? spaceSize.height - 1 : y;
         return y;
@@ -186,10 +175,9 @@ public class CellGridView extends JFrame
      * Sets the x scale factor to use when depicting a range that is larger
      * than the space-size.
      *
-     * @param   range       The x-range the cell space is supposed to depict.
+     * @param range The x-range the cell space is supposed to depict.
      */
-    public void setXScale(double range)
-    {
+    public void setXScale(double range) {
         xScaleFactor = spaceSize.width / range;
     }
 
@@ -197,23 +185,21 @@ public class CellGridView extends JFrame
      * Sets the y scale factor to use when depicting a range that is larger
      * than the space-size.
      *
-     * @param   range       The y-range the cell space is supposed to depict.
+     * @param range The y-range the cell space is supposed to depict.
      */
-    public void setYScale(double range)
-    {
+    public void setYScale(double range) {
         yScaleFactor = spaceSize.height / range;
     }
 
     /**
      * Returns the given x scaled according to the current x-scale-factor.
      *
-     * @param   x       The x to scale.
-     * @return          The x-value, scaled.
+     * @param x The x to scale.
+     * @return The x-value, scaled.
      */
-    protected int scaleX(double x)
-    {
-        int centerX = (int)Math.rint(spaceSize.width / 2.0);
-        int scaled = centerX + (int)Math.rint(x * xScaleFactor);
+    protected int scaleX(double x) {
+        int centerX = (int) Math.rint(spaceSize.width / 2.0);
+        int scaled = centerX + (int) Math.rint(x * xScaleFactor);
         return forceXInBounds(scaled);
     }
 
@@ -221,11 +207,10 @@ public class CellGridView extends JFrame
      * Returns the given time value scaled according to the current
      * time-scale-factor.
      *
-     * @param   time        The time value to scale.
-     * @return              The time value, scaled.
+     * @param time The time value to scale.
+     * @return The time value, scaled.
      */
-    protected int scaleTime(double time, double timeScale)
-    {
+    protected int scaleTime(double time, double timeScale) {
         setXScale(timeScale);
         return scaleX(time);
     }
@@ -233,24 +218,22 @@ public class CellGridView extends JFrame
     /**
      * Returns the given y scaled according to the current y-scale-factor.
      *
-     * @param   y       The y to scale.
-     * @return          The y-value, scaled.
+     * @param y The y to scale.
+     * @return The y-value, scaled.
      */
-    protected int scaleY(double y)
-    {
-        int centerY = (int)Math.rint(spaceSize.height / 2.0);
-        int scaled = centerY + (int)Math.rint(y * yScaleFactor);
+    protected int scaleY(double y) {
+        int centerY = (int) Math.rint(spaceSize.height / 2.0);
+        int scaled = centerY + (int) Math.rint(y * yScaleFactor);
         return forceYInBounds(scaled);
     }
 
     /**
      * Draws a cell at the given cell location using the given color.
      *
-     * @param   cellX, cellY        The cell location.
-     * @param   color               The color to fill the cell with.
+     * @param cellX, cellY        The cell location.
+     * @param color  The color to fill the cell with.
      */
-    public void drawCell(int cellX, int cellY, Color color)
-    {
+    public void drawCell(int cellX, int cellY, Color color) {
         // detm the pixel location of the cell
         int x = (forceXInBounds(cellX) * cellSize) + 1;
         int y = (forceYInBounds(cellY) * cellSize) + 1;
@@ -262,37 +245,35 @@ public class CellGridView extends JFrame
      * Draws a cell at the location determined by scaling the given
      * cell location by the current scale factors.
      *
-     * @param   cellX, cellY        The cell location to scale.
-     * @param   color               The color to fill the cell with.
+     * @param cellX, cellY        The cell location to scale.
+     * @param color  The color to fill the cell with.
      */
-    public void drawCellToScale(double cellX, double cellY, Color color)
-    {
+    public void drawCellToScale(double cellX, double cellY, Color color) {
         // detm the scaled pixel location of the cell
         int x = (scaleX(cellX) * cellSize) + 1;
         int y = (scaleY(-cellY) * cellSize) + 1;
 
-        if(x==AgentX && y==AgentY){  //Xiaolin Hu
-          preAgentCellColor = color;
-          return;
+        if (x == AgentX && y == AgentY) {  //Xiaolin Hu
+            preAgentCellColor = color;
+            return;
         }
 
         fillCellOnSwingThread(x, y, color);
     }
 
     //Display agent --- Xiaolin Hu
-    public void drawAgentCellToScale(double cellX, double cellY, Color color)
-    {
+    public void drawAgentCellToScale(double cellX, double cellY, Color color) {
         // detm the scaled pixel location of the cell
         int x = (scaleX(cellX) * cellSize) + 1;
         int y = (scaleY(-cellY) * cellSize) + 1;
 
-        if(AgentX != -1){  // need to resore the previous color
-          fillCellOnSwingThread(AgentX, AgentY, preAgentCellColor);
-          //System.out.println("restore color "+AgentX+"  "+AgentY+"  "+preAgentCellColor.toString());
+        if (AgentX != -1) {  // need to resore the previous color
+            fillCellOnSwingThread(AgentX, AgentY, preAgentCellColor);
+            //System.out.println("restore color "+AgentX+"  "+AgentY+"  "+preAgentCellColor.toString());
         }
         AgentX = x;
         AgentY = y;
-        preAgentCellColor = grid[x/cellSize][y/cellSize];
+        preAgentCellColor = grid[x / cellSize][y / cellSize];
 
         fillCellOnSwingThread(x, y, color);
         //System.out.println("fill color "+x+"  "+y+"  "+color.toString());
@@ -303,14 +284,13 @@ public class CellGridView extends JFrame
      * is treated as a time value and is scaled by the given time-scale,
      * rather than the current x-scale-factor.
      *
-     * @param   timeScale           The factor by which to scale the given
-     *                              cell x-value.
-     *
-     * See drawCellToScale() for the other parameter explanations.
+     * @param timeScale The factor by which to scale the given
+     *                  cell x-value.
+     *                  <p/>
+     *                  See drawCellToScale() for the other parameter explanations.
      */
     public void drawCellToTimeScale(double cellX, double timeScale,
-        double cellY, Color color)
-    {
+                                    double cellY, Color color) {
         // detm the scaled pixel location of the cell
         int x = (scaleTime(cellX, timeScale) * cellSize) + 1;
         int y = (scaleY(-cellY) * cellSize) + 1;
@@ -321,12 +301,11 @@ public class CellGridView extends JFrame
     /**
      * This is just like drawCellToTimeScale(), except that a column is drawn
      * at the scaled location, rather than just a cell.
-     *
+     * <p/>
      * See drawCellToTimeScale() for the parameter explanations.
      */
     public void drawPulseToTimeScale(double cellX, double timeScale,
-        double cellY, Color color)
-    {
+                                     double cellY, Color color) {
         // detm the scaled pixel location of the cell
         int x = (scaleTime(cellX, timeScale) * cellSize) + 1;
         int y = (scaleY(-cellY) * cellSize) + 1;
@@ -340,12 +319,11 @@ public class CellGridView extends JFrame
      * are filled; this keeps the cell from obliterating the axis lines and
      * provides a border between adjacent cells.
      *
-     * @param   pixelX, pixelY      The pixel location of the upper-left-hand
-     *                              corner of the cell to fill.
-     * @param   color               The fill color.
+     * @param pixelX, pixelY      The pixel location of the upper-left-hand
+     *                corner of the cell to fill.
+     * @param color   The fill color.
      */
-    protected void fillCell(int pixelX, int pixelY, Color color)
-    {
+    protected void fillCell(int pixelX, int pixelY, Color color) {
         // fill in the cell's rectangle
         Graphics g = gridPanel.getGraphics();
         g.setColor(color);
@@ -357,12 +335,11 @@ public class CellGridView extends JFrame
 
     /**
      * Makes a call to the fillCell() method on the swing thread.
-     *
+     * <p/>
      * See fillCell() for parameter descriptions.
      */
     protected void fillCellOnSwingThread(final int pixelX, final int pixelY,
-        final Color color)
-    {
+                                         final Color color) {
         // run this code on the swing thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -375,14 +352,13 @@ public class CellGridView extends JFrame
      * Fills the vertical column of cells that starts at the given
      * pixel location and extends to the x-axis.
      *
-     * @param   pixelX, pixelY      The pixel location of the upper-left-hand
-     *                              (or bottom-left-hand, if cellY is negative)
-     *                              corner of the column to fill.
-     * @param   color               The fill color.
+     * @param pixelX, pixelY      The pixel location of the upper-left-hand
+     *                (or bottom-left-hand, if cellY is negative)
+     *                corner of the column to fill.
+     * @param color   The fill color.
      */
     protected void fillColumn(final int pixelX, final int pixelY,
-        final Color color)
-    {
+                              final Color color) {
         // run this code on the swing thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -416,14 +392,13 @@ public class CellGridView extends JFrame
     /**
      * Draws a string at the given cell location using the given color.
      *
-     * @param   cellX, cellY        The cell location at which to draw
-     *                              the string.
-     * @param   string              The text string to draw.
-     * @param   color               The color with which to draw the string.
+     * @param cellX, cellY        The cell location at which to draw
+     *               the string.
+     * @param string The text string to draw.
+     * @param color  The color with which to draw the string.
      */
     public void drawString(int cellX, int cellY, final String string,
-        final Color color)
-    {
+                           final Color color) {
         // detm the pixel location of the cell
         final int x = forceXInBounds(cellX) * cellSize;
         final int y = forceYInBounds(-cellY) * cellSize;
@@ -443,31 +418,27 @@ public class CellGridView extends JFrame
     /**
      * The panel on which the actual grid is drawn.
      */
-    protected class GridPanel extends JPanel
-    {
+    protected class GridPanel extends JPanel {
         /**
          * Constructor.
          */
-        public GridPanel()
-        {
+        public GridPanel() {
             setBackground(Color.white);
         }
 
         /**
          * See parent method.
          */
-        public Dimension getPreferredSize()
-        {
+        public Dimension getPreferredSize() {
             return new Dimension(spaceSize.width * cellSize,
-                spaceSize.height * cellSize);
+                    spaceSize.height * cellSize);
         }
 
         /**
          * Paints this view's static graphical elements, such as its border
          * and axes labels.
          */
-        public void paint(Graphics g)
-        {
+        public void paint(Graphics g) {
             super.paint(g);
 
             // draw and label the 0,0 cell
@@ -478,8 +449,8 @@ public class CellGridView extends JFrame
 
             // label the axes
             g.drawString(xLabel,
-                width - labelFontMetrics.stringWidth(xLabel) - 4,
-                halfY - 4);
+                    width - labelFontMetrics.stringWidth(xLabel) - 4,
+                    halfY - 4);
             g.drawString(yLabel, halfX + 4, labelFontAscent + 4);
 
             // draw the two lines that form the four quadrants
@@ -494,7 +465,7 @@ public class CellGridView extends JFrame
                         // fill in this cell with its color
                         g.setColor(grid[i][j]);
                         g.fillRect(i * cellSize + 1, j * cellSize + 1,
-                            cellSize - 1, cellSize - 1);
+                                cellSize - 1, cellSize - 1);
                     }
                 }
             }
@@ -504,9 +475,11 @@ public class CellGridView extends JFrame
     /**
      * See member variable accessed.
      */
-    public Dimension getSpaceSize() {return spaceSize;}
-    public void setSpaceSize(Dimension size)
-    {
+    public Dimension getSpaceSize() {
+        return spaceSize;
+    }
+
+    public void setSpaceSize(Dimension size) {
         spaceSize = size;
 
         createGrid();
@@ -517,9 +490,11 @@ public class CellGridView extends JFrame
     /**
      * See member variable accessed.
      */
-    public int getCellSize() {return cellSize;}
-    public void setCellSize(int size)
-    {
+    public int getCellSize() {
+        return cellSize;
+    }
+
+    public void setCellSize(int size) {
         cellSize = size;
         adjustSizeToHoldGridPanel();
     }
@@ -527,14 +502,18 @@ public class CellGridView extends JFrame
     /**
      * See member variable accessed.
      */
-    public String getXLabel() {return xLabel;}
-    public void setXLabel(String label) {xLabel = label;}
+    public String getXLabel() {
+        return xLabel;
+    }
+
+    public void setXLabel(String label) {
+        xLabel = label;
+    }
 
     /**
      * Creates the grid associated with the grid member variable.
      */
-    protected void createGrid()
-    {
+    protected void createGrid() {
         // create the grid data structure
         grid = new Color[spaceSize.width][spaceSize.height];
     }
@@ -542,8 +521,7 @@ public class CellGridView extends JFrame
     /**
      * Clears the grid.
      */
-    public void clearGrid()
-    {
+    public void clearGrid() {
         // for each cell in the grid
         for (int i = 0; i < spaceSize.width; i++) {
             for (int j = 0; j < spaceSize.height; j++) {
