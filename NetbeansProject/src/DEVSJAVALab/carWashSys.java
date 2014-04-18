@@ -62,13 +62,13 @@ public void carWashSysConstruct(){
     public void layoutForSimView()
     {
         preferredSize = new Dimension(934, 453);
+        if((ViewableComponent)withName("transd")!=null)
+             ((ViewableComponent)withName("transd")).setPreferredLocation(new Point(292, 50));
         if((ViewableComponent)withName("carWashCenter")!=null)
              ((ViewableComponent)withName("carWashCenter")).setPreferredLocation(new Point(401, 260));
         if((ViewableComponent)withName("myTruckG")!=null)
              ((ViewableComponent)withName("myTruckG")).setPreferredLocation(new Point(149, 279));
         if((ViewableComponent)withName("carGenr")!=null)
-             ((ViewableComponent)withName("carGenr")).setPreferredLocation(new Point(84, 78));
-        if((ViewableComponent)withName("transd")!=null)
-             ((ViewableComponent)withName("transd")).setPreferredLocation(new Point(412, 50));
+             ((ViewableComponent)withName("carGenr")).setPreferredLocation(new Point(559, 25));
     }
 }

@@ -28,7 +28,7 @@ public class DNReaction extends ViewableDigraph {
         this.addOutport("out1");
         this.addInport("in1");
         
-        ViewableAtomic dNFixing = new DNFixing("Fixing");
+        ViewableAtomic dNFixing = new DNFixing("Fixing", 20);
         ViewableAtomic dNTransformation = new DNTransformation("Transformation");
         ViewableAtomic dNRelease = new DNRelease("Release");
 
@@ -49,10 +49,10 @@ public class DNReaction extends ViewableDigraph {
     {
         preferredSize = new Dimension(625, 331);
         if((ViewableComponent)withName("Release")!=null)
-             ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(346, 212));
+             ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(357, 138));
         if((ViewableComponent)withName("Transformation")!=null)
-             ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(177, 226));
+             ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(178, 163));
         if((ViewableComponent)withName("Fixing")!=null)
-             ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(34, 123));
+             ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(12, 58));
     }
 }

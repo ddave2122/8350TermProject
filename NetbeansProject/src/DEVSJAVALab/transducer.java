@@ -83,8 +83,6 @@ public class transducer extends  ViewableAtomic{
   return m;
  }
 
-
-
  public void  show_state(){
 
   System.out.println("car3 arrive time "  +  arrived );

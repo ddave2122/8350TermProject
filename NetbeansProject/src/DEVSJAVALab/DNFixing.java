@@ -1,5 +1,6 @@
 package DEVSJAVALab;
 
+import GenCol.entity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -16,70 +17,95 @@ public class DNFixing extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
+    protected double arrived, solved;
+    protected double observation_time;
+    private boolean enzyme, molecule;
     
     private String messageToSend;
     
-    public DNFixing() {this("DNGlucose");}
+    public DNFixing() {this("DNGlucose", 20);}
+    
+    public DNFixing(String name) { this(name, 20); }
 
-    public DNFixing(String name){
+    public DNFixing(String name, double observation_time){
        super(name);
        addInport("in1");
+       addInport("in2");
        addOutport("out1");
-
-       //int_gen_time = period ;
+       addNameTestInput("in1", "startMolecule");
+       addNameTestInput("in2", "enzymeEntry");
+       this.observation_time = observation_time;
+       enzyme = false;
+       molecule = false;
     }
     
     public void initialize(){
-       holdIn("passive", int_gen_time);
+       holdIn("passive", observation_time);
        r = new rand(12345);
        count = 0;
+
     }
 
-    public void  deltext(double e,message x)
-    {
+    public void deltext(double e, message x) {
         Continue(e);
-
-        if(messageOnPort(x, "in", 0))
-        {
-            if(getMessageOnPortZero(x).equals("movement"))
-                holdIn("passive", 300);  //Hold in active for 5 minutes
-            else if(getMessageOnPortZero(x).equals("active"))
-                holdIn("active", 1800);  //Hold in active for 30 minutes
-            else if(getMessageOnPortZero(x).equals("hibernate"))
-                holdIn("hibernate", Integer.MAX_VALUE);
-            else
-                System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
+        entity val;
+        for (int i = 0; i < x.size(); i++) {
+            if (messageOnPort(x, "in1", i)) {
+                val = x.getValOnPort("in1", i);
+                if (val.getName().compareTo("startMolecule") == 0) {
+                    molecule = true;
+                    arrived = this.getSimulationTime();
+                    System.out.println(val.getName() + " arrived at time:" + arrived);
+                    if(enzyme)
+                        holdIn("active", 5);
+                    else 
+                        holdIn("Waiting", 10);
+                }
+                //numOfarrivingcars++;
+            }
+            if (messageOnPort(x, "in2", i)) {
+                val = x.getValOnPort("in2", i);
+                if (val.getName().compareTo("enzymeEntry") == 0) {
+                    enzyme = true;
+                    solved = this.getSimulationTime();
+                    if(molecule)
+                        holdIn("active", 5);
+                    else 
+                        holdIn("Waiting", 10);
+                    System.out.println(val.getName() + " is finished at time:" + solved);
+                }
+                //numOfFinishedCars++;
+            }
         }
-}
-
-public void  deltint( )
-{
-    if(phaseIs("passive"))
-    {
-        messageToSend = "on";
-        out();
     }
-    else if(phaseIs("active"))
-        {
-        messageToSend = "sleep";
-        out();
-    }
-    else if(phaseIs("hibernate"))
-        {
-        messageToSend = "hibernate";
-        out();
-    }
-    else
-        System.out.println("UNKNOWN PHASE: " + getPhase());
-}
 
     
+public void  deltint( )
+{
+    if(phaseIs("active"))
+    {
+        messageToSend = "startProcess";
+        enzyme = false;
+        molecule = false;
+        out();
+        passivate();
+    }
+    else if(phaseIs("passive"))
+    {
+        System.out.println("the total service time is: "+(solved-arrived));
+  //System.out.println("arriving car: "+numOfarrivingcars+"  finshed car:"+numOfFinishedCars);
+    passivate();
+    }
+    
+}
+
+    @Override
     public message out()
     {
        //System.out.println(name+" out count "+count);
        message  m = new message();
        //content con = makeContent("out", new entity("car" + count));
-       content con = makeContent("out", new InputEntity(messageToSend, 1));
+       content con = makeContent("out1", new InputEntity(messageToSend, 1));
        m.add(con);
 
        return m;
@@ -87,7 +113,12 @@ public void  deltint( )
     
     private String getMessageOnPortZero(message x)
     {
-        return x.getValOnPort("in", 0).toString();
+        return x.getValOnPort("in1", 0).toString();
+    }
+    
+    private String getMessageOnPortOne(message x)
+    {
+        return x.getValOnPort("in2", 0).toString();
     }
 
 }
