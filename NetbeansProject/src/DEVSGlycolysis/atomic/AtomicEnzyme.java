@@ -17,7 +17,7 @@ public class AtomicEnzyme extends ViewableAtomic {
     public enum EnzymeType {
         Hexokinase, Phosphoglucose_isomerase, Phosphofructokinase, Triosephosphateisomerase,
         Glyceraldehydephosphatedehyrdogenase, Phosphoglyceratekinase, Phosphoglyceratemutase,
-        Pyruvatekinase, Enolase;
+        Pyruvatekinase, Aldolase;
     }
 
     private double int_gen_time;

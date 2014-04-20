@@ -1,6 +1,7 @@
 package DEVSGlycolysis.atomic;
 
 import DEVSJAVALab.InputEntity;
+import GenCol.entity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -14,7 +15,7 @@ import statistics.rand;
  * To change this template use File | Settings | File Templates.
  */
 public class CoSubstrate extends ViewableAtomic {
-    public enum CoSubstrateType {ATP, NADPlus, ADP};
+    public enum CoSubstrateType {ATP, NADPlus, ADP, None};
 
     private double int_gen_time;
     private rand r;
@@ -44,15 +45,8 @@ public class CoSubstrate extends ViewableAtomic {
     public void deltext(double e, message x) {
         Continue(e);
 
-        if (messageOnPort(x, "in", 0)) {
-            if (getMessageOnPortZero(x).equals("movement"))
-                holdIn("passive", 300);  //Hold in active for 5 minutes
-            else if (getMessageOnPortZero(x).equals("active"))
-                holdIn("active", 1800);  //Hold in active for 30 minutes
-            else if (getMessageOnPortZero(x).equals("hibernate"))
-                holdIn("hibernate", Integer.MAX_VALUE);
-            else
-                System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
+        if (messageOnPort(x, "in1", 0)) {
+            entity product = x.getValOnPort("in1", 0);
         }
     }
 
@@ -82,7 +76,7 @@ public class CoSubstrate extends ViewableAtomic {
     }
 
     private String getMessageOnPortZero(message x) {
-        return x.getValOnPort("in", 0).toString();
+        return x.getValOnPort("in1", 0).toString();
     }
 
 }
