@@ -14,6 +14,12 @@ import statistics.rand;
  * @author David
  */
 public class Product extends ViewableAtomic {
+    public enum ProductType {
+        Glucose, Glucose6Pphosphate, Fructose6Phosphate,
+        Fructose1_6BiPhosphate, GlycerAlderhyde3Phosphate, DiHydroxideAcetonePhosphate,
+        _1_3BiPhosphoGlycerate, _3PhosphoGlycerate, _2PhosphoGlycerate, PhosphoenolPyruvate, Pyruvate
+    }
+
     private double int_gen_time;
     private rand r;
     private int count;
