@@ -11,7 +11,9 @@ import statistics.rand;
  * User: nick
  * Date: 4/17/14
  * Time: 10:54 AM
- * To change this template use File | Settings | File Templates.
+ *
+ * NOTE
+ * This class outputs reusable products in the network
  */
 public class ProductReusable extends ViewableAtomic {
 

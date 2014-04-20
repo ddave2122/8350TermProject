@@ -14,6 +14,11 @@ import statistics.rand;
  * To change this template use File | Settings | File Templates.
  */
 public class AtomicEnzyme extends ViewableAtomic {
+    public enum MetaboliteType {
+        Glucose, Glucose6Pphosphate, Fructose6Phosphate,
+        Fructose1_6BiPhosphate, GlycerAlderhyde3Phosphate, DiHydroxideAcetonePhosphate,
+        _1_3BiPhosphoGlycerate, _3PhosphoGlycerate, _2PhosphoGlycerate, PhosphoenolPyruvate, Pyruvate
+    }
 
     private double int_gen_time;
     private rand r;

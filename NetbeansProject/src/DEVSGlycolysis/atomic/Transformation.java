@@ -11,7 +11,10 @@ import statistics.rand;
  * User: nick
  * Date: 4/17/14
  * Time: 11:02 AM
- * To change this template use File | Settings | File Templates.
+ *
+ * NOTE
+ * Transformation models the time required for a reaction to take place
+ *
  */
 public class Transformation extends ViewableAtomic {
     private double int_gen_time;

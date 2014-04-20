@@ -14,6 +14,7 @@ import statistics.rand;
  * To change this template use File | Settings | File Templates.
  */
 public class CoSubstrate extends ViewableAtomic {
+    public enum CoSubstrateType {ATP, NADPlus, ADP};
 
     private double int_gen_time;
     private rand r;

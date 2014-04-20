@@ -12,7 +12,9 @@ import statistics.rand;
  * User: nick
  * Date: 4/17/14
  * Time: 10:58 AM
- * To change this template use File | Settings | File Templates.
+ *
+ * NOTE
+ * Selects the necessary enzyme (depending on input)
  */
 public class Fixing extends ViewableAtomic {
     private double int_gen_time;
@@ -43,7 +45,6 @@ public class Fixing extends ViewableAtomic {
         this.observation_time = observation_time;
         enzyme = false;
         molecule = false;
-
     }
 
     public void initialize() {
@@ -95,7 +96,6 @@ public class Fixing extends ViewableAtomic {
             passivate();
         } else if (phaseIs("passive")) {
             System.out.println("the total service time is: " + (solved - arrived));
-            //System.out.println("arriving car: "+numOfarrivingcars+"  finshed car:"+numOfFinishedCars);
             passivate();
         }
 
