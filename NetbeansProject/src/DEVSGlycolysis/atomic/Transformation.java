@@ -2,7 +2,6 @@ package DEVSGlycolysis.atomic;
 
 import DEVSGlycolysis.entity.ReactionEntity;
 import DEVSGlycolysis.entity.SubstrateEnzymeTriple;
-import DEVSJAVALab.InputEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -63,18 +62,15 @@ public class Transformation extends ViewableAtomic {
             } catch (Exception exp) {
                 System.err.println(exp.getMessage());
             } finally {
-                passivate();
+                holdIn("active", 1);
             }
         }
     }
 
     public void deltint() {
-        if (phaseIs("passive")) {
+        if (phaseIs("active")) {
             out();
-        } else if (phaseIs("active")) {
-            out();
-        } else if (phaseIs("hibernate")) {
-            out();
+            passivate();
         } else
             System.out.println("UNKNOWN PHASE: " + getPhase());
     }
@@ -89,10 +85,10 @@ public class Transformation extends ViewableAtomic {
         if (eType == AtomicEnzyme.EnzymeType.Hexokinase && pType == Product.ProductType.Glucose &&
                 cssType == CoSubstrate.CoSubstrateType.ATP) {
 
-            newProduct = Product.ProductType.Glucose6Pphosphate;
+            newProduct = Product.ProductType.Glucose6Phosphate;
 
         } else if (eType == AtomicEnzyme.EnzymeType.Phosphoglucose_isomerase &&
-                pType == Product.ProductType.Glucose6Pphosphate &&
+                pType == Product.ProductType.Glucose6Phosphate &&
                 cssType == CoSubstrate.CoSubstrateType.None) {
 
             newProduct = Product.ProductType.Fructose6Phosphate;
@@ -114,6 +110,12 @@ public class Transformation extends ViewableAtomic {
                 cssType == CoSubstrate.CoSubstrateType.NADPlus) {
 
             newProduct = Product.ProductType._1_3BiPhosphoGlycerate;
+
+        } else if (eType == AtomicEnzyme.EnzymeType.Triosephosphateisomerase &&
+                pType == Product.ProductType.DiHydroxideAcetonePhosphate &&
+                cssType == CoSubstrate.CoSubstrateType.None) {
+
+            newProduct = Product.ProductType.GlycerAlderhyde3Phosphate;
 
         } else if (eType == AtomicEnzyme.EnzymeType.Phosphoglyceratekinase &&
                 pType == Product.ProductType._1_3BiPhosphoGlycerate &&

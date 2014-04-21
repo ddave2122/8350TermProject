@@ -37,4 +37,10 @@ public class ReactionEntity extends entity {
     public double getReactionTime() {
         return this.reactionTime;
     }
+
+    @Override
+    public String toString() {
+        return product.toString() + "_" + concentration + "_" + reactionTime;
+    }
+
 }

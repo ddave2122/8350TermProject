@@ -31,19 +31,20 @@ public class Enzyme extends ViewableDigraph {
         this.addInport("in11");
 
         ViewableAtomic dNChoice = new DEVSGlycolysis.atomic.Choice("Choice", 7);
-        ViewableAtomic dNAMEnzyme = new AtomicEnzyme("AtomicEnzyme");
+        //ViewableAtomic dNAMEnzyme = new AtomicEnzyme("AtomicEnzyme");
         ViewableAtomic dNAldolase = new Aldolase("Aldolase");
         ViewableAtomic dNActiva = new Activation("Activation");
 
         add(dNChoice);
-        add(dNAMEnzyme);
+        //add(dNAMEnzyme);
         add(dNAldolase);
         add(dNActiva);
 
         addCoupling(this, "in11", dNChoice, "in1");
-        addCoupling(dNChoice, "out1", dNAMEnzyme, "in1");
+        //addCoupling(dNChoice, "out1", dNAMEnzyme, "in1");
+        addCoupling(dNChoice, "out1", dNActiva, "in1");
         addCoupling(dNChoice, "out2", dNAldolase, "in1");
-        addCoupling(dNAMEnzyme, "out1", dNActiva, "in1");
+        //addCoupling(dNAMEnzyme, "out1", dNActiva, "in1");
         addCoupling(dNAldolase, "out1", dNActiva, "in2");
         addCoupling(dNActiva, "out1", this, "out1");
     }
@@ -55,13 +56,11 @@ public class Enzyme extends ViewableDigraph {
     public void layoutForSimView()
     {
         preferredSize = new Dimension(625, 276);
-        if((ViewableComponent)withName("Aldolase")!=null)
-             ((ViewableComponent)withName("Aldolase")).setPreferredLocation(new Point(170, 188));
-        if((ViewableComponent)withName("AtomicEnzyme")!=null)
-             ((ViewableComponent)withName("AtomicEnzyme")).setPreferredLocation(new Point(165, 37));
         if((ViewableComponent)withName("Choice")!=null)
-             ((ViewableComponent)withName("Choice")).setPreferredLocation(new Point(7, 119));
+             ((ViewableComponent)withName("Choice")).setPreferredLocation(new Point(20, 100));
+        if((ViewableComponent)withName("Aldolase")!=null)
+             ((ViewableComponent)withName("Aldolase")).setPreferredLocation(new Point(172, 186));
         if((ViewableComponent)withName("Activation")!=null)
-             ((ViewableComponent)withName("Activation")).setPreferredLocation(new Point(346, 110));
+             ((ViewableComponent)withName("Activation")).setPreferredLocation(new Point(337, 100));
     }
 }

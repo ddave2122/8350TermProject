@@ -1,5 +1,6 @@
 package DEVSGlycolysis.atomic;
 
+import DEVSGlycolysis.entity.SubstrateEnzymeTriple;
 import DEVSJAVALab.InputEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
@@ -18,7 +19,12 @@ public class Aldolase extends ViewableAtomic {
     private rand r;
     private int count;
 
+    private SubstrateEnzymeTriple triple;
     private String messageToSend;
+
+
+    public static final String inPort = "in1";
+    public static final String outPort = "out1";
 
     public Aldolase() {
         this("Aldolase");
@@ -26,8 +32,8 @@ public class Aldolase extends ViewableAtomic {
 
     public Aldolase(String name) {
         super(name);
-        addInport("in1");
-        addOutport("out1");
+        addInport(inPort);
+        addOutport(outPort);
         addNameTestInput("in1", "Aldolase");
     }
 
@@ -43,24 +49,18 @@ public class Aldolase extends ViewableAtomic {
     public void deltext(double e, message x) {
         Continue(e);
 
-        if (messageOnPort(x, "in1", 0)) {
-            if (getMessageOnPortZero(x).equals("Aldolase"))
-            {
-                holdIn("active", 5);  //Hold in active for 5 seconds
-                messageToSend = "Aldolase";
-            }
-            else
+        if (messageOnPort(x, inPort, 0)) {
+            this.triple = (SubstrateEnzymeTriple) x.getValOnPort(inPort, 0);
+            holdIn("active", 1);  //Hold in active for 5 seconds
+
+        } else {
                 System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
         }
     }
 
     @Override
     public void deltint() {
-       if (phaseIs("passive")) {
-             //Do nothing
-        } 
-        else if (phaseIs("active")) {
-            messageToSend = "Aldolase";
+       if (phaseIs("active")) {
             out();
             passivate();
         }  
@@ -71,13 +71,15 @@ public class Aldolase extends ViewableAtomic {
     @Override
     public message out() {
         message m = new message();
-        content con = makeContent("out1", new InputEntity(messageToSend, 1));
+        SubstrateEnzymeTriple outMsg = new SubstrateEnzymeTriple("Triple", Product.ProductType.DiHydroxideAcetonePhosphate,
+                CoSubstrate.CoSubstrateType.None, AtomicEnzyme.EnzymeType.Triosephosphateisomerase);
+        content con = makeContent(outPort, outMsg);
         m.add(con);
 
         return m;
     }
 
     private String getMessageOnPortZero(message x) {
-        return x.getValOnPort("in1", 0).toString();
+        return x.getValOnPort(inPort, 0).toString();
     }
 }

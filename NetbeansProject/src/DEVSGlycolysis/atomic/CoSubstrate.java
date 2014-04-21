@@ -2,7 +2,6 @@ package DEVSGlycolysis.atomic;
 
 import DEVSGlycolysis.entity.ReactionEntity;
 import DEVSGlycolysis.entity.SubstratePair;
-import GenCol.entity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -21,11 +20,13 @@ public class CoSubstrate extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
-    private boolean glucose6, hexokinase;
+
     private ReactionEntity reactionEntity;
     private CoSubstrateType coSubstrate;
 
-    private String messageToSend;
+    private static final String inPort1 = "in1";
+    private static final String inPort2 = "in2";
+    private static final String outPort = "out1";
 
     public CoSubstrate() {
         this("Screen");
@@ -33,11 +34,9 @@ public class CoSubstrate extends ViewableAtomic {
 
     public CoSubstrate(String name) {
         super(name);
-        addInport("in2");
-        addInport("in1");
-        addOutport("out1");
-
-        //int_gen_time = period ;
+        addInport(inPort2);
+        addInport(inPort1);
+        addOutport(outPort);
     }
 
     @Override
@@ -51,26 +50,52 @@ public class CoSubstrate extends ViewableAtomic {
     @Override
     public void deltext(double e, message x) {
         Continue(e);
-        entity val;
+
         for (int i = 0; i < x.size(); i++) {
-            if (messageOnPort(x, "in2", i)) {
+            if (messageOnPort(x, inPort2, i)) {
                 reactionEntity = (ReactionEntity)x.getValOnPort("in2", i);
                 switch(reactionEntity.getProduct())
                 {
                     case Glucose :
-                        this.coSubstrate = CoSubstrate.CoSubstrateType.ATP;
+                        this.coSubstrate = CoSubstrateType.ATP;
+                        break;
+                    case Glucose6Phosphate:
+                        this.coSubstrate = CoSubstrateType.None;
+                        break;
+                    case Fructose6Phosphate:
+                        this.coSubstrate = CoSubstrateType.ATP;
+                        break;
+                    case Fructose1_6BiPhosphate:
+                        this.coSubstrate = CoSubstrateType.None;
+                        break;
+                    case DiHydroxideAcetonePhosphate:
+                        this.coSubstrate = CoSubstrateType.None;
+                        break;
+                    case GlycerAlderhyde3Phosphate:
+                        this.coSubstrate = CoSubstrateType.NADPlus;
+                        break;
+                    case _1_3BiPhosphoGlycerate:
+                        this.coSubstrate = CoSubstrateType.ADP;
+                        break;
+                    case _3PhosphoGlycerate:
+                        this.coSubstrate = CoSubstrateType.None;
+                        break;
+                    case _2PhosphoGlycerate:
+                        this.coSubstrate = CoSubstrateType.None;
+                        break;
+                    case PhosphoenolPyruvate:
+                        this.coSubstrate = CoSubstrateType.ADP;
                         break;
                 }
+                holdIn("active", 1);
             }
-            if (messageOnPort(x, "in1", i)) {
-                //val = x.getValOnPort("in1", i);
-                reactionEntity = (ReactionEntity)x.getValOnPort("in1", i);
+            if (messageOnPort(x, inPort1, i)) {
+
+                reactionEntity = (ReactionEntity)x.getValOnPort(inPort1, i);
                 
-                if (reactionEntity.getName().compareTo("Glucose") == 0) {
-                    glucose6 = true;
+                if (reactionEntity.getProduct() == Product.ProductType.Glucose) {
                     this.coSubstrate = CoSubstrateType.ATP;
-                        holdIn("active", 5);
-                        messageToSend = "Substrate";
+                        holdIn("active", 1);
                 }
             }
         }
@@ -78,9 +103,6 @@ public class CoSubstrate extends ViewableAtomic {
     @Override
     public void deltint() {
         if (phaseIs("active")) {
-            messageToSend = "Substrate";
-            glucose6 = false;
-            hexokinase = false;
             out();
             passivate();
         } else if (phaseIs("passive")) {
@@ -92,14 +114,10 @@ public class CoSubstrate extends ViewableAtomic {
     @Override
     public message out() {
         message m = new message();
-        content con = makeContent("out1", new SubstratePair("name", this.reactionEntity.getProduct(), this.coSubstrate));
+        content con = makeContent(outPort,
+                        new SubstratePair("name", this.reactionEntity.getProduct(), this.coSubstrate));
         m.add(con);
-
         return m;
-    }
-
-    private String getMessageOnPort(message x, String port) {
-        return x.getValOnPort(port, 0).toString();
     }
 
 }

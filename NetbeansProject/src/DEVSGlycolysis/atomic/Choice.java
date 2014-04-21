@@ -1,6 +1,7 @@
 package DEVSGlycolysis.atomic;
 
-import DEVSJAVALab.InputEntity;
+import DEVSGlycolysis.entity.SubstrateEnzymeTriple;
+import DEVSGlycolysis.entity.SubstratePair;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -18,7 +19,12 @@ public class Choice extends ViewableAtomic {
     private rand r;
     private int count;
 
-    private String messageToSendOne, messageToSendTwo;
+    private SubstratePair pair;
+    private SubstrateEnzymeTriple triple;
+
+    public static final String inPort = "in1";
+    public static final String outPort1 = "out1";
+    public static final String outPort2 = "out2";
 
     public Choice() {
         this("Choice", 4);
@@ -26,10 +32,10 @@ public class Choice extends ViewableAtomic {
 
     public Choice(String name, double period) {
         super(name);
-        addInport("in1");
-        addOutport("out1");
-        addOutport("out2");
-        addNameTestInput("in1", "Reaction");
+        addInport(inPort);
+        addOutport(outPort1);
+        addOutport(outPort2);
+        addNameTestInput(inPort, "Reaction");
 
         int_gen_time = period ;
     }
@@ -46,26 +52,120 @@ public class Choice extends ViewableAtomic {
     public void deltext(double e, message x) {
         Continue(e);
 
-        if (messageOnPort(x, "in1", 0)) {
-            if (getMessageOnPortZero(x).equals("Reaction"))
-            {
-                holdIn("active", 5);  //Hold in active for 5 seconds
-                messageToSendOne = "AtomicEnzyme";
-                messageToSendTwo = "Aldolase";
+        if (messageOnPort(x, inPort, 0)) {
+            this.pair = (SubstratePair) x.getValOnPort(inPort, 0);
+            Product.ProductType pType = this.pair.getProductType();
+            CoSubstrate.CoSubstrateType cType = this.pair.getCoSSType();
+
+            switch (pType) {
+                case Glucose :
+                    switch (cType) {
+                        case ATP:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Hexokinase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    }
+                    break;
+                case Glucose6Phosphate:
+                    switch (cType) {
+                        case None:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphoglucose_isomerase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    }
+                    break;
+                case Fructose6Phosphate:
+                    switch (cType) {
+                        case ATP:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphofructokinase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    }
+                    break;
+                case Fructose1_6BiPhosphate:
+                    switch (cType) {
+                        case None:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Aldolase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    }
+                    break;
+                case DiHydroxideAcetonePhosphate:
+                    switch (cType) {
+                        case None:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Triosephosphateisomerase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    }
+                    break;
+                case GlycerAlderhyde3Phosphate:
+                    switch (cType) {
+                        case NADPlus:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Glyceraldehydephosphatedehyrdogenase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    }
+                    break;
+                case _1_3BiPhosphoGlycerate:
+                    switch (cType) {
+                        case ADP:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphoglyceratekinase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    };
+                    break;
+                case _3PhosphoGlycerate:
+                    switch (cType) {
+                        case None:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphoglyceratemutase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    }
+                    break;
+                case _2PhosphoGlycerate:
+                    switch (cType) {
+                        case None:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphopyruvatehydratase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    };
+                    break;
+                case PhosphoenolPyruvate:
+                    switch (cType) {
+                        case ADP:
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Pyruvatekinase);
+                            break;
+                        default:
+                            System.err.println("Bad config!");
+                            break;
+                    }
+                    break;
             }
-            else
-                System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
+            holdIn("active", 1);
         }
     }
 
     @Override
     public void deltint() {
-        if (phaseIs("passive")) {
-             //Do nothing
-        } 
-        else if (phaseIs("active")) {
-            messageToSendOne = "AtomicEnzyme";
-            messageToSendTwo = "Aldolase";
+        if (phaseIs("active")) {
             out();
             passivate();
         }  
@@ -76,15 +176,18 @@ public class Choice extends ViewableAtomic {
     @Override
     public message out() {
         message m = new message();
-        content con = makeContent("out1", new InputEntity(messageToSendOne, 1));
-        content con2 = makeContent("out2", new InputEntity(messageToSendTwo, 1));
-        m.add(con);
-        m.add(con2);
+
+        if (this.triple.getEnzymeType() == AtomicEnzyme.EnzymeType.Aldolase) {
+            m.add(makeContent(outPort1, this.triple));
+            m.add(makeContent(outPort2, this.triple));
+        } else {
+            m.add(makeContent(outPort1, this.triple));
+        }
 
         return m;
     }
 
     private String getMessageOnPortZero(message x) {
-        return x.getValOnPort("in1", 0).toString();
+        return x.getValOnPort(inPort, 0).toString();
     }
 }

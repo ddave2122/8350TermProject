@@ -1,5 +1,6 @@
 package DEVSGlycolysis.atomic;
 
+import DEVSGlycolysis.entity.ReactionEntity;
 import DEVSJAVALab.InputEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
@@ -21,18 +22,21 @@ public class ProductReusable extends ViewableAtomic {
     private rand r;
     private int count;
 
-    private String messageToSend;
+    private ReactionEntity reaction;
+
+    public static final String inPort = "in0";
+    public static final String outPort = "out1";
 
     public ProductReusable() {
-        this("Product", 7);
+        this("ProductReusable", 7);
     }
 
     public ProductReusable(String name, double period) {
         super(name);
-        addInport("in1");
-        addOutport("out1");
+        addInport(inPort);
+        addOutport(outPort);
         
-        addNameTestInput("in1", "Glucose");
+        addNameTestInput(inPort, "Glucose");
 
         int_gen_time = period;
     }
@@ -48,24 +52,18 @@ public class ProductReusable extends ViewableAtomic {
     public void deltext(double e, message x) {
         Continue(e);
 
-        if (messageOnPort(x, "in1", 0)) {
-            if (getMessageOnPortZero(x).equals("Glucose"))
-            {
-                holdIn("active", 5);  //Hold in active for 5 seconds
-                messageToSend = "Hexokinase";
-            }
-            else
-                System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
+        if (messageOnPort(x, inPort, 0)) {
+            this.reaction = (ReactionEntity) x.getValOnPort(inPort, 0);
+            holdIn("active", 1);
         }
+        else
+            System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
+
     }
 
     @Override
     public void deltint() {
-        if (phaseIs("passive")) {
-             //Do nothing
-        } 
-        else if (phaseIs("active")) {
-            messageToSend = "Hexokinase";
+        if (phaseIs("active")) {
             out();
             passivate();
         }  
@@ -76,14 +74,14 @@ public class ProductReusable extends ViewableAtomic {
     @Override
     public message out() {
         message m = new message();
-        content con = makeContent("out1", new InputEntity(messageToSend, 1));
+        content con = makeContent(outPort, this.reaction);
         m.add(con);
 
         return m;
     }
 
     private String getMessageOnPortZero(message x) {
-        return x.getValOnPort("in1", 0).toString();
+        return x.getValOnPort(inPort, 0).toString();
     }
 
 }

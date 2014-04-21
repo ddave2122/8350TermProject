@@ -16,7 +16,7 @@ import statistics.rand;
  */
 public class Product extends ViewableAtomic {
     public enum ProductType {
-        Glucose, Glucose6Pphosphate, Fructose6Phosphate,
+        Glucose, Glucose6Phosphate, Fructose6Phosphate,
         Fructose1_6BiPhosphate, GlycerAlderhyde3Phosphate, DiHydroxideAcetonePhosphate,
         _1_3BiPhosphoGlycerate, _3PhosphoGlycerate, _2PhosphoGlycerate, PhosphoenolPyruvate, Pyruvate
     }
@@ -26,9 +26,9 @@ public class Product extends ViewableAtomic {
     private int count;
     private ReactionEntity reaction;
 
-    private static final String inPort = "in1";
-    private static final String outPort1 = "out1";
-    private static final String outPort2 = "out2";
+    public static final String inPort = "in1";
+    public static final String outPort1 = "out1";
+    public static final String outPort2 = "out2";
 
     public Product() {
         this("Product", 11);

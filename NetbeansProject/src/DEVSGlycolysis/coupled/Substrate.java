@@ -18,7 +18,9 @@ import java.awt.*;
  */
 public class Substrate extends ViewableDigraph {
 
-
+    public static final String inPort1 = "in1";
+    public static final String inPort2 = "in2";
+    public static final String outPort = "out1";
     public Substrate() {
         this("Substrate");
     }
@@ -30,10 +32,10 @@ public class Substrate extends ViewableDigraph {
 
     public void DNSubstrateConstructor() {
         this.addOutport("out1");
-        this.addInport("in1");
-        this.addInport("in2");
+        this.addInport(inPort1);
+        this.addInport(inPort2);
 
-        ViewableAtomic dNProduct = new ProductReusable("Product", 7);
+        ViewableAtomic dNProduct = new ProductReusable("ProductReusable", 7);
         ViewableAtomic dNGlucose = new Glucose("Glucose");
         ViewableAtomic dNCoSubstrate = new CoSubstrate("CoSubstrate");
 
@@ -41,11 +43,11 @@ public class Substrate extends ViewableDigraph {
         add(dNGlucose);
         add(dNCoSubstrate);
 
-        addCoupling(this, "in1", dNProduct, "in1");
-        addCoupling(this, "in2", dNGlucose, "in1");
+        addCoupling(this, inPort1, dNProduct, ProductReusable.inPort);
+        addCoupling(this, inPort2, dNGlucose, "in1");
         addCoupling(dNGlucose, "out1", dNCoSubstrate, "in1");
-        addCoupling(dNProduct, "out1", dNCoSubstrate, "in2");
-        addCoupling(dNCoSubstrate,"out1", this,"out1");
+        addCoupling(dNProduct, ProductReusable.outPort, dNCoSubstrate, "in2");
+        addCoupling(dNCoSubstrate,"out1", this, outPort);
     }
 
     /**
@@ -54,12 +56,12 @@ public class Substrate extends ViewableDigraph {
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(515, 271);
-        if((ViewableComponent)withName("Glucose")!=null)
-             ((ViewableComponent)withName("Glucose")).setPreferredLocation(new Point(10, 180));
-        if((ViewableComponent)withName("Product")!=null)
-             ((ViewableComponent)withName("Product")).setPreferredLocation(new Point(9, 46));
+        preferredSize = new Dimension(515, 284);
         if((ViewableComponent)withName("CoSubstrate")!=null)
              ((ViewableComponent)withName("CoSubstrate")).setPreferredLocation(new Point(212, 110));
+        if((ViewableComponent)withName("ProductReusable")!=null)
+             ((ViewableComponent)withName("ProductReusable")).setPreferredLocation(new Point(-4, 43));
+        if((ViewableComponent)withName("Glucose")!=null)
+             ((ViewableComponent)withName("Glucose")).setPreferredLocation(new Point(6, 180));
     }
 }

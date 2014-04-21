@@ -1,5 +1,6 @@
 package DEVSGlycolysis.atomic;
 
+import DEVSGlycolysis.entity.SubstrateEnzymeTriple;
 import DEVSJAVALab.InputEntity;
 import GenCol.entity;
 import genDevs.modeling.content;
@@ -18,8 +19,9 @@ public class Activation extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
-    private boolean AtomicEnzyme, Aldolase;
-    private String messageToSend;
+
+    private SubstrateEnzymeTriple triple;
+    private SubstrateEnzymeTriple aldTriple;
 
     public Activation() {
         this("Activation");
@@ -30,8 +32,6 @@ public class Activation extends ViewableAtomic {
         addInport("in1");
         addInport("in2");
         addOutport("out1");
-
-        //int_gen_time = period ;
     }
 
     @Override
@@ -45,36 +45,18 @@ public class Activation extends ViewableAtomic {
     @Override
     public void deltext(double e, message x) {
         Continue(e);
-        
-        entity val;
         for (int i = 0; i < x.size(); i++) {
             if (messageOnPort(x, "in1", i)) {
-                val = x.getValOnPort("in1", i);
-                if (val.getName().compareTo("AtomicEnzyme") == 0) {
-                    AtomicEnzyme = true;
-                    if (Aldolase)
-                    {
-                        holdIn("active", 5);
-                        messageToSend = "Activation";
-                    }
-                    else
-                        holdIn("Waiting", 10);
+                this.triple = (SubstrateEnzymeTriple) x.getValOnPort("in1", i);
+                if (this.triple.getEnzymeType() == AtomicEnzyme.EnzymeType.Aldolase && this.aldTriple == null) {
+                    holdIn("waiting", 100);
+                } else {
+                    holdIn("active", 1);
                 }
-                //numOfarrivingcars++;
             }
             if (messageOnPort(x, "in2", i)) {
-                val = x.getValOnPort("in2", i);
-                if (val.getName().compareTo("Aldolase") == 0) {
-                    Aldolase = true;
-                    if (AtomicEnzyme)
-                    {
-                        holdIn("active", 5);
-                        messageToSend = "Activation";
-                    }
-                    else
-                        holdIn("Waiting", 10);
-                }
-                //numOfFinishedCars++;
+                this.aldTriple = (SubstrateEnzymeTriple) x.getValOnPort("in2", i);
+                holdIn("active", 1);
             }
         }
     }
@@ -82,9 +64,6 @@ public class Activation extends ViewableAtomic {
     @Override
     public void deltint() {
          if (phaseIs("active")) {
-            messageToSend = "Activation";
-            Aldolase = false;
-            AtomicEnzyme = false;
             out();
             passivate();
         } else if (phaseIs("passive")) {
@@ -95,7 +74,8 @@ public class Activation extends ViewableAtomic {
 
     public message out() {
         message m = new message();
-        content con = makeContent("out1", new InputEntity(messageToSend, 1));
+        content con = makeContent("out1", this.triple);
+        this.aldTriple = null;
         m.add(con);
 
         return m;

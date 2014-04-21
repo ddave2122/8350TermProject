@@ -23,7 +23,6 @@ public class GlucoseGenerator extends ViewableAtomic {
     public GlucoseGenerator(String name, double period) {
         super(name);
         addOutport("out1");
-
         int_gen_time = period;
     }
 
@@ -32,6 +31,7 @@ public class GlucoseGenerator extends ViewableAtomic {
         holdIn("active", int_gen_time);
         r = new rand(12345);
         count = 0;
+        passivate();
     }
 
     @Override
@@ -49,7 +49,6 @@ public class GlucoseGenerator extends ViewableAtomic {
 
         if (phaseIs("active")) {
             count = count + 1;
-//   holdIn("active",int_gen_time);
             holdIn("active", 1000 );
         } else {
             passivate();
@@ -58,9 +57,8 @@ public class GlucoseGenerator extends ViewableAtomic {
 
     @Override
     public message out() {
-//System.out.println(name+" out count "+count);
         message m = new message();
-//   content con = makeContent("out", new entity("car" + count));
+
         content con = makeContent("out1", new GlucoseEntity("Glucose", 5 + r.uniform(20), 50 + r.uniform(100), 1));
         m.add(con);
 

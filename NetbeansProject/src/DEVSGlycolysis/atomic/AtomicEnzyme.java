@@ -1,5 +1,6 @@
 package DEVSGlycolysis.atomic;
 
+import DEVSGlycolysis.entity.SubstrateEnzymeTriple;
 import DEVSJAVALab.InputEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
@@ -25,6 +26,7 @@ public class AtomicEnzyme extends ViewableAtomic {
     private int count;
 
     private String messageToSend;
+    private SubstrateEnzymeTriple triple;
 
     public AtomicEnzyme() {
         this("AtomicEnzyme");
@@ -51,22 +53,13 @@ public class AtomicEnzyme extends ViewableAtomic {
         Continue(e);
 
         if (messageOnPort(x, "in1", 0)) {
-            if (getMessageOnPortZero(x).equals("AtomicEnzyme"))
-            {
-                holdIn("active", 8);  //Hold in active for 5 seconds
-                messageToSend = "AtomicEnzyme";
-            }
-            else
-                System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
+            this.triple = (SubstrateEnzymeTriple) x.getValOnPort("in1", 0);
+            holdIn("active", 2);
         }
     }
 
     public void deltint() {
-        if (phaseIs("passive")) {
-             //Do nothing
-        } 
-        else if (phaseIs("active")) {
-            messageToSend = "AtomicEnzyme";
+        if (phaseIs("active")) {
             out();
             passivate();
         }  
@@ -77,7 +70,7 @@ public class AtomicEnzyme extends ViewableAtomic {
     @Override
     public message out() {
         message m = new message();
-        content con = makeContent("out1", new InputEntity(messageToSend, 1));
+        content con = makeContent("out1", this.triple);
         m.add(con);
 
         return m;
