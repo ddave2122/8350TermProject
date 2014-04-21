@@ -19,7 +19,7 @@ public class SubstratePair extends entity {
     }
 
     public SubstratePair(String name, Product.ProductType pType, CoSubstrate.CoSubstrateType coSSType) {
-        this.name = name;
+        super(name);
         this.ssType = pType;
         this.cossType = coSSType;
     }
@@ -30,5 +30,10 @@ public class SubstratePair extends entity {
 
     public Product.ProductType getProductType() {
         return this.ssType;
+    }
+
+    @Override
+    public String toString() {
+        return cossType.toString() + "_" + ssType.toString();
     }
 }

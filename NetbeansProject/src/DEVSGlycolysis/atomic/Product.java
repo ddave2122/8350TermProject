@@ -25,6 +25,10 @@ public class Product extends ViewableAtomic {
     private int count;
     private String messageToSendOne, messageToSendTwo;
 
+    private static final String inPort = "in1";
+    private static final String outPort1 = "out1";
+    private static final String outPort2 = "out2";
+
     public Product() {
         this("Product", 11);
     }
@@ -85,9 +89,11 @@ public class Product extends ViewableAtomic {
 
     @Override
     public message out() {
- message m = new message();
+
+        message m = new message();
         content con = makeContent("out1", new InputEntity(messageToSendOne, 1));
         content con2 = makeContent("out2", new InputEntity(messageToSendTwo, 1));
+
         m.add(con);
         m.add(con2);
 
@@ -95,6 +101,6 @@ public class Product extends ViewableAtomic {
     }
 
     private String getMessageOnPortZero(message x) {
-        return x.getValOnPort("in1", 0).toString();
+        return x.getValOnPort(inPort, 0).toString();
     }
 }
