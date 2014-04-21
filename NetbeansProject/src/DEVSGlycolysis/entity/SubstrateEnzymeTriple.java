@@ -1,7 +1,7 @@
 package DEVSGlycolysis.entity;
 
-import DEVSGlycolysis.atomic.AtomicEnzyme;
 import DEVSGlycolysis.atomic.CoSubstrate;
+import DEVSGlycolysis.atomic.EnzymeType;
 import DEVSGlycolysis.atomic.Product;
 import GenCol.entity;
 
@@ -14,15 +14,15 @@ import GenCol.entity;
 public class SubstrateEnzymeTriple extends entity {
     private Product.ProductType substrateType;
     private CoSubstrate.CoSubstrateType cosubstrateType;
-    private AtomicEnzyme.EnzymeType enzymeType;
+    private EnzymeType enzymeType;
 
     public SubstrateEnzymeTriple() {
         this("SubstrateEnzymeTriple", Product.ProductType.Glucose,
-                CoSubstrate.CoSubstrateType.ATP, AtomicEnzyme.EnzymeType.Hexokinase);
+                CoSubstrate.CoSubstrateType.ATP, EnzymeType.Hexokinase);
     }
 
     public SubstrateEnzymeTriple(String name, Product.ProductType substrateType,
-                                 CoSubstrate.CoSubstrateType cossType, AtomicEnzyme.EnzymeType enzymeType) {
+                                 CoSubstrate.CoSubstrateType cossType, EnzymeType enzymeType) {
         super(name);
         this.substrateType = substrateType;
         this.cosubstrateType = cossType;
@@ -37,7 +37,7 @@ public class SubstrateEnzymeTriple extends entity {
         return this.cosubstrateType;
     }
 
-    public AtomicEnzyme.EnzymeType getEnzymeType() {
+    public EnzymeType getEnzymeType() {
         return this.enzymeType;
     }
 

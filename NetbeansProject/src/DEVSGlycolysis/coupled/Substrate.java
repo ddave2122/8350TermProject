@@ -34,15 +34,12 @@ public class Substrate extends ViewableDigraph {
         this.addInport(inPort1);
         this.addInport(inPort2);
 
-        ViewableAtomic dNProduct = new ProductReusable("ProductReusable", 7);
         ViewableAtomic dNCoSubstrate = new CoSubstrate("CoSubstrate");
 
-        add(dNProduct);
         add(dNCoSubstrate);
 
         addCoupling(this, inPort1, dNCoSubstrate, CoSubstrate.inPort1);
-        addCoupling(this, inPort2, dNProduct, ProductReusable.inPort);
-        addCoupling(dNProduct, ProductReusable.outPort, dNCoSubstrate, CoSubstrate.inPort2);
+        addCoupling(this, inPort2, dNCoSubstrate, CoSubstrate.inPort2);
         addCoupling(dNCoSubstrate,CoSubstrate.outPort, this, outPort);
     }
 
@@ -53,9 +50,7 @@ public class Substrate extends ViewableDigraph {
     public void layoutForSimView()
     {
         preferredSize = new Dimension(515, 284);
-        if((ViewableComponent)withName("ProductReusable")!=null)
-             ((ViewableComponent)withName("ProductReusable")).setPreferredLocation(new Point(12, 161));
         if((ViewableComponent)withName("CoSubstrate")!=null)
-             ((ViewableComponent)withName("CoSubstrate")).setPreferredLocation(new Point(192, 58));
+             ((ViewableComponent)withName("CoSubstrate")).setPreferredLocation(new Point(115, 116));
     }
 }

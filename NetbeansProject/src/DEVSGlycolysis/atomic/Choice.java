@@ -61,7 +61,7 @@ public class Choice extends ViewableAtomic {
                 case Glucose :
                     switch (cType) {
                         case ATP:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Hexokinase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Hexokinase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -71,7 +71,7 @@ public class Choice extends ViewableAtomic {
                 case Glucose6Phosphate:
                     switch (cType) {
                         case None:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphoglucose_isomerase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Phosphoglucose_isomerase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -81,7 +81,7 @@ public class Choice extends ViewableAtomic {
                 case Fructose6Phosphate:
                     switch (cType) {
                         case ATP:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphofructokinase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Phosphofructokinase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -91,7 +91,7 @@ public class Choice extends ViewableAtomic {
                 case Fructose1_6BiPhosphate:
                     switch (cType) {
                         case None:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Aldolase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Aldolase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -101,7 +101,7 @@ public class Choice extends ViewableAtomic {
                 case DiHydroxideAcetonePhosphate:
                     switch (cType) {
                         case None:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Triosephosphateisomerase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Triosephosphateisomerase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -111,7 +111,7 @@ public class Choice extends ViewableAtomic {
                 case GlycerAlderhyde3Phosphate:
                     switch (cType) {
                         case NADPlus:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Glyceraldehydephosphatedehyrdogenase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Glyceraldehydephosphatedehyrdogenase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -121,7 +121,7 @@ public class Choice extends ViewableAtomic {
                 case _1_3BiPhosphoGlycerate:
                     switch (cType) {
                         case ADP:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphoglyceratekinase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Phosphoglyceratekinase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -131,7 +131,7 @@ public class Choice extends ViewableAtomic {
                 case _3PhosphoGlycerate:
                     switch (cType) {
                         case None:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphoglyceratemutase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Phosphoglyceratemutase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -141,7 +141,7 @@ public class Choice extends ViewableAtomic {
                 case _2PhosphoGlycerate:
                     switch (cType) {
                         case None:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Phosphopyruvatehydratase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Phosphopyruvatehydratase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -151,7 +151,7 @@ public class Choice extends ViewableAtomic {
                 case PhosphoenolPyruvate:
                     switch (cType) {
                         case ADP:
-                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, AtomicEnzyme.EnzymeType.Pyruvatekinase);
+                            this.triple = new SubstrateEnzymeTriple("Triple", pType, cType, EnzymeType.Pyruvatekinase);
                             break;
                         default:
                             System.err.println("Bad config!");
@@ -177,7 +177,7 @@ public class Choice extends ViewableAtomic {
     public message out() {
         message m = new message();
 
-        if (this.triple.getEnzymeType() == AtomicEnzyme.EnzymeType.Aldolase) {
+        if (this.triple.getEnzymeType() == EnzymeType.Aldolase) {
             m.add(makeContent(outPort1, this.triple));
             m.add(makeContent(outPort2, this.triple));
         } else {

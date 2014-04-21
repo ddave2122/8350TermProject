@@ -71,7 +71,7 @@ public class Aldolase extends ViewableAtomic {
     public message out() {
         message m = new message();
         SubstrateEnzymeTriple outMsg = new SubstrateEnzymeTriple("Triple", Product.ProductType.DiHydroxideAcetonePhosphate,
-                CoSubstrate.CoSubstrateType.None, AtomicEnzyme.EnzymeType.Triosephosphateisomerase);
+                CoSubstrate.CoSubstrateType.None, EnzymeType.Triosephosphateisomerase);
         content con = makeContent(outPort, outMsg);
         m.add(con);
 

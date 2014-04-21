@@ -51,7 +51,7 @@ public class Transformation extends ViewableAtomic {
 
         if (messageOnPort(x, inPort, 0)) {
             SubstrateEnzymeTriple val = (SubstrateEnzymeTriple)x.getValOnPort(inPort, 0);
-            AtomicEnzyme.EnzymeType eType = val.getEnzymeType();
+            EnzymeType eType = val.getEnzymeType();
             Product.ProductType pType = val.getSubstrateType();
             CoSubstrate.CoSubstrateType cssType = val.getCoSubstrateType();
 
@@ -75,67 +75,67 @@ public class Transformation extends ViewableAtomic {
             System.out.println("UNKNOWN PHASE: " + getPhase());
     }
 
-    private Product.ProductType determineProduct(AtomicEnzyme.EnzymeType eType,
+    private Product.ProductType determineProduct(EnzymeType eType,
                                                  Product.ProductType pType,
                                                  CoSubstrate.CoSubstrateType cssType)
             throws Exception
     {
         Product.ProductType newProduct;
 
-        if (eType == AtomicEnzyme.EnzymeType.Hexokinase && pType == Product.ProductType.Glucose &&
+        if (eType == EnzymeType.Hexokinase && pType == Product.ProductType.Glucose &&
                 cssType == CoSubstrate.CoSubstrateType.ATP) {
 
             newProduct = Product.ProductType.Glucose6Phosphate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Phosphoglucose_isomerase &&
+        } else if (eType == EnzymeType.Phosphoglucose_isomerase &&
                 pType == Product.ProductType.Glucose6Phosphate &&
                 cssType == CoSubstrate.CoSubstrateType.None) {
 
             newProduct = Product.ProductType.Fructose6Phosphate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Phosphofructokinase &&
+        } else if (eType == EnzymeType.Phosphofructokinase &&
                 pType == Product.ProductType.Fructose6Phosphate &&
                 cssType == CoSubstrate.CoSubstrateType.ATP) {
 
             newProduct = Product.ProductType.Fructose1_6BiPhosphate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Aldolase &&
+        } else if (eType == EnzymeType.Aldolase &&
                 pType == Product.ProductType.Fructose1_6BiPhosphate &&
                 cssType == CoSubstrate.CoSubstrateType.None) {
 
             newProduct = Product.ProductType.DiHydroxideAcetonePhosphate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Glyceraldehydephosphatedehyrdogenase &&
+        } else if (eType == EnzymeType.Glyceraldehydephosphatedehyrdogenase &&
                 pType == Product.ProductType.GlycerAlderhyde3Phosphate &&
                 cssType == CoSubstrate.CoSubstrateType.NADPlus) {
 
             newProduct = Product.ProductType._1_3BiPhosphoGlycerate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Triosephosphateisomerase &&
+        } else if (eType == EnzymeType.Triosephosphateisomerase &&
                 pType == Product.ProductType.DiHydroxideAcetonePhosphate &&
                 cssType == CoSubstrate.CoSubstrateType.None) {
 
             newProduct = Product.ProductType.GlycerAlderhyde3Phosphate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Phosphoglyceratekinase &&
+        } else if (eType == EnzymeType.Phosphoglyceratekinase &&
                 pType == Product.ProductType._1_3BiPhosphoGlycerate &&
                 cssType == CoSubstrate.CoSubstrateType.ADP) {
 
             newProduct = Product.ProductType._3PhosphoGlycerate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Phosphoglyceratemutase &&
+        } else if (eType == EnzymeType.Phosphoglyceratemutase &&
                 pType == Product.ProductType._3PhosphoGlycerate &&
                 cssType == CoSubstrate.CoSubstrateType.None) {
 
             newProduct = Product.ProductType._2PhosphoGlycerate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Phosphopyruvatehydratase &&
+        } else if (eType == EnzymeType.Phosphopyruvatehydratase &&
                 pType == Product.ProductType._2PhosphoGlycerate &&
                 cssType == CoSubstrate.CoSubstrateType.None) {
 
             newProduct = Product.ProductType.PhosphoenolPyruvate;
 
-        } else if (eType == AtomicEnzyme.EnzymeType.Pyruvatekinase &&
+        } else if (eType == EnzymeType.Pyruvatekinase &&
                 pType == Product.ProductType.PhosphoenolPyruvate &&
                 cssType == CoSubstrate.CoSubstrateType.ADP) {
 

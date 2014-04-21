@@ -46,7 +46,7 @@ public class Activation extends ViewableAtomic {
         for (int i = 0; i < x.size(); i++) {
             if (messageOnPort(x, "in1", i)) {
                 this.triple = (SubstrateEnzymeTriple) x.getValOnPort("in1", i);
-                if (this.triple.getEnzymeType() == AtomicEnzyme.EnzymeType.Aldolase && this.aldTriple == null) {
+                if (this.triple.getEnzymeType() == EnzymeType.Aldolase && this.aldTriple == null) {
                     holdIn("waiting", 100);
                 } else {
                     holdIn("active", 1);
