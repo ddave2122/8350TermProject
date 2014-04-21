@@ -33,7 +33,7 @@ public class Enzyme extends ViewableDigraph {
         ViewableAtomic dNChoice = new DEVSGlycolysis.atomic.Choice("Choice", 7);
         ViewableAtomic dNAMEnzyme = new AtomicEnzyme("AtomicEnzyme");
         ViewableAtomic dNAldolase = new Aldolase("Aldolase");
-        ViewableAtomic dNActiva = new Activa("Activa");
+        ViewableAtomic dNActiva = new Activation("Activation");
 
         add(dNChoice);
         add(dNAMEnzyme);
@@ -61,7 +61,7 @@ public class Enzyme extends ViewableDigraph {
              ((ViewableComponent)withName("AtomicEnzyme")).setPreferredLocation(new Point(165, 37));
         if((ViewableComponent)withName("Choice")!=null)
              ((ViewableComponent)withName("Choice")).setPreferredLocation(new Point(7, 119));
-        if((ViewableComponent)withName("Activa")!=null)
-             ((ViewableComponent)withName("Activa")).setPreferredLocation(new Point(346, 110));
+        if((ViewableComponent)withName("Activation")!=null)
+             ((ViewableComponent)withName("Activation")).setPreferredLocation(new Point(346, 110));
     }
 }

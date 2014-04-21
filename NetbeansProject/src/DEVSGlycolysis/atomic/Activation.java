@@ -14,18 +14,18 @@ import statistics.rand;
  * Time: 11:05 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Activa extends ViewableAtomic {
+public class Activation extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
     private boolean AtomicEnzyme, Aldolase;
     private String messageToSend;
 
-    public Activa() {
-        this("Activa");
+    public Activation() {
+        this("Activation");
     }
 
-    public Activa(String name) {
+    public Activation(String name) {
         super(name);
         addInport("in1");
         addInport("in2");
@@ -55,7 +55,7 @@ public class Activa extends ViewableAtomic {
                     if (Aldolase)
                     {
                         holdIn("active", 5);
-                        messageToSend = "Activa";
+                        messageToSend = "Activation";
                     }
                     else
                         holdIn("Waiting", 10);
@@ -69,7 +69,7 @@ public class Activa extends ViewableAtomic {
                     if (AtomicEnzyme)
                     {
                         holdIn("active", 5);
-                        messageToSend = "Activa";
+                        messageToSend = "Activation";
                     }
                     else
                         holdIn("Waiting", 10);
@@ -82,7 +82,7 @@ public class Activa extends ViewableAtomic {
     @Override
     public void deltint() {
          if (phaseIs("active")) {
-            messageToSend = "Activa";
+            messageToSend = "Activation";
             Aldolase = false;
             AtomicEnzyme = false;
             out();
