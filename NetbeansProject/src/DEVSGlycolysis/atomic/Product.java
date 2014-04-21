@@ -4,6 +4,7 @@
  */
 package DEVSGlycolysis.atomic;
 
+import DEVSGlycolysis.entity.ReactionEntity;
 import DEVSJAVALab.InputEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
@@ -23,7 +24,7 @@ public class Product extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
-    private String messageToSendOne, messageToSendTwo;
+    private ReactionEntity reaction;
 
     private static final String inPort = "in1";
     private static final String outPort1 = "out1";
@@ -39,11 +40,11 @@ public class Product extends ViewableAtomic {
 
     public Product(String name, double period) {
         super(name);
-        addInport("in1");
-        addOutport("out1");
-        addOutport("out2");
+        addInport(inPort);
+        addOutport(outPort1);
+        addOutport(outPort2);
         
-        addNameTestInput("in1", "Product");
+        addNameTestInput(inPort, "Product");
         
         int_gen_time = period ;
     }
@@ -60,26 +61,15 @@ public class Product extends ViewableAtomic {
     public void deltext(double e, message x) {
         Continue(e);
 
-        if (messageOnPort(x, "in1", 0)) {
-            if (getMessageOnPortZero(x).equals("Product"))
-            {
-                holdIn("active", 5);  //Hold in active for 5 seconds
-                messageToSendOne = "AtomicEnzyme";
-                messageToSendTwo = "Aldolase";
-            }
-            else
-                System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
+        if (messageOnPort(x, inPort, 0)) {
+            this.reaction = (ReactionEntity)x.getValOnPort(inPort, 0);
+            holdIn("active", 5);  //Hold in active for 5 seconds
         }
     }
 
     @Override
     public void deltint() {
-         if (phaseIs("passive")) {
-             //Do nothing
-        } 
-        else if (phaseIs("active")) {
-            messageToSendOne = "Glucose-6";
-            messageToSendTwo = "Pyruvate";
+        if (phaseIs("active")) {
             out();
             passivate();
         }  
@@ -89,18 +79,20 @@ public class Product extends ViewableAtomic {
 
     @Override
     public message out() {
-
         message m = new message();
-        content con = makeContent("out1", new InputEntity(messageToSendOne, 1));
-        content con2 = makeContent("out2", new InputEntity(messageToSendTwo, 1));
+        content con = null;
+        switch (this.reaction.getProduct()) {
+            case Pyruvate:
+                // if Pyruvate we are done
+                con = makeContent(outPort2, this.reaction);
+                break;
+            default:
+                // otherwise recycle product back into network
+                con = makeContent(outPort1, this.reaction);
+                break;
+        }
 
         m.add(con);
-        m.add(con2);
-
         return m;
-    }
-
-    private String getMessageOnPortZero(message x) {
-        return x.getValOnPort(inPort, 0).toString();
     }
 }
