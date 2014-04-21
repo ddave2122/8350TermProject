@@ -50,7 +50,7 @@ public class GlucoseGenerator extends ViewableAtomic {
         if (phaseIs("active")) {
             count = count + 1;
 //   holdIn("active",int_gen_time);
-            holdIn("active", 10 );
+            holdIn("active", 1000 );
         } else {
             passivate();
         }

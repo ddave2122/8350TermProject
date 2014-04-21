@@ -28,7 +28,7 @@ public class Enzyme extends ViewableDigraph {
 
     public void DNEnzymeConstructor() {
         this.addOutport("out1");
-        this.addInport("in1");
+        this.addInport("in11");
 
         ViewableAtomic dNChoice = new DEVSGlycolysis.atomic.Choice("Choice", 7);
         ViewableAtomic dNAMEnzyme = new AtomicEnzyme("AtomicEnzyme");
@@ -40,7 +40,7 @@ public class Enzyme extends ViewableDigraph {
         add(dNAldolase);
         add(dNActiva);
 
-        addCoupling(this, "in1", dNChoice, "in1");
+        addCoupling(this, "in11", dNChoice, "in1");
         addCoupling(dNChoice, "out1", dNAMEnzyme, "in1");
         addCoupling(dNChoice, "out2", dNAldolase, "in1");
         addCoupling(dNAMEnzyme, "out1", dNActiva, "in1");

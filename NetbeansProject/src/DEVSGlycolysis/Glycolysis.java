@@ -45,13 +45,14 @@ public class Glycolysis extends ViewableDigraph {
         add(dNProduct);
         add(dNGlucoseGenerator);
 
-        addCoupling(dNGlucoseGenerator, "out1", dNSubstrate, "in1");
+        addCoupling(dNGlucoseGenerator, "out1", dNSubstrate, "in2");
         addCoupling(dNSubstrate, "out1", dNReaction, "in1");
         addCoupling(dNEnzyme, "out1", dNReaction, "in2");
-        addCoupling(dNReaction, "out1", dNEnzyme, "in1");
         addCoupling(dNReaction, "out1", dNProduct, "in1");
-        addCoupling(dNProduct, "out1", dNSubstrate, "in2");
+        addCoupling(dNProduct, "out1", dNSubstrate, "in1");
         addCoupling(dNProduct, "out2", this, "out1");
+        addCoupling(dNReaction, "out2", dNEnzyme, "in11");
+
     }
 
     /**
@@ -62,14 +63,14 @@ public class Glycolysis extends ViewableDigraph {
     {
         preferredSize = new Dimension(1502, 786);
         if((ViewableComponent)withName("Reaction")!=null)
-             ((ViewableComponent)withName("Reaction")).setPreferredLocation(new Point(777, 102));
+             ((ViewableComponent)withName("Reaction")).setPreferredLocation(new Point(601, 35));
+        if((ViewableComponent)withName("Substrate")!=null)
+             ((ViewableComponent)withName("Substrate")).setPreferredLocation(new Point(185, 24));
         if((ViewableComponent)withName("GlucoseGenerator")!=null)
              ((ViewableComponent)withName("GlucoseGenerator")).setPreferredLocation(new Point(13, 74));
         if((ViewableComponent)withName("Product")!=null)
              ((ViewableComponent)withName("Product")).setPreferredLocation(new Point(938, 461));
         if((ViewableComponent)withName("Enzyme")!=null)
-             ((ViewableComponent)withName("Enzyme")).setPreferredLocation(new Point(165, 436));
-        if((ViewableComponent)withName("Substrate")!=null)
-             ((ViewableComponent)withName("Substrate")).setPreferredLocation(new Point(185, 24));
+             ((ViewableComponent)withName("Enzyme")).setPreferredLocation(new Point(160, 318));
     }
 }

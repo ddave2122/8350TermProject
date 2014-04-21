@@ -1,6 +1,6 @@
 package DEVSGlycolysis.atomic;
 
-import DEVSJAVALab.InputEntity;
+import DEVSGlycolysis.entity.ReactionEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -31,7 +31,7 @@ public class Glucose extends ViewableAtomic {
         super(name);
         addInport("in1");
         addOutport("out1");
-        addNameTestInput("in1", "Substrate");
+        addNameTestInput("in1", "Glucose");
         
 
         //int_gen_time = period ;
@@ -51,7 +51,7 @@ public class Glucose extends ViewableAtomic {
         Continue(e);
 
         if (messageOnPort(x, "in1", 0)) {
-            if (getMessageOnPortZero(x).equals("Substrate")) {
+            if (getMessageOnPortZero(x).equals("Glucose")) {
                 holdIn("active", 3);  //Hold in active for 5 minutes
                 messageToSend = "Glucose-6";
             }
@@ -75,7 +75,7 @@ public class Glucose extends ViewableAtomic {
         //System.out.println(name+" out count "+count);
         message m = new message();
         //content con = makeContent("out", new entity("car" + count));
-        content con = makeContent("out1", new InputEntity(messageToSend, 1));
+        content con = makeContent("out1", new ReactionEntity());
         m.add(con);
 
         return m;

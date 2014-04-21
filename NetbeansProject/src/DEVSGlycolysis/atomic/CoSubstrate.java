@@ -1,6 +1,7 @@
 package DEVSGlycolysis.atomic;
 
-import DEVSJAVALab.InputEntity;
+import DEVSGlycolysis.entity.ReactionEntity;
+import DEVSGlycolysis.entity.SubstratePair;
 import GenCol.entity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
@@ -21,6 +22,8 @@ public class CoSubstrate extends ViewableAtomic {
     private rand r;
     private int count;
     private boolean glucose6, hexokinase;
+    private ReactionEntity reactionEntity;
+    private CoSubstrateType coSubstrate;
 
     private String messageToSend;
 
@@ -51,29 +54,23 @@ public class CoSubstrate extends ViewableAtomic {
         entity val;
         for (int i = 0; i < x.size(); i++) {
             if (messageOnPort(x, "in2", i)) {
-                val = x.getValOnPort("in2", i);
-                if (val.getName().compareTo("Hexokinase") == 0) {
-                    hexokinase = true;
-                    if (glucose6)
-                    {
-                        holdIn("active", 5);
-                        messageToSend = "Substrate";
-                    }
-                    else
-                        holdIn("Waiting", Integer.MAX_VALUE);
+                reactionEntity = (ReactionEntity)x.getValOnPort("in2", i);
+                switch(reactionEntity.getProduct())
+                {
+                    case Glucose :
+                        this.coSubstrate = CoSubstrate.CoSubstrateType.ATP;
+                        break;
                 }
             }
             if (messageOnPort(x, "in1", i)) {
-                val = x.getValOnPort("in1", i);
-                if (val.getName().compareTo("Glucose-6") == 0) {
+                //val = x.getValOnPort("in1", i);
+                reactionEntity = (ReactionEntity)x.getValOnPort("in1", i);
+                
+                if (reactionEntity.getName().compareTo("Glucose") == 0) {
                     glucose6 = true;
-                    if (hexokinase) 
-                    {
+                    this.coSubstrate = CoSubstrateType.ATP;
                         holdIn("active", 5);
                         messageToSend = "Substrate";
-                    }
-                    else
-                        holdIn("Waiting", Integer.MAX_VALUE);
                 }
             }
         }
@@ -95,7 +92,7 @@ public class CoSubstrate extends ViewableAtomic {
     @Override
     public message out() {
         message m = new message();
-        content con = makeContent("out1", new InputEntity(messageToSend, 1));
+        content con = makeContent("out1", new SubstratePair("name", this.reactionEntity.getProduct(), this.coSubstrate));
         m.add(con);
 
         return m;

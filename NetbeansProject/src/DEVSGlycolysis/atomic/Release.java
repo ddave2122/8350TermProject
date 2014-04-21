@@ -34,6 +34,7 @@ public class Release extends ViewableAtomic {
         super(name);
         addInport(inPort);
         addOutport(outPort);
+        addNameTestInput(inPort, "Transformation");
     }
 
     public void initialize() {
@@ -45,12 +46,21 @@ public class Release extends ViewableAtomic {
 
     @Override
     public void deltext(double e, message x) {
-        Continue(e);
-
-        if (messageOnPort(x, inPort, 0)) {
-            this.reaction = (ReactionEntity)x.getValOnPort(inPort, 0);
-            holdIn("active", 10);
+            if (messageOnPort(x, "in1", 0)) {
+            if (getMessageOnPortZero(x).equals("Transformation"))
+            {
+                holdIn("active", 8);  //Hold in active for 5 seconds
+//                messageToSend = "AtomicEnzyme";
+            }
+            else
+                System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
         }
+        //        Continue(e);
+//
+//        if (messageOnPort(x, inPort, 0)) {
+//            this.reaction = (ReactionEntity)x.getValOnPort(inPort, 0);
+//            holdIn("active", 10);
+//        }
     }
 
     @Override
@@ -63,12 +73,25 @@ public class Release extends ViewableAtomic {
     }
 
 
+//    public message out() {
+//        message m = new message();
+//        content con = makeContent(outPort, this.reaction);
+//        m.add(con);
+//
+//        return m;
+//    }
+    
+        @Override
     public message out() {
         message m = new message();
-        content con = makeContent(outPort, this.reaction);
+        content con = makeContent("out1", new InputEntity("Test ", 1));
         m.add(con);
 
         return m;
+    }
+    
+        private String getMessageOnPortZero(message x) {
+        return x.getValOnPort("in1", 0).toString();
     }
 
 }

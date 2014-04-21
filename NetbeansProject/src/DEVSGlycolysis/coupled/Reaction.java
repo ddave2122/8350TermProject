@@ -29,6 +29,8 @@ public class Reaction extends ViewableDigraph {
 
     public void DNReactionConstructor() {
         this.addOutport("out1");
+        this.addOutport("out2");
+
         this.addInport("in1");
         this.addInport("in2");
 
@@ -45,6 +47,8 @@ public class Reaction extends ViewableDigraph {
         addCoupling(dNFixing, "out1", dNTransformation, "in1");
         addCoupling(dNTransformation, "out1", dNRelease, "in1");
         addCoupling(dNRelease, "out1", this, "out1");
+        addCoupling(dNFixing, "out3", this, "out2");
+
     }
 
     /**
@@ -54,12 +58,12 @@ public class Reaction extends ViewableDigraph {
     public void layoutForSimView()
     {
         preferredSize = new Dimension(633, 196);
+        if((ViewableComponent)withName("Release")!=null)
+             ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(343, 28));
+        if((ViewableComponent)withName("Fixing")!=null)
+             ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(58, 34));
         if((ViewableComponent)withName("Transformation")!=null)
              ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(185, 83));
-        if((ViewableComponent)withName("Fixing")!=null)
-             ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(6, 81));
-        if((ViewableComponent)withName("Release")!=null)
-             ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(383, 84));
     }
 }
 

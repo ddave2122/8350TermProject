@@ -16,7 +16,7 @@ public class ReactionEntity extends entity {
     private double reactionTime;
 
     public ReactionEntity() {
-        this("ReactionEntity", Product.ProductType.Glucose, 500.0, 1.0);
+        this("Glucose", Product.ProductType.Glucose, 500.0, 1.0);
     }
 
     public ReactionEntity(String name, Product.ProductType product, double concentration, double time) {

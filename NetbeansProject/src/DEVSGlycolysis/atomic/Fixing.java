@@ -28,7 +28,7 @@ public class Fixing extends ViewableAtomic {
     private Product.ProductType pType;
     private AtomicEnzyme.EnzymeType eType;
 
-    private String messageToSend;
+    private String messageToSendOne, messageToSendTwo;
 
     public Fixing() {
         this("Glucose", 20);
@@ -43,7 +43,9 @@ public class Fixing extends ViewableAtomic {
         addInport("in1");
         addInport("in2");
         addOutport("out1");
-        addNameTestInput("in1", "startMolecule");
+        addOutport("out3");
+
+        addNameTestInput("in1", "Substrate");
         addNameTestInput("in2", "enzymeEntry");
         this.observation_time = observation_time;
         enzyme = false;
@@ -54,6 +56,7 @@ public class Fixing extends ViewableAtomic {
         holdIn("passive", observation_time);
         r = new rand(12345);
         count = 0;
+        messageToSendTwo = "Enzyme";
     }
 
     public void deltext(double e, message x) {
@@ -62,14 +65,15 @@ public class Fixing extends ViewableAtomic {
         for (int i = 0; i < x.size(); i++) {
             if (messageOnPort(x, "in1", i)) {
                 val = x.getValOnPort("in1", i);
-                if (val.getName().compareTo("startMolecule") == 0) {
+                if (val.getName().compareTo("Substrate") == 0) {
                     molecule = true;
                     arrived = this.getSimulationTime();
                     System.out.println(val.getName() + " arrived at time:" + arrived);
-                    if (enzyme)
-                        holdIn("active", 5);
-                    else
-                        holdIn("Waiting", 10);
+
+                    holdIn("active", 5);
+                    messageToSendOne = "";
+                    messageToSendTwo = "Enzyme";
+                    
                 }
                 //numOfarrivingcars++;
             }
@@ -79,7 +83,12 @@ public class Fixing extends ViewableAtomic {
                     enzyme = true;
                     solved = this.getSimulationTime();
                     if (molecule)
+                    {
+                        messageToSendOne = "startProcess";
+                        messageToSendTwo = "Enzyme";
+
                         holdIn("active", 5);
+                    }
                     else
                         holdIn("Waiting", 10);
                     System.out.println(val.getName() + " is finished at time:" + solved);
@@ -89,10 +98,12 @@ public class Fixing extends ViewableAtomic {
         }
     }
 
-
+    @Override
     public void deltint() {
         if (phaseIs("active")) {
-            messageToSend = "startProcess";
+            messageToSendOne = "startProcess";
+            messageToSendTwo = "Enzyme";
+
             enzyme = false;
             molecule = false;
             out();
@@ -101,20 +112,41 @@ public class Fixing extends ViewableAtomic {
             System.out.println("the total service time is: " + (solved - arrived));
             passivate();
         }
+        else if (phaseIs("waiting")) {
+            System.out.println("the total service time is: " + (solved - arrived));
+            out();
+            passivate();
+        }
 
     }
 
-    @Override
+
     public message out() {
         //System.out.println(name+" out count "+count);
         message m = new message();
 
-        SubstratePair pair = new SubstratePair();
-        content con = makeContent("out1", new InputEntity(messageToSend, 1));
+          SubstratePair pair = new SubstratePair();
+        content con = makeContent("out1", new InputEntity(messageToSendOne, 1));
+//      content con2 = makeContent("out3", new InputEntity(messageToSendTwo, 1));
+        content con2 = makeContent("out3", new InputEntity("Test 1", 1));
         m.add(con);
+        m.add(con2);
 
         return m;
     }
+    
+//    public message out() {
+//        SubstratePair pair = new SubstratePair();
+//        
+//        message m = new message();
+//        content con = makeContent("out3", new InputEntity("Test 3", 1));
+//        content con2 = makeContent("out1", new InputEntity("Test 1", 1));
+//
+//        m.add(con);
+//        m.add(con2);
+//
+//        return m;
+//    }
 
     private String getMessageOnPortZero(message x) {
         return x.getValOnPort("in1", 0).toString();
