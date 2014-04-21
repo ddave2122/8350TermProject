@@ -61,16 +61,16 @@ public class Glycolysis extends ViewableDigraph {
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(1502, 786);
-        if((ViewableComponent)withName("Substrate")!=null)
-             ((ViewableComponent)withName("Substrate")).setPreferredLocation(new Point(221, 33));
-        if((ViewableComponent)withName("Reaction")!=null)
-             ((ViewableComponent)withName("Reaction")).setPreferredLocation(new Point(790, 92));
+        preferredSize = new Dimension(1251, 786);
+        if((ViewableComponent)withName("GlucoseGenerator")!=null)
+             ((ViewableComponent)withName("GlucoseGenerator")).setPreferredLocation(new Point(16, 341));
+        if((ViewableComponent)withName("Enzyme")!=null)
+             ((ViewableComponent)withName("Enzyme")).setPreferredLocation(new Point(155, 332));
         if((ViewableComponent)withName("Product")!=null)
              ((ViewableComponent)withName("Product")).setPreferredLocation(new Point(914, 468));
-        if((ViewableComponent)withName("Enzyme")!=null)
-             ((ViewableComponent)withName("Enzyme")).setPreferredLocation(new Point(104, 417));
-        if((ViewableComponent)withName("GlucoseGenerator")!=null)
-             ((ViewableComponent)withName("GlucoseGenerator")).setPreferredLocation(new Point(13, 74));
+        if((ViewableComponent)withName("Substrate")!=null)
+             ((ViewableComponent)withName("Substrate")).setPreferredLocation(new Point(10, 13));
+        if((ViewableComponent)withName("Reaction")!=null)
+             ((ViewableComponent)withName("Reaction")).setPreferredLocation(new Point(564, 35));
     }
 }

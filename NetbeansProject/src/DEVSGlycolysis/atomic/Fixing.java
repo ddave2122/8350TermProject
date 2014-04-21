@@ -58,7 +58,7 @@ public class Fixing extends ViewableAtomic {
         holdIn("passive", observation_time);
         r = new rand(12345);
         count = 0;
-
+        passivate();
     }
 
     public void deltext(double e, message x) {
@@ -74,7 +74,7 @@ public class Fixing extends ViewableAtomic {
             if (messageOnPort(x, inPort2, i)) {
                 this.triple = (SubstrateEnzymeTriple)x.getValOnPort(inPort2, i);
                 solved = this.getSimulationTime();
-                holdIn("active", 5);
+                holdIn("active", 1);
             }
         }
     }

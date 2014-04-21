@@ -17,7 +17,7 @@ public class GlucoseGenerator extends ViewableAtomic {
     protected rand r;
 
     public GlucoseGenerator() {
-        this("GlucoseGenerator", 7);
+        this("GlucoseGenerator", 3);
     }
 
     public GlucoseGenerator(String name, double period) {
@@ -31,7 +31,6 @@ public class GlucoseGenerator extends ViewableAtomic {
         holdIn("active", int_gen_time);
         r = new rand(12345);
         count = 0;
-        passivate();
     }
 
     @Override
@@ -49,7 +48,7 @@ public class GlucoseGenerator extends ViewableAtomic {
 
         if (phaseIs("active")) {
             count = count + 1;
-            holdIn("active", 1000 );
+            passivate();
         } else {
             passivate();
         }
