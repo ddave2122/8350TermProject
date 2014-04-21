@@ -57,13 +57,13 @@ public class Reaction extends ViewableDigraph {
      */
     public void layoutForSimView()
     {
-        preferredSize = new Dimension(633, 196);
-        if((ViewableComponent)withName("Transformation")!=null)
-             ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(164, 32));
-        if((ViewableComponent)withName("Release")!=null)
-             ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(356, 30));
+        preferredSize = new Dimension(617, 196);
         if((ViewableComponent)withName("Fixing")!=null)
              ((ViewableComponent)withName("Fixing")).setPreferredLocation(new Point(-11, 41));
+        if((ViewableComponent)withName("Release")!=null)
+             ((ViewableComponent)withName("Release")).setPreferredLocation(new Point(356, 30));
+        if((ViewableComponent)withName("Transformation")!=null)
+             ((ViewableComponent)withName("Transformation")).setPreferredLocation(new Point(164, 32));
     }
 }
 

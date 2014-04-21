@@ -16,7 +16,6 @@ import java.awt.*;
  */
 public class Enzyme extends ViewableDigraph {
 
-
     public Enzyme() {
         this("Enzyme");
     }

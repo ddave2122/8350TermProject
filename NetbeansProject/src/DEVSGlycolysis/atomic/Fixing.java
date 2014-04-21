@@ -67,7 +67,7 @@ public class Fixing extends ViewableAtomic {
                 this.pair = (SubstratePair)x.getValOnPort(inPort1, i);
                 this.triple = null;
                 arrived = this.getSimulationTime();
-                holdIn("waiting", 5);
+                holdIn("waiting", 2);
             }
             if (messageOnPort(x, inPort2, i)) {
                 this.triple = (SubstrateEnzymeTriple)x.getValOnPort(inPort2, i);
