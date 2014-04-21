@@ -20,6 +20,7 @@ public class CoSubstrate extends ViewableAtomic {
     private double int_gen_time;
     private rand r;
     private int count;
+    private boolean glucose6, hexokinase;
 
     private String messageToSend;
 
@@ -36,47 +37,72 @@ public class CoSubstrate extends ViewableAtomic {
         //int_gen_time = period ;
     }
 
+    @Override
     public void initialize() {
-        holdIn("passive", int_gen_time);
+        holdIn("passive", 11);
         r = new rand(12345);
         count = 0;
+        passivate();
     }
-
+    
+    @Override
     public void deltext(double e, message x) {
         Continue(e);
-
-        if (messageOnPort(x, "in1", 0)) {
-            entity product = x.getValOnPort("in1", 0);
+        entity val;
+        for (int i = 0; i < x.size(); i++) {
+            if (messageOnPort(x, "in2", i)) {
+                val = x.getValOnPort("in2", i);
+                if (val.getName().compareTo("Hexokinase") == 0) {
+                    hexokinase = true;
+                    if (glucose6)
+                    {
+                        holdIn("active", 5);
+                        messageToSend = "Substrate";
+                    }
+                    else
+                        holdIn("Waiting", Integer.MAX_VALUE);
+                }
+            }
+            if (messageOnPort(x, "in1", i)) {
+                val = x.getValOnPort("in1", i);
+                if (val.getName().compareTo("Glucose-6") == 0) {
+                    glucose6 = true;
+                    if (hexokinase) 
+                    {
+                        holdIn("active", 5);
+                        messageToSend = "Substrate";
+                    }
+                    else
+                        holdIn("Waiting", Integer.MAX_VALUE);
+                }
+            }
         }
     }
-
+    @Override
     public void deltint() {
-        if (phaseIs("passive")) {
-            messageToSend = "on";
+        if (phaseIs("active")) {
+            messageToSend = "Substrate";
+            glucose6 = false;
+            hexokinase = false;
             out();
-        } else if (phaseIs("active")) {
-            messageToSend = "sleep";
-            out();
-        } else if (phaseIs("hibernate")) {
-            messageToSend = "hibernate";
-            out();
+            passivate();
+        } else if (phaseIs("passive")) {
+            passivate();
         } else
             System.out.println("UNKNOWN PHASE: " + getPhase());
     }
 
-
+    @Override
     public message out() {
-        //System.out.println(name+" out count "+count);
         message m = new message();
-        //content con = makeContent("out", new entity("car" + count));
-        content con = makeContent("out", new InputEntity(messageToSend, 1));
+        content con = makeContent("out1", new InputEntity(messageToSend, 1));
         m.add(con);
 
         return m;
     }
 
-    private String getMessageOnPortZero(message x) {
-        return x.getValOnPort("in1", 0).toString();
+    private String getMessageOnPort(message x, String port) {
+        return x.getValOnPort(port, 0).toString();
     }
 
 }

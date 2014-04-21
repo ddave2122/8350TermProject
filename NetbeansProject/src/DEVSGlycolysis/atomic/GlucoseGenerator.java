@@ -50,7 +50,7 @@ public class GlucoseGenerator extends ViewableAtomic {
         if (phaseIs("active")) {
             count = count + 1;
 //   holdIn("active",int_gen_time);
-            holdIn("active", 10 + r.uniform(int_gen_time));
+            holdIn("active", 10 );
         } else {
             passivate();
         }
@@ -61,7 +61,7 @@ public class GlucoseGenerator extends ViewableAtomic {
 //System.out.println(name+" out count "+count);
         message m = new message();
 //   content con = makeContent("out", new entity("car" + count));
-        content con = makeContent("out", new GlucoseEntity("Glucose" + count, 5 + r.uniform(20), 50 + r.uniform(100), 1));
+        content con = makeContent("out1", new GlucoseEntity("Glucose", 5 + r.uniform(20), 50 + r.uniform(100), 1));
         m.add(con);
 
         return m;

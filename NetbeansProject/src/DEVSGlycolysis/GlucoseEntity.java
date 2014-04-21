@@ -39,7 +39,7 @@ public class GlucoseEntity extends entity {
 
     @Override
     public String toString() {
-        return name + "_" + processingTime;
+        return name;
         //return name+"_"+((double)((int)(processingTime*100)))/100;
     }
 

@@ -30,7 +30,7 @@ public class Enzyme extends ViewableDigraph {
         this.addOutport("out1");
         this.addInport("in1");
 
-        ViewableAtomic dNChoice = new DEVSGlycolysis.atomic.Choice("Choice");
+        ViewableAtomic dNChoice = new DEVSGlycolysis.atomic.Choice("Choice", 7);
         ViewableAtomic dNAMEnzyme = new AtomicEnzyme("AtomicEnzyme");
         ViewableAtomic dNAldolase = new Aldolase("Aldolase");
         ViewableAtomic dNActiva = new Activa("Activa");

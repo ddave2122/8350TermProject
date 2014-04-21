@@ -34,24 +34,28 @@ public class AtomicEnzyme extends ViewableAtomic {
         super(name);
         addInport("in1");
         addOutport("out1");
+        addNameTestInput("in1", "AtomicEnzyme");
+
     }
 
+    @Override
     public void initialize() {
         holdIn("passive", int_gen_time);
         r = new rand(12345);
         count = 0;
+        passivate();
     }
 
+    @Override
     public void deltext(double e, message x) {
         Continue(e);
 
-        if (messageOnPort(x, "in", 0)) {
-            if (getMessageOnPortZero(x).equals("movement"))
-                holdIn("passive", 300);  //Hold in active for 5 minutes
-            else if (getMessageOnPortZero(x).equals("active"))
-                holdIn("active", 1800);  //Hold in active for 30 minutes
-            else if (getMessageOnPortZero(x).equals("hibernate"))
-                holdIn("hibernate", Integer.MAX_VALUE);
+        if (messageOnPort(x, "in1", 0)) {
+            if (getMessageOnPortZero(x).equals("AtomicEnzyme"))
+            {
+                holdIn("active", 8);  //Hold in active for 5 seconds
+                messageToSend = "AtomicEnzyme";
+            }
             else
                 System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
         }
@@ -59,30 +63,27 @@ public class AtomicEnzyme extends ViewableAtomic {
 
     public void deltint() {
         if (phaseIs("passive")) {
-            messageToSend = "on";
+             //Do nothing
+        } 
+        else if (phaseIs("active")) {
+            messageToSend = "AtomicEnzyme";
             out();
-        } else if (phaseIs("active")) {
-            messageToSend = "sleep";
-            out();
-        } else if (phaseIs("hibernate")) {
-            messageToSend = "hibernate";
-            out();
-        } else
+            passivate();
+        }  
+        else
             System.out.println("UNKNOWN PHASE: " + getPhase());
     }
 
-
+    @Override
     public message out() {
-        //System.out.println(name+" out count "+count);
         message m = new message();
-        //content con = makeContent("out", new entity("car" + count));
-        content con = makeContent("out", new InputEntity(messageToSend, 1));
+        content con = makeContent("out1", new InputEntity(messageToSend, 1));
         m.add(con);
 
         return m;
     }
 
     private String getMessageOnPortZero(message x) {
-        return x.getValOnPort("in", 0).toString();
+        return x.getValOnPort("in1", 0).toString();
     }
 }

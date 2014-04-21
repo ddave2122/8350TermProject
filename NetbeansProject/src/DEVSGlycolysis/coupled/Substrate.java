@@ -55,11 +55,11 @@ public class Substrate extends ViewableDigraph {
     public void layoutForSimView()
     {
         preferredSize = new Dimension(515, 271);
-        if((ViewableComponent)withName("CoSubstrate")!=null)
-             ((ViewableComponent)withName("CoSubstrate")).setPreferredLocation(new Point(212, 110));
         if((ViewableComponent)withName("Glucose")!=null)
              ((ViewableComponent)withName("Glucose")).setPreferredLocation(new Point(10, 180));
         if((ViewableComponent)withName("Product")!=null)
-             ((ViewableComponent)withName("Product")).setPreferredLocation(new Point(10, 45));
+             ((ViewableComponent)withName("Product")).setPreferredLocation(new Point(9, 46));
+        if((ViewableComponent)withName("CoSubstrate")!=null)
+             ((ViewableComponent)withName("CoSubstrate")).setPreferredLocation(new Point(212, 110));
     }
 }
