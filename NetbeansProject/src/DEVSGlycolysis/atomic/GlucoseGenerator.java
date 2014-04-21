@@ -1,6 +1,6 @@
 package DEVSGlycolysis.atomic;
 
-import DEVSGlycolysis.GlucoseEntity;
+import DEVSGlycolysis.entity.ReactionEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
@@ -16,49 +16,32 @@ public class GlucoseGenerator extends ViewableAtomic {
     protected int count;
     protected rand r;
 
+    public static final String outPort = "out1";
+
     public GlucoseGenerator() {
         this("GlucoseGenerator", 3);
     }
 
     public GlucoseGenerator(String name, double period) {
         super(name);
-        addOutport("out1");
+        addOutport(outPort);
         int_gen_time = period;
     }
 
     @Override
     public void initialize() {
         holdIn("active", int_gen_time);
-        r = new rand(12345);
-        count = 0;
-    }
-
-    @Override
-    public void deltext(double e, message x) {
-        Continue(e);
-        for (int i = 0; i < x.getLength(); i++) {
-            if (messageOnPort(x, "in", i)) { //the stop message from tranducer
-                passivate();
-            }
-        }
     }
 
     @Override
     public void deltint() {
-
-        if (phaseIs("active")) {
-            count = count + 1;
-            passivate();
-        } else {
-            passivate();
-        }
+        passivate();
     }
 
     @Override
     public message out() {
         message m = new message();
-
-        content con = makeContent("out1", new GlucoseEntity("Glucose", 5 + r.uniform(20), 50 + r.uniform(100), 1));
+        content con = makeContent(outPort, new ReactionEntity());
         m.add(con);
 
         return m;

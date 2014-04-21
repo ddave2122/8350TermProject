@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package DEVSGlycolysis;
+package DEVSGlycolysis.entity;
 
 import GenCol.entity;
 
@@ -15,7 +15,7 @@ public class GlucoseEntity extends entity {
     protected int priority;
 
     public GlucoseEntity() {
-        this("Glucose", 10, 10, 1);
+        this("GlucoseEntity", 10, 10, 1);
     }
 
     public GlucoseEntity(String name, double _procTime, double _price, int _priority) {

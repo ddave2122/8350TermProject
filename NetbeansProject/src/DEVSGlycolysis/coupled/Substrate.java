@@ -1,7 +1,6 @@
 package DEVSGlycolysis.coupled;
 
 import DEVSGlycolysis.atomic.CoSubstrate;
-import DEVSGlycolysis.atomic.Glucose;
 import DEVSGlycolysis.atomic.ProductReusable;
 import simView.ViewableAtomic;
 import simView.ViewableComponent;
@@ -31,23 +30,20 @@ public class Substrate extends ViewableDigraph {
     }
 
     public void DNSubstrateConstructor() {
-        this.addOutport("out1");
+        this.addOutport(outPort);
         this.addInport(inPort1);
         this.addInport(inPort2);
 
         ViewableAtomic dNProduct = new ProductReusable("ProductReusable", 7);
-        ViewableAtomic dNGlucose = new Glucose("Glucose");
         ViewableAtomic dNCoSubstrate = new CoSubstrate("CoSubstrate");
 
         add(dNProduct);
-        add(dNGlucose);
         add(dNCoSubstrate);
 
-        addCoupling(this, inPort1, dNProduct, ProductReusable.inPort);
-        addCoupling(this, inPort2, dNGlucose, "in1");
-        addCoupling(dNGlucose, "out1", dNCoSubstrate, "in1");
-        addCoupling(dNProduct, ProductReusable.outPort, dNCoSubstrate, "in2");
-        addCoupling(dNCoSubstrate,"out1", this, outPort);
+        addCoupling(this, inPort1, dNCoSubstrate, CoSubstrate.inPort1);
+        addCoupling(this, inPort2, dNProduct, ProductReusable.inPort);
+        addCoupling(dNProduct, ProductReusable.outPort, dNCoSubstrate, CoSubstrate.inPort2);
+        addCoupling(dNCoSubstrate,CoSubstrate.outPort, this, outPort);
     }
 
     /**
@@ -57,11 +53,9 @@ public class Substrate extends ViewableDigraph {
     public void layoutForSimView()
     {
         preferredSize = new Dimension(515, 284);
-        if((ViewableComponent)withName("CoSubstrate")!=null)
-             ((ViewableComponent)withName("CoSubstrate")).setPreferredLocation(new Point(212, 110));
         if((ViewableComponent)withName("ProductReusable")!=null)
-             ((ViewableComponent)withName("ProductReusable")).setPreferredLocation(new Point(-4, 43));
-        if((ViewableComponent)withName("Glucose")!=null)
-             ((ViewableComponent)withName("Glucose")).setPreferredLocation(new Point(6, 180));
+             ((ViewableComponent)withName("ProductReusable")).setPreferredLocation(new Point(12, 161));
+        if((ViewableComponent)withName("CoSubstrate")!=null)
+             ((ViewableComponent)withName("CoSubstrate")).setPreferredLocation(new Point(192, 58));
     }
 }

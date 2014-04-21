@@ -1,7 +1,6 @@
 package DEVSGlycolysis.atomic;
 
 import DEVSGlycolysis.entity.ReactionEntity;
-import DEVSJAVALab.InputEntity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;

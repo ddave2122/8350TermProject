@@ -24,9 +24,9 @@ public class CoSubstrate extends ViewableAtomic {
     private ReactionEntity reactionEntity;
     private CoSubstrateType coSubstrate;
 
-    private static final String inPort1 = "in1";
-    private static final String inPort2 = "in2";
-    private static final String outPort = "out1";
+    public static final String inPort1 = "in1";
+    public static final String inPort2 = "in2";
+    public static final String outPort = "out1";
 
     public CoSubstrate() {
         this("Screen");

@@ -1,8 +1,6 @@
 package DEVSGlycolysis.atomic;
 
 import DEVSGlycolysis.entity.SubstrateEnzymeTriple;
-import DEVSJAVALab.InputEntity;
-import GenCol.entity;
 import genDevs.modeling.content;
 import genDevs.modeling.message;
 import simView.ViewableAtomic;
