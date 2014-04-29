@@ -62,7 +62,7 @@ public class Product extends ViewableAtomic {
 
         if (messageOnPort(x, inPort, 0)) {
             this.reaction = (ReactionEntity)x.getValOnPort(inPort, 0);
-            holdIn("active", 5);  //Hold in active for 5 seconds
+            holdIn("active", 3);  //Hold in active for 5 seconds
         }
     }
 
