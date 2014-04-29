@@ -41,7 +41,7 @@ public class Transformation extends ViewableAtomic {
 
     public void initialize() {
         holdIn("passive", int_gen_time);
-        r = new rand(12345);
+        r = new rand((int)System.currentTimeMillis());
         count = 0;
         passivate();
     }
@@ -55,9 +55,15 @@ public class Transformation extends ViewableAtomic {
             Product.ProductType pType = val.getSubstrateType();
             CoSubstrate.CoSubstrateType cssType = val.getCoSubstrateType();
 
+
             try {
+                this.concentration = val.getProductConcentration();
+                if (this.concentration < 1.0) {
+                    throw new Exception("Not enough to perform reaction!");
+                }
 
                 this.release = determineProduct(eType, pType, cssType);
+                this.reactionTime = calculateRate(this.concentration, this.release);
 
             } catch (Exception exp) {
                 System.err.println(exp.getMessage());
@@ -73,6 +79,49 @@ public class Transformation extends ViewableAtomic {
             passivate();
         } else
             System.out.println("UNKNOWN PHASE: " + getPhase());
+    }
+
+    private double calculateRate(double concentration, Product.ProductType pType) {
+        double rate = 0.0;
+        switch (pType) {
+            case Glucose:
+                // just use random amount of transport concentration
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case Glucose6Phosphate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case Fructose6Phosphate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case Fructose1_6BiPhosphate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case GlycerAlderhyde3Phosphate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case DiHydroxideAcetonePhosphate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case _1_3BiPhosphoGlycerate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case _3PhosphoGlycerate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case _2PhosphoGlycerate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case PhosphoenolPyruvate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            case Pyruvate:
+                rate = this.r.normal(5.0, 1.0) - concentration;
+                break;
+            default:
+                break;
+        }
+        return rate;
     }
 
     private Product.ProductType determineProduct(EnzymeType eType,

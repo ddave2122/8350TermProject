@@ -13,14 +13,16 @@ import GenCol.entity;
 public class SubstratePair extends entity {
     private CoSubstrate.CoSubstrateType cossType;
     private Product.ProductType ssType;
+    private double productConcentration;
 
     public SubstratePair() {
-        this("SubstratePair", Product.ProductType.Glucose, CoSubstrate.CoSubstrateType.None);
+        this("SubstratePair", Product.ProductType.Glucose, 1.0, CoSubstrate.CoSubstrateType.None);
     }
 
-    public SubstratePair(String name, Product.ProductType pType, CoSubstrate.CoSubstrateType coSSType) {
+    public SubstratePair(String name, Product.ProductType pType, double conc, CoSubstrate.CoSubstrateType coSSType) {
         super(name);
         this.ssType = pType;
+        this.productConcentration = conc;
         this.cossType = coSSType;
     }
 
@@ -30,6 +32,10 @@ public class SubstratePair extends entity {
 
     public Product.ProductType getProductType() {
         return this.ssType;
+    }
+
+    public double getProductConcentration() {
+        return this.productConcentration;
     }
 
     @Override

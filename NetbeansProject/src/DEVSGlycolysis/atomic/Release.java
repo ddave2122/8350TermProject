@@ -38,7 +38,6 @@ public class Release extends ViewableAtomic {
 
     public void initialize() {
         holdIn("passive", int_gen_time);
-        r = new rand(12345);
         count = 0;
         passivate();
     }
@@ -47,7 +46,7 @@ public class Release extends ViewableAtomic {
     public void deltext(double e, message x) {
         if (messageOnPort(x, "in1", 0)) {
             this.reaction = (ReactionEntity) x.getValOnPort("in1", 0);
-            holdIn("active", 1);
+            holdIn("active", this.reaction.getReactionTime());
         }
         else
             System.out.println("UNKNOWN MESSAGE: " + getMessageOnPortZero(x));
@@ -61,7 +60,6 @@ public class Release extends ViewableAtomic {
         } else
             System.out.println("UNKNOWN PHASE: " + getPhase());
     }
-
     
     @Override
     public message out() {

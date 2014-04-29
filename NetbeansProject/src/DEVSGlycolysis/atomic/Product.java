@@ -84,6 +84,9 @@ public class Product extends ViewableAtomic {
             case Pyruvate:
                 // if Pyruvate we are done
                 con = makeContent(outPort2, this.reaction);
+                double time = this.reaction.getReactionTime();
+                System.out.print("Total reaction time:");
+                System.out.println(this.getSimulationTime() - time);
                 break;
             default:
                 // otherwise recycle product back into network

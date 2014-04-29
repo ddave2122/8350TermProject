@@ -115,7 +115,8 @@ public class CoSubstrate extends ViewableAtomic {
     public message out() {
         message m = new message();
         content con = makeContent(outPort,
-                        new SubstratePair("name", this.reactionEntity.getProduct(), this.coSubstrate));
+                        new SubstratePair("name", this.reactionEntity.getProduct(),
+                                this.reactionEntity.getConcentration(), coSubstrate));
         m.add(con);
         return m;
     }

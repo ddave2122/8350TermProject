@@ -69,11 +69,14 @@ public class Activation extends ViewableAtomic {
         }
     }
 
-
     public message out() {
         message m = new message();
+        if (this.aldTriple != null) {
+            this.triple.setConcentration(2.0);
+            this.aldTriple = null;
+        }
         content con = makeContent("out1", this.triple);
-        this.aldTriple = null;
+
         m.add(con);
 
         return m;

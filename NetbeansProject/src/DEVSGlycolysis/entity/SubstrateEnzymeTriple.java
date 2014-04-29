@@ -15,16 +15,18 @@ public class SubstrateEnzymeTriple extends entity {
     private Product.ProductType substrateType;
     private CoSubstrate.CoSubstrateType cosubstrateType;
     private EnzymeType enzymeType;
+    private double concentration;
 
     public SubstrateEnzymeTriple() {
-        this("SubstrateEnzymeTriple", Product.ProductType.Glucose,
+        this("SubstrateEnzymeTriple", Product.ProductType.Glucose, 1.0,
                 CoSubstrate.CoSubstrateType.ATP, EnzymeType.Hexokinase);
     }
 
     public SubstrateEnzymeTriple(String name, Product.ProductType substrateType,
-                                 CoSubstrate.CoSubstrateType cossType, EnzymeType enzymeType) {
+                                 double concentration, CoSubstrate.CoSubstrateType cossType, EnzymeType enzymeType) {
         super(name);
         this.substrateType = substrateType;
+        this.concentration = concentration;
         this.cosubstrateType = cossType;
         this.enzymeType = enzymeType;
     }
@@ -39,6 +41,14 @@ public class SubstrateEnzymeTriple extends entity {
 
     public EnzymeType getEnzymeType() {
         return this.enzymeType;
+    }
+
+    public double getProductConcentration() {
+        return this.concentration;
+    }
+
+    public void setConcentration(double d) {
+        this.concentration = d;
     }
 
     @Override

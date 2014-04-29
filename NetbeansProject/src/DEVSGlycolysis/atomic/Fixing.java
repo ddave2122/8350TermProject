@@ -71,7 +71,6 @@ public class Fixing extends ViewableAtomic {
             }
             if (messageOnPort(x, inPort2, i)) {
                 this.triple = (SubstrateEnzymeTriple)x.getValOnPort(inPort2, i);
-                solved = this.getSimulationTime();
                 holdIn("active", 1);
             }
         }

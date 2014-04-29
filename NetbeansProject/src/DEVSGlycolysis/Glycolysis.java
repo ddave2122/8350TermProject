@@ -67,10 +67,10 @@ public class Glycolysis extends ViewableDigraph {
         if((ViewableComponent)withName("Product")!=null)
              ((ViewableComponent)withName("Product")).setPreferredLocation(new Point(914, 468));
         if((ViewableComponent)withName("Substrate")!=null)
-             ((ViewableComponent)withName("Substrate")).setPreferredLocation(new Point(219, 25));
+             ((ViewableComponent)withName("Substrate")).setPreferredLocation(new Point(196, 32));
         if((ViewableComponent)withName("Enzyme")!=null)
              ((ViewableComponent)withName("Enzyme")).setPreferredLocation(new Point(104, 417));
         if((ViewableComponent)withName("Reaction")!=null)
-             ((ViewableComponent)withName("Reaction")).setPreferredLocation(new Point(818, 127));
+             ((ViewableComponent)withName("Reaction")).setPreferredLocation(new Point(769, 135));
     }
 }

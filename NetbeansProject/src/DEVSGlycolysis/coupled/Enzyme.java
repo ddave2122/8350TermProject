@@ -41,10 +41,8 @@ public class Enzyme extends ViewableDigraph {
         add(dNActiva);
 
         addCoupling(this, "in11", dNChoice, "in1");
-        //addCoupling(dNChoice, "out1", dNAMEnzyme, "in1");
         addCoupling(dNChoice, "out1", dNActiva, "in1");
         addCoupling(dNChoice, "out2", dNAldolase, "in1");
-        //addCoupling(dNAMEnzyme, "out1", dNActiva, "in1");
         addCoupling(dNAldolase, "out1", dNActiva, "in2");
         addCoupling(dNActiva, "out1", this, "out1");
     }
